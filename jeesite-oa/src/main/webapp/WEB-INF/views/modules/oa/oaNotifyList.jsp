@@ -58,13 +58,28 @@
 			<tr>
 				<td>
 					<c:if test="${oaNotify.type==4 && not empty oaNotify.remarks}">
-						<a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}" title="项目浏览" style="text-decoration:none">
+						<a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectNote" title="项目浏览" style="text-decoration:none">
 							<i class="icon-file-alt icon-large"></i>
+						</a>&nbsp;
+					</c:if>
+
+					<c:if test="${requestScope.oaNotify.self}">
+						<c:if test="${oaNotify.readFlag==0}">
+							<a href="${ctx}/oa/oaNotify/${requestScope.oaNotify.self?'view':'form'}?id=${oaNotify.id}"  title="通知查看">
+								${fns:abbr(oaNotify.title,50)}
+							</a>
+						</c:if>
+						<c:if test="${oaNotify.readFlag==1}">
+							<a class="muted" href="${ctx}/oa/oaNotify/${requestScope.oaNotify.self?'view':'form'}?id=${oaNotify.id}"  title="通知查看">
+								${fns:abbr(oaNotify.title,50)}
+							</a>
+						</c:if>
+					</c:if>
+					<c:if test="${!requestScope.oaNotify.self}">
+						<a href="${ctx}/oa/oaNotify/${requestScope.oaNotify.self?'view':'form'}?id=${oaNotify.id}"  title="通知查看">
+								${fns:abbr(oaNotify.title,50)}
 						</a>
 					</c:if>
-					&nbsp;<a href="${ctx}/oa/oaNotify/${requestScope.oaNotify.self?'view':'form'}?id=${oaNotify.id}"  title="通知查看">
-							${fns:abbr(oaNotify.title,50)}
-					</a>
 				</td>
 				<td>
 					${fns:getDictLabel(oaNotify.type, 'oa_notify_type', '')}

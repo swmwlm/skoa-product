@@ -26,7 +26,7 @@
 
         <div class="controls">
             <c:if test="${oaNotify.type==4 && not empty oaNotify.remarks}">
-                <a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}" title="项目浏览" style="text-decoration:none">
+                <a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectNote" title="项目浏览" style="text-decoration:none">
                     <i class="icon-file-alt icon-large"></i>
                 </a>
             </c:if>
