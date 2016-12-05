@@ -219,3 +219,12 @@ UPDATE sys_user SET `password`='fa3befd31f3e25439ede877aa89a1799e92e0556ffe6592a
 /* 用户表增加姓名的拼音字段，以及简拼字段 */
 ALTER TABLE sys_user ADD COLUMN `quanpin` varchar(255);
 ALTER TABLE sys_user ADD COLUMN `jianpin` varchar(255);
+
+
+/* 调整菜单 我的面板下的 二级菜单 */
+update sys_menu set sort='120' where id=28 and name='个人信息';
+update sys_menu set sort='90' where id=71 and name='文件管理';
+/*调整通知通告二级菜单,放入一级菜单 我的面板下,并调整我的面板下的二级菜单排序*/
+update sys_menu set sort='30',parent_id='27',parent_ids='0,1,27,' where id=88 and name='通知通告';
+/*隐藏在线办公一级菜单*/
+update sys_menu set is_show=0 where id=62 and name='在线办公';
