@@ -93,14 +93,15 @@
 			</if>
 			${sqlMap.dsf}
 		</where>
-		<choose>
+		ORDER BY ${sqlMap.orderBy}
+		<!--<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
 				ORDER BY a.update_date DESC
 			</otherwise>
-		</choose>
+		</choose>-->
 	</select>
 	
 	<select id="findAllList" resultType="ProjectInfo">
