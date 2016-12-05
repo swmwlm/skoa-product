@@ -43,8 +43,8 @@ public class ProjectInfoUtils {
 		if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&& StringUtils.isBlank(projectInfo.getProjectProgress())&&"0".equals(projectInfo.getProjectStatus()))
 			return true;
 
-		//2.如果当前用户是项目的负责人,则可以编辑该项目
-		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo))
+		//2.如果当前用户是项目的负责人,项目状态不能处于材料收集阶段(推介人编辑) 状态,则可以编辑该项目
+		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
 			return true;
 		return false;
 	}
@@ -114,8 +114,8 @@ public class ProjectInfoUtils {
 	 */
 	public static Boolean viewableProject(ProjectInfo projectInfo) {
 		//1.判断当前用户是否有@RequiresPermissions("project:projectInfo:view")权限;
-		//2.判断当前用户是否为项目负责人,若是,则可以浏览
-		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo))
+		//2.判断当前用户是否为项目负责人,并且项目状态不是材料收集阶段(推介人编辑),才可以浏览
+		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
 			return true;
 
 		//3.判断 当前项目进度是否为0或者1,若是,则可以浏览

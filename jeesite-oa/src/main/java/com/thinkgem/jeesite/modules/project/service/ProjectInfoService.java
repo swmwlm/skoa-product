@@ -60,8 +60,8 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		sb.append(" a.project_progress<2 ");
 		//2.当前用户可以看到 自己创建的项目,并且该项目进度为空或者为0或者为1
 		sb.append(" or (a.create_by = '"+currentUser.getId()+"' and (a.project_progress is null or a.project_progress<2 )) ");
-		//3.当前用户可以看到 自己负责的项目
-		sb.append(" or a.primary_person='"+currentUser.getId()+"' ");
+		//3.当前用户可以看到 自己负责的项目,项目状态不能为 推介人编辑 状态,此状态还处于材料收集阶段;
+		sb.append(" or (a.primary_person='"+currentUser.getId()+"' and a.project_status!=0 ) ");
 		//4.当前用户可以看到 自己参与的(所在项目小组)项目,并且项目进度小于5
 		sb.append(" or (find_in_set('"+currentUser.getId()+"',a.team_members) and a.project_progress<5)");
 		//5.当前用户可以看到 按 自己所在角色与项目进度绑定的集合 ,进行筛选
