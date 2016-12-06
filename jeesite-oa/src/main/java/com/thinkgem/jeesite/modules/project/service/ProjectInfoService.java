@@ -74,8 +74,10 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		sb.append(")");
 
 		projectInfo.getSqlMap().put("dsf",sb.toString());
-		//把自己创建的项目,且处于推介人编辑 状态的,优先显示
-		String orderBy="(a.create_by = '"+currentUser.getId()+"' and a.project_status=0) DESC,a.update_date DESC";
+		//orderBy:1.把自己创建的项目,且处于推介人编辑 状态的,优先显示
+		//orderBy:2.是项目负责人的项目,次优显示
+		//orderBy:3.更新时间,最后显示
+		String orderBy="(a.create_by = '"+currentUser.getId()+"' and a.project_status=0) DESC,(a.primary_person='"+currentUser.getId()+"' or find_in_set('"+currentUser.getId()+"',a.team_members)) DESC,a.update_date DESC";
 		//page.setOrderBy(orderBy);//该方式会过滤orderby;Page.getOrderBy;不适用本场景
 		projectInfo.getSqlMap().put("orderBy",orderBy);
 		return super.findPage(page, projectInfo);
