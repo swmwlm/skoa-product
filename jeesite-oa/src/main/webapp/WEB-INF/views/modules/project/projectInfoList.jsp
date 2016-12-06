@@ -133,6 +133,12 @@
 					<a href="${ctx}/project/projectInfo/view?id=${projectInfo.id}" title="${projectInfo.projectName}">
 						${fns:abbr(projectInfo.projectName,40)}
 					</a>
+					<c:if test="${fns:isProjectInfoCreator(projectInfo)}">
+						<span class="badge badge-success" title="项目创建者">C</span>
+					</c:if>
+					<c:if test="${fns:isProjectInfoPrimaryPerson(projectInfo)}">
+						<span class="badge badge-important" title="项目负责人">P</span>
+					</c:if>
 				</td>
 				<td>
 					${projectInfo.primaryPerson.name}

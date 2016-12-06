@@ -41,6 +41,20 @@ public class ProjectInfoUtils {
 	}
 
 	/**
+	 * 判断当前用户是否是某个项目的创建者 (提供jstl fn自定义函数接口)
+	 * @param projectInfo
+	 * @return
+	 */
+	public static Boolean isProjectInfoCreator(Object projectInfo){
+		ProjectInfo _projectInfo=null;
+		if(projectInfo instanceof  ProjectInfo) {
+			_projectInfo= (ProjectInfo) projectInfo;
+			return ProjectInfoUtils.isProjectInfoCreator(_projectInfo);
+		}
+		return false;
+	}
+
+	/**
 	 * 判断当前用户是否可以编辑或删除该项目
 	 * @param projectInfo
 	 * @return
