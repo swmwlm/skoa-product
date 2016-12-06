@@ -72,10 +72,22 @@ public class ProjectInfoController extends BaseController {
 	@RequiresPermissions("project:projectInfo:view")
 	@RequestMapping(value = "form")
 	public String form(ProjectInfo projectInfo, Model model,RedirectAttributes redirectAttributes) {
-		//校验当前用户是否拥有该项目的编辑权限
-		if(StringUtils.isBlank(projectInfo.getId())||ProjectInfoUtils.editableProject(projectInfo)) {
+		//新增项目;
+		if(StringUtils.isBlank(projectInfo.getId())) {
 			model.addAttribute("projectInfo", projectInfo);
 			return "modules/project/projectInfoForm";
+		}
+		//有项目编辑权限
+		if(ProjectInfoUtils.editableProject(projectInfo)){
+			//校验当前用户是否拥有该项目的编辑权限,且项目进度为null或者小于2;
+			if(null==projectInfo.getProjectProgress()||Integer.parseInt(projectInfo.getProjectProgress())<2){
+				model.addAttribute("projectInfo", projectInfo);
+				return "modules/project/projectInfoForm";
+			}else{
+				//当项目进度大于等于2时,跳转到 修改权限比较小的页面;
+				model.addAttribute("projectInfo", projectInfo);
+				return "modules/project/projectInfoFormProgressGte2";
+			}
 		}
 		addMessage(redirectAttributes, "没有权限,编辑项目失败");
 		return "redirect:"+Global.getAdminPath()+"/project/projectInfo/?repage";
