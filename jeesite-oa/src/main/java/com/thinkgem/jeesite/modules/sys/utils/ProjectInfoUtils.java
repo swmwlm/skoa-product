@@ -46,11 +46,9 @@ public class ProjectInfoUtils {
 	 * @return
 	 */
 	public static Boolean editableProject(ProjectInfo projectInfo) {
-		//1.如果当前用户是项目的创建者,且项目进度为null,并且该项目的状态为推介人编辑时,则可以编辑该项目
-		//if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&&"0".equals(projectInfo.getProjectStatus()))
-		if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&& StringUtils.isBlank(projectInfo.getProjectProgress())&&"0".equals(projectInfo.getProjectStatus()))
+		//1.如果当前用户是项目的创建者,且该项目的状态为推介人编辑时,则可以编辑该项目
+		if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&&StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-
 		//2.如果当前用户是项目的负责人,项目状态不能处于材料收集阶段(推介人编辑) 状态,则可以编辑该项目
 		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
 			return true;
@@ -122,21 +120,16 @@ public class ProjectInfoUtils {
 	 */
 	public static Boolean viewableProject(ProjectInfo projectInfo) {
 		//1.判断当前用户是否有@RequiresPermissions("project:projectInfo:view")权限;
-		//2.若项目进度 为空,判断当前用户是否为项目创建者,若是,表示可以浏览
-		if(projectInfo.getProjectProgress()==null&&ProjectInfoUtils.isProjectInfoCreator(projectInfo))
+		//2.当前用户可以看到项目进度为0或者1的项目,且项目状态不为 推介人编辑 状态的
+		if(null!=projectInfo.getProjectProgress()&&Integer.parseInt(projectInfo.getProjectProgress())<2&&!StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-		//3.判断 当前项目进度是否为0或者1,若是,则可以浏览
-		if(StringUtils.equals("0",projectInfo.getProjectProgress())||StringUtils.equals("1",projectInfo.getProjectProgress()))
+		//2.当前用户可以看到 自己创建的项目,并且项目的状态为编辑状态
+		if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&&StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-		//4.判断当前用户是否为项目负责人,并且项目状态不是材料收集阶段(推介人编辑),才可以浏览
-		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
+		//3.当前用户可以看到 自己负责(包含副负责人)的项目,项目状态不能为 推介人编辑 状态,此状态还处于材料收集阶段;
+		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-
-		//5.当前用户可以看到 自己参与的(所在项目小组)项目,并且项目进度小于5
-		/*if(ProjectInfoUtils.isProjectInfoTeam(projectInfo)&&Integer.valueOf(projectInfo.getProjectProgress())<5)
-			return true;*/
-
-		//5.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
+		//4.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
 		Set<String> projectProgressSet=UserUtils.getProjectProgressSet();
 		if(Collections3.isEmpty(projectProgressSet))
 			return false;

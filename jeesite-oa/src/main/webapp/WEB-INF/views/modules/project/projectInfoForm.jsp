@@ -187,6 +187,7 @@
 					<form:options items="${fns:getDictList('projectStatus')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
+				<span class="help-inline">推介人编辑:此阶段的项目只有创建人可见 </span>
 			</div>
 		</div>
 		<div class="control-group">

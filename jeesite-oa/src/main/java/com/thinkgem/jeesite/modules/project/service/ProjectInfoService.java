@@ -56,13 +56,13 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		User currentUser=UserUtils.getUser();
 
 		sb.append(" and (");
-		//1.所有人都可以看到项目进度为0或者1的项目
-		sb.append(" a.project_progress<2 ");
-		//2.当前用户可以看到 自己创建的项目,并且该项目进度为空或者为0或者为1
-		sb.append(" or (a.create_by = '"+currentUser.getId()+"' and (a.project_progress is null or a.project_progress<2 )) ");
+		//1.当前用户可以看到项目进度为0或者1的项目,且项目状态不为 推介人编辑 状态的
+		sb.append(" (a.project_progress<2 and a.project_status!=0)");
+		//2.当前用户可以看到 自己创建的项目,并且项目的状态为编辑状态
+		sb.append(" or (a.create_by = '"+currentUser.getId()+"' and a.project_status=0) ");
 		//3.当前用户可以看到 自己主负责的项目,项目状态不能为 推介人编辑 状态,此状态还处于材料收集阶段;
 		sb.append(" or (a.primary_person='"+currentUser.getId()+"' and a.project_status!=0 ) ");
-		//4.当前用户可以看到 自己副负责的(所在项目的副负责人)项目
+		//4.当前用户可以看到 自己副负责的(所在项目的副负责人)项目,项目状态不能为 推介人编辑 状态,此状态还处于材料收集阶段;
 		sb.append(" or (find_in_set('"+currentUser.getId()+"',a.team_members) and a.project_status!=0)");
 		//5.当前用户可以看到 按 自己所在角色与项目进度绑定的集合 ,进行筛选
 		Set<String> progressSet= UserUtils.getProjectProgressSet();//获取该用户拥有的项目进度;
