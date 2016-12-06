@@ -74,7 +74,7 @@
 				AND a.project_grade = #{projectGrade}
 			</if>
 			<if test="primaryPerson != null and primaryPerson.id != null and primaryPerson.id != ''">
-				AND a.primary_person = #{primaryPerson.id}
+				AND (a.primary_person = #{primaryPerson.id} or find_in_set(#{primaryPerson.id},a.team_members))
 			</if>
 			<if test="createBy != null and createBy.id != null and createBy.id != ''">
 				AND a.create_by = #{createBy.id}
