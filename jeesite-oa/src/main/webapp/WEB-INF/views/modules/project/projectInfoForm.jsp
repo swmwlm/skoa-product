@@ -240,6 +240,7 @@
 				</c:if>
 			<%--</shiro:hasPermission>--%>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+			<span class="help-inline">提示:项目进度立项以后就不可以变更基础资料. </span>
 		</div>
 	</form:form>
 </body>

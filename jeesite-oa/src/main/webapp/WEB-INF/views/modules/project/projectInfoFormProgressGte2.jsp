@@ -258,6 +258,7 @@
 				</c:if>
 			<%--</shiro:hasPermission>--%>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+			<span class="help-inline">提示:项目进度立项以后,只允许上传资料,变更项目状态及备注操作. </span>
 		</div>
 	</form:form>
 </body>
