@@ -29,8 +29,8 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 	private String projectName;		// 项目名称
 	private String projectGrade;		// 项目级别
 	private User primaryPerson;		// 项目负责人
-	private String teamMembers;		// 项目小组成员
-	private String teamMemberNames;		// 项目小组成员
+	private String teamMembers;		// 项目小组成员;变更为项目副负责人成员
+	private String teamMemberNames;		// 项目小组成员;变更为项目副负责人成员
 	private String industryDomain;		// 行业领域
 	private String mainBusiness;		// 主营业务
 	private String content;		// 项目介绍

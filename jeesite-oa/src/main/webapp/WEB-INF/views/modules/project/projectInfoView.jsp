@@ -152,13 +152,13 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">项目负责人：</label>
+			<label class="control-label">项目主负责人：</label>
 			<div class="controls">
 				${projectInfo.primaryPerson.name}
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">项目小组成员：</label>
+			<label class="control-label">项目副负责人成员：</label>
 			<div class="controls">
 				${projectInfo.teamMemberNames}
 			</div>

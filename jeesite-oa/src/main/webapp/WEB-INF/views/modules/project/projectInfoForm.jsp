@@ -73,7 +73,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">项目负责人：</label>
+			<label class="control-label">项目主负责人：</label>
 			<div class="controls">
 				<sys:treeselect id="primaryPerson" name="primaryPerson.id" value="${projectInfo.primaryPerson.id}" labelName="primaryPerson.name" labelValue="${projectInfo.primaryPerson.name}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true"/>
@@ -81,7 +81,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">项目小组成员：</label>
+			<label class="control-label">项目副负责人成员：</label>
 			<div class="controls">
 				<sys:treeselect id="teamMembers" name="teamMembers" value="${projectInfo.teamMembers}" labelName="teamMemberNames" labelValue="${projectInfo.teamMemberNames}"
 								title="用户" url="/sys/office/treeData?type=3" cssClass="input-xxlarge" allowClear="true" notAllowSelectParent="true" checked="true"/>

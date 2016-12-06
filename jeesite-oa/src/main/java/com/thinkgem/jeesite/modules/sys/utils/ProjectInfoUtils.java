@@ -1,9 +1,11 @@
 package com.thinkgem.jeesite.modules.sys.utils;
 
+import com.google.common.base.Splitter;
 import com.thinkgem.jeesite.common.utils.Collections3;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -11,14 +13,20 @@ import java.util.Set;
  */
 public class ProjectInfoUtils {
 	/**
-	 * 判断当前用户是否是某个项目的负责人
+	 * 判断当前用户是否是某个项目的负责人;副负责人也算
 	 * @param projectInfo
 	 * @return
 	 */
 	public static Boolean isProjectInfoPrimaryPerson(ProjectInfo projectInfo){
-		if(null==projectInfo||null==projectInfo.getPrimaryPerson())
+		if(null==projectInfo||null==projectInfo.getPrimaryPerson()||StringUtils.isBlank(UserUtils.getUser().getId()))
 			return false;
-		return UserUtils.getUser().getId().equals(projectInfo.getPrimaryPerson().getId());
+
+		//主负责人及副负责人拼装集合;判断当前用户是否属于此集合成员之一;
+		String teamMembers=projectInfo.getTeamMembers();
+		String primaryPersonId=projectInfo.getPrimaryPerson().getId();
+		String strIds=primaryPersonId+","+teamMembers;
+		List<String> strIdList=Splitter.on(',').trimResults().omitEmptyStrings().splitToList(strIds);
+		return strIdList.contains(UserUtils.getUser().getId());
 	}
 
 	/**
@@ -94,7 +102,7 @@ public class ProjectInfoUtils {
 	}
 
 	/**
-	 * 是否是项目小组成员
+	 * 是否是项目副负责人成员
 	 * @param projectInfo
 	 * @return
 	 */
@@ -114,23 +122,21 @@ public class ProjectInfoUtils {
 	 */
 	public static Boolean viewableProject(ProjectInfo projectInfo) {
 		//1.判断当前用户是否有@RequiresPermissions("project:projectInfo:view")权限;
-		//2.判断当前用户是否为项目负责人,并且项目状态不是材料收集阶段(推介人编辑),才可以浏览
-		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
+		//2.若项目进度 为空,判断当前用户是否为项目创建者,若是,表示可以浏览
+		if(projectInfo.getProjectProgress()==null&&ProjectInfoUtils.isProjectInfoCreator(projectInfo))
 			return true;
-
 		//3.判断 当前项目进度是否为0或者1,若是,则可以浏览
 		if(StringUtils.equals("0",projectInfo.getProjectProgress())||StringUtils.equals("1",projectInfo.getProjectProgress()))
 			return true;
-
-		//4.若项目进度 为空,判断当前用户是否为项目创建者,若是,表示可以浏览
-		if(projectInfo.getProjectProgress()==null&&ProjectInfoUtils.isProjectInfoCreator(projectInfo))
+		//4.判断当前用户是否为项目负责人,并且项目状态不是材料收集阶段(推介人编辑),才可以浏览
+		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
 			return true;
 
 		//5.当前用户可以看到 自己参与的(所在项目小组)项目,并且项目进度小于5
-		if(ProjectInfoUtils.isProjectInfoTeam(projectInfo)&&Integer.valueOf(projectInfo.getProjectProgress())<5)
-			return true;
+		/*if(ProjectInfoUtils.isProjectInfoTeam(projectInfo)&&Integer.valueOf(projectInfo.getProjectProgress())<5)
+			return true;*/
 
-		//6.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
+		//5.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
 		Set<String> projectProgressSet=UserUtils.getProjectProgressSet();
 		if(Collections3.isEmpty(projectProgressSet))
 			return false;
