@@ -43,9 +43,8 @@
 			<tr>
 				<th>标题</th>
 				<th>类型</th>
-				<th>状态</th>
 				<th>查阅状态</th>
-				<th>更新时间</th>
+				<th>日期</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -71,9 +70,6 @@
 				</td>
 				<td>
 					${fns:getDictLabel(oaNotify.type, 'oa_notify_type', '')}
-				</td>
-				<td>
-					${fns:getDictLabel(oaNotify.status, 'oa_notify_status', '')}
 				</td>
 				<td>
 					${fns:getDictLabel(oaNotify.readFlag, 'oa_notify_read', '')}
