@@ -4,7 +4,6 @@
 package com.thinkgem.jeesite.modules.project.service;
 
 import com.thinkgem.jeesite.common.service.CrudService;
-import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
@@ -13,7 +12,6 @@ import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfoProgress;
 import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +57,7 @@ public class ProjectInfoProgressService extends CrudService<ProjectInfoProgressD
         content.append(DictUtils.getDictLabels(projectInfoProgress.getStatusCurrent(), "projectProgress", "暂无进度"));
         content.append("”");
         content.append("。");
-        content.append(projectInfoProgress.getRemarks());
+        content.append("变更备注:"+projectInfoProgress.getRemarks());
 
         System.out.println("【项目进度更新：oaNotifyRecordIds:" + oaNotifyRecordIds + "。" + content.toString() + "】");
 
