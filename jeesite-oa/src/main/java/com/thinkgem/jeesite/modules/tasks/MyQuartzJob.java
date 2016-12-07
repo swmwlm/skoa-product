@@ -55,7 +55,7 @@ public class MyQuartzJob {
 				oaNotify.setCreateBy(new User("1"));
 				oaNotify.setUpdateBy(new User("1"));
 				for(ProjectInfo p :projectInfoList){
-					oaNotify.setTitle(p.getProjectName()+" 已经超过15天没有更新啦");
+					oaNotify.setTitle(p.getProjectName()+" 已经超过十五天没有更新啦");
 					oaNotify.setContent(p.getProjectName()+" 最后一次更新于"+ DateUtils.formatDateTime(p.getUpdateDate()));
 					//1.Joiner先以','拼装主负责人和副负责人 2.Splitter以','拆分成一个可迭代的集合 3.把集合转化为set,去除重复的人员id
 					Set<String> idSet=new HashSet<>(Splitter.on(',').omitEmptyStrings().trimResults().splitToList(Joiner.on(',').join(p.getPrimaryPerson(),p.getTeamMembers())));
