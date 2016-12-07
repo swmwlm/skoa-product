@@ -6,6 +6,7 @@ package com.thinkgem.jeesite.common.utils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -181,7 +182,12 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		long afterTime = after.getTime();
 		return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
 	}
-	
+
+	public static Date createDate(int year, int month, int date, int hour, int minute, int second) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month, date, hour, minute, second);
+		return calendar.getTime();
+	}
 	/**
 	 * @param args
 	 * @throws ParseException

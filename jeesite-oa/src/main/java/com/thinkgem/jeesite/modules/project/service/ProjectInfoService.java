@@ -6,6 +6,7 @@ package com.thinkgem.jeesite.modules.project.service;
 import com.google.common.base.Joiner;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -190,6 +192,22 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 	public void delete(ProjectInfo projectInfo) {
 		super.delete(projectInfo);
 		//projectInfoProgressDao.delete(new ProjectInfoProgress(projectInfo));
+	}
+
+	/**
+	 * 获取更新时间+15天 in (lastExecuteTime,currentExecuteTime]
+	 * 筛选出 15天以上未更新的项目,做通知提醒
+	 * @param lastExecuteTime
+	 * @param currentExecuteTime
+	 * @return
+	 */
+	public List<ProjectInfo> selectProjectInfoUpdateGte15days(Date lastExecuteTime, Date currentExecuteTime){
+		ProjectInfo projectInfo=new ProjectInfo();
+		projectInfo.setProjectStatus("1");
+		//测试时使用的条件
+		//projectInfo.getSqlMap().put("dsf"," and date_add(a.update_date, interval 23 hour)> '"+ DateUtils.formatDateTime(lastExecuteTime)+"' and date_add(a.update_date, interval 23 hour) <='"+DateUtils.formatDateTime(currentExecuteTime)+"' ");
+		projectInfo.getSqlMap().put("dsf"," and date_add(a.update_date, interval 15 day)> '"+DateUtils.formatDateTime(lastExecuteTime)+"' and date_add(a.update_date, interval 15 day) <='"+DateUtils.formatDateTime(currentExecuteTime)+"' ");
+		return super.findList(projectInfo);
 	}
 	
 }

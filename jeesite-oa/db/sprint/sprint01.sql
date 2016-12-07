@@ -229,6 +229,33 @@ update sys_menu set sort='30',parent_id='27',parent_ids='0,1,27,' where id=88 an
 /*隐藏在线办公一级菜单*/
 update sys_menu set is_show=0 where id=62 and name='在线办公';
 
-
 /* 新增 项目进度更新 的通告类型 */
 insert into `jeesite`.`sys_dict` ( `id`, `description`, `create_date`, `label`, `update_date`, `create_by`, `parent_id`, `update_by`, `type`, `value`, `del_flag`, `sort`, `remarks`) values ( '3dbb8b353daa43f5920cafed27dffd7f', '通知通告类型', '2016-12-07 11:46:36', '项目进度更新', '2016-12-07 11:46:36', '1', '0', '1', 'oa_notify_type', '5', '0', '50', '');
+
+
+/* 批量更新任务日志 */
+DROP TABLE IF EXISTS sys_batchLog;
+CREATE TABLE sys_batchLog
+(
+	id varchar(64) NOT NULL COMMENT '编号',
+	jobName varchar(64) COMMENT '任务名称',
+	lastExecuteTime datetime COMMENT '上次执行时间',
+	create_by varchar(64) NOT NULL COMMENT '创建者',
+	create_date datetime NOT NULL COMMENT '创建时间',
+	update_by varchar(64) NOT NULL COMMENT '更新者',
+	update_date datetime NOT NULL COMMENT '更新时间',
+	remarks varchar(255) COMMENT '备注信息',
+	del_flag char(1) DEFAULT '0' NOT NULL COMMENT '删除标记',
+	PRIMARY KEY (id)
+) COMMENT = '批量更新任务日志';
+
+/* Create Indexes */
+CREATE INDEX sys_batchLog_del_flag ON sys_batchLog (del_flag ASC);
+CREATE INDEX sys_batchLog_create_by ON sys_batchLog (create_by ASC);
+CREATE INDEX sys_batchLog_create_date ON sys_batchLog (create_date ASC);
+CREATE INDEX sys_batchLog_update_date ON sys_batchLog (update_date ASC);
+
+/* 任务日志 菜单添加 */
+INSERT INTO jeesite.sys_menu (id, parent_id, parent_ids, name, sort, href, target, icon, is_show, permission, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('a816a4eb6afd433b82ed548b41e28fe0', '67', '0,1,2,67,', '任务日志查询', 70, '/batchlog/sysBatchlog', '', '', '1', '', '1', '2016-12-07 13:48:45', '1', '2016-12-07 13:54:59', '', '0');
+INSERT INTO jeesite.sys_menu (id, parent_id, parent_ids, name, sort, href, target, icon, is_show, permission, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('3a7d6044f7f54d9b904043dceafcbe66', 'a816a4eb6afd433b82ed548b41e28fe0', '0,1,2,67,a816a4eb6afd433b82ed548b41e28fe0,', '修改', 60, '', '', '', '0', 'batchlog:sysBatchlog:edit', '1', '2016-12-07 13:57:08', '1', '2016-12-07 13:58:22', '', '0');
+INSERT INTO jeesite.sys_menu (id, parent_id, parent_ids, name, sort, href, target, icon, is_show, permission, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('a9a5b15610de49b59dcc8a5456b58df8', 'a816a4eb6afd433b82ed548b41e28fe0', '0,1,2,67,a816a4eb6afd433b82ed548b41e28fe0,', '查看', 30, '', '', '', '0', 'batchlog:sysBatchlog:view', '1', '2016-12-07 13:56:00', '1', '2016-12-07 13:58:06', '', '0');

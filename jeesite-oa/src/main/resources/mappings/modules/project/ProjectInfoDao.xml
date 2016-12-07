@@ -93,7 +93,14 @@
 			</if>
 			${sqlMap.dsf}
 		</where>
-		ORDER BY ${sqlMap.orderBy}
+		<choose>
+			<when test="sqlMap !=null and sqlMap.orderBy != null and sqlMap.orderBy != ''">
+				ORDER BY ${sqlMap.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
 		<!--<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
