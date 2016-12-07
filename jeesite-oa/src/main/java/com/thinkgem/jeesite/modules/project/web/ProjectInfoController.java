@@ -10,6 +10,7 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfoProgress;
 import com.thinkgem.jeesite.modules.project.entity.ProjectNote;
+import com.thinkgem.jeesite.modules.project.service.ProjectInfoProgressService;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.project.service.ProjectNoteService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -42,6 +43,9 @@ public class ProjectInfoController extends BaseController {
 
 	@Autowired
 	private ProjectInfoService projectInfoService;
+
+	@Autowired
+	private ProjectInfoProgressService projectInfoProgressService;
 
 	@Autowired
 	private SystemService systemService;
@@ -182,11 +186,11 @@ public class ProjectInfoController extends BaseController {
 		projectInfoProgress.setRemarks(remarks);
 		projectInfoProgress.setStatusOrigin(projectInfo.getProjectProgress());
 		projectInfoProgress.setStatusCurrent(projectProgress);
+
 		projectInfo.setProjectProgress(projectProgress);
 
-		projectInfo.getProjectInfoProgressList().add(projectInfoProgress);
+		projectInfoProgressService.addProjectInfoProgress(projectInfo, projectInfoProgress);
 
-		projectInfoService.save(projectInfo);
 		addMessage(redirectAttributes, "项目进度更新成功!");
 		return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
 
