@@ -254,6 +254,10 @@ CREATE INDEX sys_batchLog_del_flag ON sys_batchLog (del_flag ASC);
 CREATE INDEX sys_batchLog_create_by ON sys_batchLog (create_by ASC);
 CREATE INDEX sys_batchLog_create_date ON sys_batchLog (create_date ASC);
 CREATE INDEX sys_batchLog_update_date ON sys_batchLog (update_date ASC);
+CREATE INDEX sys_batchLog_jobName ON sys_batchLog (jobName ASC);
+
+/* 设置JOB_SendOaNotify4ProjectInfoUpdateGte15days任务的第一次执行时间 */
+INSERT INTO jeesite.sys_batchlog (id, jobName, lastExecuteTime, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('05ea08af820c459f93e3c946add60b71', 'JOB_SendOaNotify4ProjectInfoUpdateGte15days', '2016-11-07 15:42:00', '1', '2016-11-07 15:42:00', '1', '2016-11-07 15:42:00', null, '0');
 
 /* 任务日志 菜单添加 */
 INSERT INTO jeesite.sys_menu (id, parent_id, parent_ids, name, sort, href, target, icon, is_show, permission, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('a816a4eb6afd433b82ed548b41e28fe0', '67', '0,1,2,67,', '任务日志查询', 70, '/batchlog/sysBatchlog', '', '', '1', '', '1', '2016-12-07 13:48:45', '1', '2016-12-07 13:54:59', '', '0');
