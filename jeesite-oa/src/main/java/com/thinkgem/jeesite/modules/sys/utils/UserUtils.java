@@ -3,10 +3,13 @@
  */
 package com.thinkgem.jeesite.modules.sys.utils;
 
+import com.google.common.base.Splitter;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.CacheUtils;
 import com.thinkgem.jeesite.common.utils.Collections3;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.sys.dao.*;
 import com.thinkgem.jeesite.modules.sys.entity.*;
 import com.thinkgem.jeesite.modules.sys.security.SystemAuthorizingRealm.Principal;
@@ -342,4 +345,76 @@ public class UserUtils {
 		Set<String> projectProgressSet=new HashSet<>(projectProgressList);
 		return projectProgressSet;
 	}
+
+	/**
+	 * 获取某个用户拥有的项目进度set集合
+	 * @param userId
+	 * @return
+	 */
+	public static Set<String> getProjectProgressSet(String userId){
+		User user = get(userId);
+		List<Role> roleList=user.getRoleList();
+		if(CollectionUtils.isEmpty(roleList))
+			return null;
+
+		List<String> roleIdList= extractToList(roleList,"id");
+		List<Dict> dictList=dictDao.findListByRoleIdList(roleIdList);
+		if(CollectionUtils.isEmpty(dictList))
+			return null;
+
+		List<String> projectProgressList=Collections3.extractToList(dictList,"value");
+		Set<String> projectProgressSet=new HashSet<>(projectProgressList);
+		return projectProgressSet;
+	}
+
+	/**
+	 * 获取消息通知的人员列表
+	 * （目前用于：项目进度更新，项目动态添加）
+	 * @param projectInfo  项目
+	 * @param atUserIds    At通知的人（多个逗号分割）
+	 * @param createUserId 创建人Id
+	 * @return
+	 */
+	public static Set<String> getNotifyUserIds(ProjectInfo projectInfo, String atUserIds, String createUserId) {
+		Set<String> resultSet = new HashSet<>();
+		//1，获取负责人，副负责人
+		if (projectInfo.getPrimaryPerson() != null) {
+			resultSet.add(projectInfo.getPrimaryPerson().getId());
+		}
+		if (projectInfo.getTeamMembers() != null) {
+			List<String> teamMembers = Splitter.on(',').trimResults().omitEmptyStrings().splitToList(projectInfo.getTeamMembers());
+			resultSet.addAll(teamMembers);
+		}
+		//2，获取高层人
+		List<User> userList2 = userDao.findUserByStationType("1");
+		if (CollectionUtils.isNotEmpty(userList2)) {
+			resultSet.addAll(Collections3.extractToList(userList2, "id"));
+		}
+		//3，获取有阶段角色的（30%-100%）
+		if (StringUtils.isNotBlank(projectInfo.getProjectProgress())) {
+			if (Integer.valueOf(projectInfo.getProjectProgress()) > 1) {
+				List<User> userList3 = userDao.findUserByProjectProgress(projectInfo.getProjectProgress());
+				if (CollectionUtils.isNotEmpty(userList3)) {
+					resultSet.addAll(Collections3.extractToList(userList3, "id"));
+				}
+			}
+		}
+		//4，atUserIds添加
+		if (StringUtils.isNotBlank(atUserIds)) {
+			List<String> atUserIdList = Splitter.on(',').trimResults().omitEmptyStrings().splitToList(atUserIds);
+			resultSet.addAll(atUserIdList);
+		}
+		//5，去掉创建人; 去除重复的人(set自动去除了)
+		if (resultSet.contains(createUserId)) {
+			resultSet.remove(createUserId);
+		}
+		return resultSet;
+	}
+
+	public static String getNotifyUserIdsString(ProjectInfo projectInfo, String atUserIds, String createUserId) {
+		Set<String> stringSet = getNotifyUserIds(projectInfo, atUserIds, createUserId);
+		return Collections3.convertToString(stringSet, ",");
+	}
+
+
 }

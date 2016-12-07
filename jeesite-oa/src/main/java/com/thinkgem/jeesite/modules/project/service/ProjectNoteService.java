@@ -11,6 +11,7 @@ import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
 import com.thinkgem.jeesite.modules.project.dao.ProjectNoteDao;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.entity.ProjectNote;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,20 +51,24 @@ public class ProjectNoteService extends CrudService<ProjectNoteDao, ProjectNote>
 		//1.先保存项目评论
 		super.save(projectNote);
 		//2.再做通知通告,发消息
-		if (StringUtils.isNotBlank(projectNote.getAtUserids())) {
+//		if (StringUtils.isNotBlank(projectNote.getAtUserids())) {
 			ProjectInfo projectInfo=projectInfoDao.get(projectNote.getProjectId());
-			//邮件通知等(预留)
 
+			//根据项目获取需要通知的人员
+			String oaNotifyRecordIds=UserUtils.getNotifyUserIdsString(projectInfo, projectNote.getAtUserids(),UserUtils.getUser().getId());
+			System.out.println("【项目动态添加：oaNotifyRecordIds:"+oaNotifyRecordIds+"】");
+
+			//邮件通知等(预留)
 			//添加到我的通告
 			OaNotify oaNotify = new OaNotify();
 			oaNotify.setType("4");
 			oaNotify.setTitle(projectInfo.getProjectName());
 			oaNotify.setContent(projectNote.getContent());
 			oaNotify.setStatus("1");
-			oaNotify.setOaNotifyRecordIds(projectNote.getAtUserids());
+			oaNotify.setOaNotifyRecordIds(oaNotifyRecordIds);
 			oaNotify.setRemarks(projectInfo.getId());
 			oaNotifyService.save(oaNotify);
-		}
+//		}
 	}
 	
 	@Transactional(readOnly = false)

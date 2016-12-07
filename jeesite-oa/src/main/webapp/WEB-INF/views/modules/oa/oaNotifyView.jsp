@@ -30,6 +30,11 @@
                     <i class="icon-file-alt icon-large"></i>
                 </a>
             </c:if>
+            <c:if test="${oaNotify.type==5 && not empty oaNotify.remarks}">
+                <a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectProgress" title="项目浏览" style="text-decoration:none">
+                    <i class="icon-file-alt icon-large"></i>
+                </a>
+            </c:if>
                 ${oaNotify.title}
         </div>
     </div>

@@ -228,3 +228,7 @@ update sys_menu set sort='90' where id=71 and name='文件管理';
 update sys_menu set sort='30',parent_id='27',parent_ids='0,1,27,' where id=88 and name='通知通告';
 /*隐藏在线办公一级菜单*/
 update sys_menu set is_show=0 where id=62 and name='在线办公';
+
+
+/* 新增 项目进度更新 的通告类型 */
+insert into `jeesite`.`sys_dict` ( `id`, `description`, `create_date`, `label`, `update_date`, `create_by`, `parent_id`, `update_by`, `type`, `value`, `del_flag`, `sort`, `remarks`) values ( '3dbb8b353daa43f5920cafed27dffd7f', '通知通告类型', '2016-12-07 11:46:36', '项目进度更新', '2016-12-07 11:46:36', '1', '0', '1', 'oa_notify_type', '5', '0', '50', '');

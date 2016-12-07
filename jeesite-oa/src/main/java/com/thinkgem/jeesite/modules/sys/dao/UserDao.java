@@ -33,11 +33,26 @@ public interface UserDao extends CrudDao<User> {
 	public List<User> findUserByOfficeId(User user);
 
 	/**
-	 * 通过roleId获取用户列表,仅返回用户id和name
+	 * 通过roleId获取用户列表,仅返回用户id，name，login_name
 	 * @param roleId
 	 * @return
 	 */
 	public List<User> findUserByRoleId(@Param("roleId") String roleId);
+
+
+	/**
+	 *根据 岗位类型stationType 获取用户列表,仅返回用户id，name，login_name
+	 * @param stationType
+	 * @return
+	 */
+	public List<User> findUserByStationType(@Param("stationType") String stationType);
+
+	/**
+	 * 根据 项目进度projectProgress 获取用户列表,仅返回用户id，name，login_name
+	 * @param projectProgress
+	 * @return
+	 */
+	public List<User> findUserByProjectProgress(@Param("projectProgress") String projectProgress);
 
 	/**
 	 * 通过登录名字符串（例如 "ad","tom" ）获取用户列表,仅返回用户id和name，目前用于项目动态

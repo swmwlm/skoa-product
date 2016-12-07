@@ -249,7 +249,7 @@
 			</div>
 		</div>
 		<c:if test="${!fns:isProjectInfoNew(projectInfo)}">
-			<div class="control-group">
+			<div class="control-group" id="divProjectProgress">
 				<table class="table table-hover" id="progressTable">
 					<thead>
 					<tr>
