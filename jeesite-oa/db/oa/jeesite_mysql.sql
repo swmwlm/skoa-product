@@ -57,7 +57,7 @@ CREATE TABLE oa_notify_record
 	oa_notify_id varchar(64) COMMENT '通知通告ID',
 	user_id varchar(64) COMMENT '接受人',
 	read_flag char(1) DEFAULT '0' COMMENT '阅读标记',
-	read_date date COMMENT '阅读时间',
+	read_date datetime COMMENT '阅读时间',
 	PRIMARY KEY (id)
 ) COMMENT = '通知通告发送记录';
 

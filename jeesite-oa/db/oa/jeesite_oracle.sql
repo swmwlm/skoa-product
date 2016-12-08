@@ -56,7 +56,7 @@ CREATE TABLE oa_notify_record
 	oa_notify_id varchar2(64),
 	user_id varchar2(64),
 	read_flag char(1) DEFAULT '0',
-	read_date date,
+	read_date timestamp,
 	PRIMARY KEY (id)
 );
 
