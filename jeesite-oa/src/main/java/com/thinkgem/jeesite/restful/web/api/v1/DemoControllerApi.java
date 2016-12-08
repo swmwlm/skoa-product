@@ -2,9 +2,11 @@ package com.thinkgem.jeesite.restful.web.api.v1;
 
 import com.google.common.base.Preconditions;
 import com.thinkgem.jeesite.common.json.JsonResultModel;
+import com.thinkgem.jeesite.common.utils.cglib.SimpleBeanCopier;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.sys.dao.UserDao;
 import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.restful.module.TestUserModel;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,8 +154,8 @@ public class DemoControllerApi extends BaseController {
             @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User")
     })*/
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<User> putUser(@PathVariable String id,
-										@ApiParam(
+	public ResponseEntity<TestUserModel> putUser(@PathVariable String id,
+												 @ApiParam(
 												value = "Updated user object",
 												required = true
 										) @RequestBody User user) {
@@ -163,13 +165,14 @@ public class DemoControllerApi extends BaseController {
 
 		if (currentUser == null) {
 			System.out.println("User with id " + id + " not found");
-			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<TestUserModel>(HttpStatus.NOT_FOUND);
 		}
 
 		currentUser.setName(user.getName());
 
+		TestUserModel user1= (TestUserModel) new SimpleBeanCopier(User.class, TestUserModel.class).copy(currentUser);
 		//userDao.update(user);//不做真实更新
-		return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+		return new ResponseEntity<TestUserModel>(user1, HttpStatus.OK);
 	}
 
 	//------------------- Delete a User --------------------------------------------------------
