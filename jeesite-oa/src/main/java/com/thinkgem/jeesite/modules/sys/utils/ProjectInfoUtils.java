@@ -114,6 +114,20 @@ public class ProjectInfoUtils {
 	}
 
 	/**
+	 * 判断当前用户是否允许变更项目进度;项目处于采编阶段,是不允许更新项目进度的
+	 * @param projectInfo
+	 * @return
+	 */
+	public static Boolean isAllowedUpdateProjectProgress(Object projectInfo){
+		ProjectInfo _projectInfo=null;
+		if(projectInfo instanceof  ProjectInfo) {
+			_projectInfo= (ProjectInfo) projectInfo;
+			return ProjectInfoUtils.isProjectInfoPrimaryPerson(_projectInfo)&&!StringUtils.equals("0",((ProjectInfo) projectInfo).getProjectStatus());
+		}
+		return false;
+	}
+
+	/**
 	 * 是否是项目副负责人成员
 	 * @param projectInfo
 	 * @return

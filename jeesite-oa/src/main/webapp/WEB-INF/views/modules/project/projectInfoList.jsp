@@ -148,7 +148,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="${fns:isProjectInfoPrimaryPerson(projectInfo)}">
+						<c:when test="${fns:isAllowedUpdateProjectProgress(projectInfo)}">
 							<a href="javascript:updateProgress('${projectInfo.id}', '${projectInfo.projectProgress}')" title="设置进度" current-progress="${projectInfo.projectProgress}" id="href_${projectInfo.id}">
 								${fns:getDictLabel(projectInfo.projectProgress, 'projectProgress', '暂无进度')}
 							</a>
