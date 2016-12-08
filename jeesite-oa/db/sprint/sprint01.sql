@@ -27,7 +27,7 @@ CREATE TABLE project_info
 	recommended_date datetime COMMENT '项目的推荐时间',
 	project_type char(2) COMMENT '项目类型',
   intended_money DECIMAL(20,2) DEFAULT NULL COMMENT '拟投金额',
-  project_status char(1) DEFAULT '0' NOT NULL COMMENT '项目状态:0,推介人编辑;1,负责人管理;2暂停;3完成',
+  project_status char(1) DEFAULT '0' NOT NULL COMMENT '项目状态:0,个人编辑;1,项目发布;2项目暂停;3项目完成',
 
 	create_by varchar(64) NOT NULL COMMENT '创建者',
 	create_date datetime NOT NULL COMMENT '创建时间',
@@ -75,9 +75,9 @@ INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_
 /* 更新项目状态字典数据 */
 DELETE from jeesite.sys_dict WHERE type='projectStatus';
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('1277ee67ceae466d89ae050175ffdba6', '3', '项目完成', 'projectStatus', '项目负责人设置项目完成状态', 40, '0', '1', '2016-09-23 09:55:47', '1', '2016-09-23 09:55:47', '项目负责人设置项目完成状态', '0');
-INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('1d8569f1e4964186b4c0441c04ba4d00', '0', '推介人编辑', 'projectStatus', '推介人编辑', 10, '0', '1', '2016-09-23 09:52:18', '1', '2016-09-23 09:52:18', '推介人编辑状态，项目的基础资料录入', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('1d8569f1e4964186b4c0441c04ba4d00', '0', '个人编辑', 'projectStatus', '推介人编辑', 10, '0', '1', '2016-09-23 09:52:18', '1', '2016-09-23 09:52:18', '推介人编辑状态，项目的基础资料录入', '0');
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('2c9591ec55584b91a904d07635eee438', '2', '项目暂停', 'projectStatus', '项目负责人设置项目暂停状态', 30, '0', '1', '2016-09-23 09:55:26', '1', '2016-09-23 09:55:26', '项目负责人设置项目暂停状态', '0');
-INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('fdf311be46774255beb71b0da142df1a', '1', '负责人管理', 'projectStatus', '项目负责人管理状态', 20, '0', '1', '2016-09-23 09:53:25', '1', '2016-09-23 09:53:25', '项目负责人对项目进行管理维护', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('fdf311be46774255beb71b0da142df1a', '1', '项目发布', 'projectStatus', '项目负责人管理状态', 20, '0', '1', '2016-09-23 09:53:25', '1', '2016-09-23 09:53:25', '项目负责人对项目进行管理维护', '0');
 
 /* 更新项目类型字典数据 */
 DELETE from jeesite.sys_dict WHERE type='projectType';

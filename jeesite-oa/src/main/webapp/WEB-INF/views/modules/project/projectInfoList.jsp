@@ -205,7 +205,7 @@
                                         <option value="${dict.value}">${dict.label}</option>
                                     </c:forEach>
                                 </select>
-								<span class="help-inline">提示:项目进度不能后撤 </span>
+								<span class="help-inline">提示:项目进度不能后撤,立项后不可变更基础资料. </span>
                             </div>
                         </div>
                         <div class="control-group">

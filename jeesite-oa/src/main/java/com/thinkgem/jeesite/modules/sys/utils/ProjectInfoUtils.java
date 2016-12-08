@@ -60,10 +60,10 @@ public class ProjectInfoUtils {
 	 * @return
 	 */
 	public static Boolean editableProject(ProjectInfo projectInfo) {
-		//1.如果当前用户是项目的创建者,且该项目的状态为推介人编辑时,则可以编辑该项目
+		//1.如果当前用户是项目的创建者,且该项目的状态为 个人编辑 时,则可以编辑该项目
 		if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&&StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-		//2.如果当前用户是项目的负责人,项目状态不能处于材料收集阶段(推介人编辑) 状态,则可以编辑该项目
+		//2.如果当前用户是项目的负责人,项目状态不能处于材料收集阶段(个人编辑) 状态,则可以编辑该项目
 		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!"0".equals(projectInfo.getProjectStatus()))
 			return true;
 		return false;
@@ -148,13 +148,13 @@ public class ProjectInfoUtils {
 	 */
 	public static Boolean viewableProject(ProjectInfo projectInfo) {
 		//1.判断当前用户是否有@RequiresPermissions("project:projectInfo:view")权限;
-		//2.当前用户可以看到项目进度为0或者1的项目,且项目状态不为 推介人编辑 状态的
+		//2.当前用户可以看到项目进度为0或者1的项目,且项目状态不为 个人编辑 状态的
 		if(null!=projectInfo.getProjectProgress()&&Integer.parseInt(projectInfo.getProjectProgress())<2&&!StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
 		//2.当前用户可以看到 自己创建的项目,并且项目的状态为编辑状态
 		if(ProjectInfoUtils.isProjectInfoCreator(projectInfo)&&StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-		//3.当前用户可以看到 自己负责(包含副负责人)的项目,项目状态不能为 推介人编辑 状态,此状态还处于材料收集阶段;
+		//3.当前用户可以看到 自己负责(包含副负责人)的项目,项目状态不能为 个人编辑 状态,此状态还处于材料收集阶段;
 		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
 		//4.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
