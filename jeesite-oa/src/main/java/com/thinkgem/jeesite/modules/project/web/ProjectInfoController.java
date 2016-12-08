@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.project.web;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
@@ -16,6 +17,7 @@ import com.thinkgem.jeesite.modules.project.service.ProjectNoteService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
 import com.thinkgem.jeesite.modules.sys.utils.ProjectInfoUtils;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -186,8 +188,6 @@ public class ProjectInfoController extends BaseController {
 		projectInfoProgress.setRemarks(remarks);
 		projectInfoProgress.setStatusOrigin(projectInfo.getProjectProgress());
 		projectInfoProgress.setStatusCurrent(projectProgress);
-
-		projectInfo.setProjectProgress(projectProgress);
 
 		projectInfoProgressService.addProjectInfoProgress(projectInfo, projectInfoProgress);
 

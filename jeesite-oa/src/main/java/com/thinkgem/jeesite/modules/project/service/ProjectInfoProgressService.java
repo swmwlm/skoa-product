@@ -4,6 +4,7 @@
 package com.thinkgem.jeesite.modules.project.service;
 
 import com.thinkgem.jeesite.common.service.CrudService;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
@@ -39,6 +40,9 @@ public class ProjectInfoProgressService extends CrudService<ProjectInfoProgressD
     @Transactional(readOnly = false)
     public void addProjectInfoProgress(ProjectInfo projectInfo, ProjectInfoProgress projectInfoProgress) {
 
+        projectInfo.setProjectProgress(projectInfoProgress.getStatusCurrent());
+        projectInfo.setUpdateBy(UserUtils.getUser());
+        projectInfo.setUpdateDate(DateUtils.getCurrentDateTime());
         projectInfoDao.update(projectInfo);
 
         projectInfoProgress.setProjectInfo(projectInfo);
