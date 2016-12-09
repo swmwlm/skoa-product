@@ -131,13 +131,13 @@
 				</td>
 				<td>
 					<a href="${ctx}/project/projectInfo/view?id=${projectInfo.id}" title="${projectInfo.projectName}">
-						${fns:abbr(projectInfo.projectName,40)}
+						${fns:abbr(projectInfo.projectName,30)}
 					</a>
-					<c:if test="${fns:isProjectInfoCreator(projectInfo)}">
-						<span class="badge badge-success" title="项目创建者">C</span>
-					</c:if>
 					<c:if test="${fns:isProjectInfoPrimaryPerson(projectInfo)}">
 						<span class="badge badge-important" title="项目负责人">P</span>
+					</c:if>
+					<c:if test="${fns:isProjectInfoCreator(projectInfo)}">
+						<span class="badge badge-success" title="项目创建者">C</span>
 					</c:if>
 				</td>
 				<td>
@@ -171,8 +171,8 @@
 				<td>
 					${projectInfo.updateBy.name}
 				</td>
-				<td>
-					${projectInfo.remarks}
+				<td title="${projectInfo.remarks}">
+					${fns:abbr(projectInfo.remarks,10)}
 				</td>
 				<%--<shiro:hasPermission name="project:projectInfo:edit">--%>
 				<td>
