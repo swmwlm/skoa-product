@@ -1,7 +1,10 @@
 package com.thinkgem.jeesite.restful.module;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class AppOaNotify {
 
     private String type;		// 类型

@@ -1,5 +1,8 @@
 package com.thinkgem.jeesite.restful.module;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class AppUser {
     private String id;      //用户id
     private String photo;   //头像
