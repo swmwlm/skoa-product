@@ -11,7 +11,7 @@
 	<cache name="sysCache" maxEntriesLocalHeap="1000" eternal="true" overflowToDisk="true" statistics="true"/>
 	
 	<!-- 用户缓存 -->
-	<cache name="userCache" maxEntriesLocalHeap="1000" eternal="true" overflowToDisk="true" statistics="true"/>
+	<cache name="userCache" maxEntriesLocalHeap="1000" eternal="false" timeToIdleSeconds="1800" timeToLiveSeconds="1800" overflowToDisk="true" statistics="true"/>
 	
 	<!-- 集团缓存 -->
 	<cache name="corpCache" maxEntriesLocalHeap="1000" eternal="true" overflowToDisk="true" statistics="true"/>
