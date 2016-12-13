@@ -94,6 +94,14 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">项目小组成员：</label>
+			<div class="controls">
+					<%--<sys:treeselect id="projectTeamMembers" name="projectTeamMembers" value="${projectInfo.projectTeamMembers}" labelName="projectTeamMemberNames" labelValue="${projectInfo.projectTeamMemberNames}"
+								title="用户" url="/sys/office/treeData?type=3" cssClass="input-xxlarge" allowClear="true" notAllowSelectParent="true" checked="true"/>--%>
+					${projectInfo.projectTeamMemberNames}
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">行业领域：</label>
 			<div class="controls">
 				<%--<form:select path="industryDomain" class="input-xlarge ">

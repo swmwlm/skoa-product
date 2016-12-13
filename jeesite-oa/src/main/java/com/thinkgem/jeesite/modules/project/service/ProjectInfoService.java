@@ -65,7 +65,9 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		sb.append(" or (a.primary_person='"+currentUser.getId()+"' and a.project_status!=0 ) ");
 		//4.当前用户可以看到 自己副负责的(所在项目的副负责人)项目,项目状态不能为 个人编辑 状态,此状态还处于材料收集阶段;
 		sb.append(" or (find_in_set('"+currentUser.getId()+"',a.team_members) and a.project_status!=0)");
-		//5.当前用户可以看到 按 自己所在角色与项目进度绑定的集合 ,进行筛选
+		//5.当前用户可以看到 自己参与的(所在项目小组)项目,并且项目进度小于5
+		sb.append(" or (find_in_set('"+currentUser.getId()+"',a.project_team_members) and a.project_progress<5)");
+		//6.当前用户可以看到 按 自己所在角色与项目进度绑定的集合 ,进行筛选
 		Set<String> progressSet= UserUtils.getProjectProgressSet();//获取该用户拥有的项目进度;
 		if(CollectionUtils.isNotEmpty(progressSet)){
 			String progressIn= "'"+Joiner.on("','").skipNulls().join(progressSet)+"'";
@@ -77,8 +79,9 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		projectInfo.getSqlMap().put("dsf",sb.toString());
 		//orderBy:1.把自己创建的项目,且处于 个人编辑 状态的,优先显示
 		//orderBy:2.是项目负责人的项目,次优显示
-		//orderBy:3.更新时间,最后显示
-		String orderBy="(a.create_by = '"+currentUser.getId()+"' and a.project_status=0) DESC,(a.primary_person='"+currentUser.getId()+"' or find_in_set('"+currentUser.getId()+"',a.team_members)) DESC,a.update_date DESC";
+		//orderBy:3.是项目小组的项目,次次优显示
+		//orderBy:4.更新时间,最后显示
+		String orderBy="(a.create_by = '"+currentUser.getId()+"' and a.project_status=0) DESC,(a.primary_person='"+currentUser.getId()+"' or find_in_set('"+currentUser.getId()+"',a.team_members)) DESC,(find_in_set('"+currentUser.getId()+"',a.project_team_members)) DESC,a.update_date DESC";
 		//page.setOrderBy(orderBy);//该方式会过滤orderby;Page.getOrderBy;不适用本场景
 		projectInfo.getSqlMap().put("orderBy",orderBy);
 		return super.findPage(page, projectInfo);
@@ -105,7 +108,9 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		sb.append(" or (a.primary_person='"+userId+"' and a.project_status!=0 ) ");
 		//4.当前用户可以看到 自己副负责的(所在项目的副负责人)项目,项目状态不能为 个人编辑 状态,此状态还处于材料收集阶段;
 		sb.append(" or (find_in_set('"+userId+"',a.team_members) and a.project_status!=0)");
-		//5.当前用户可以看到 按 自己所在角色与项目进度绑定的集合 ,进行筛选
+		//5.当前用户可以看到 自己参与的(所在项目小组)项目,并且项目进度小于5
+		sb.append(" or (find_in_set('"+userId+"',a.project_team_members) and a.project_progress<5)");
+		//6.当前用户可以看到 按 自己所在角色与项目进度绑定的集合 ,进行筛选
 		Set<String> progressSet= UserUtils.getProjectProgressSet(userId);//获取该用户拥有的项目进度;
 		if(CollectionUtils.isNotEmpty(progressSet)){
 			String progressIn= "'"+Joiner.on("','").skipNulls().join(progressSet)+"'";
@@ -117,8 +122,9 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		projectInfo.getSqlMap().put("dsf",sb.toString());
 		//orderBy:1.把自己创建的项目,且处于 个人编辑 状态的,优先显示
 		//orderBy:2.是项目负责人的项目,次优显示
-		//orderBy:3.更新时间,最后显示
-		String orderBy="(a.create_by = '"+userId+"' and a.project_status=0) DESC,(a.primary_person='"+userId+"' or find_in_set('"+userId+"',a.team_members)) DESC,a.update_date DESC";
+		//orderBy:3.是项目小组的项目,次次优显示
+		//orderBy:4.更新时间,最后显示
+		String orderBy="(a.create_by = '"+userId+"' and a.project_status=0) DESC,(a.primary_person='"+userId+"' or find_in_set('"+userId+"',a.team_members)) DESC,(find_in_set('"+userId+"',a.project_team_members)) DESC,a.update_date DESC";
 		//page.setOrderBy(orderBy);//该方式会过滤orderby;Page.getOrderBy;不适用本场景
 		projectInfo.getSqlMap().put("orderBy",orderBy);
 		return super.findPage(page, projectInfo);

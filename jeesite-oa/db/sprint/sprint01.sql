@@ -12,9 +12,9 @@ CREATE TABLE project_info
 	area_id varchar(64) COMMENT '归属区域',
 	project_name varchar(200) COMMENT '项目名称',
 	project_grade char(2) COMMENT '项目级别',
-	primary_person varchar(64) COMMENT '项目负责人',
-	team_members varchar(2000) COMMENT '项目小组成员',
-	team_member_names varchar(2000) COMMENT '项目小组成员',
+	primary_person varchar(64) COMMENT '项目主负责人',
+	team_members varchar(2000) COMMENT '项目副负责人成员',
+	team_member_names varchar(2000) COMMENT '项目副负责人成员姓名',
   industry_domain char(2) COMMENT '行业领域',
   main_business VARCHAR(255) COMMENT '主营业务',
 	content text COMMENT '项目介绍',
@@ -266,3 +266,7 @@ INSERT INTO jeesite.sys_menu (id, parent_id, parent_ids, name, sort, href, targe
 
 /* 更改通知接受时间为datetime */
 ALTER TABLE jeesite.oa_notify_record modify COLUMN read_date datetime;
+
+/* 项目表增加 项目小组及姓名 */
+ALTER TABLE project_info ADD COLUMN `project_team_members` varchar(2000) COMMENT '项目小组成员';
+ALTER TABLE project_info ADD COLUMN `project_team_member_names` varchar(2000) COMMENT '项目小组成员姓名';

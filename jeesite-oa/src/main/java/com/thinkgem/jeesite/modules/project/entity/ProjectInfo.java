@@ -29,8 +29,11 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 	private String projectName;		// 项目名称
 	private String projectGrade;		// 项目级别
 	private User primaryPerson;		// 项目负责人
-	private String teamMembers;		// 项目小组成员;变更为项目副负责人成员
-	private String teamMemberNames;		// 项目小组成员;变更为项目副负责人成员
+	private String teamMembers;		// 项目副负责人成员
+	private String teamMemberNames;		// 项目副负责人成员姓名s
+
+	private String projectTeamMembers;		// 项目小组成员;
+	private String projectTeamMemberNames;		// 项目小组成员姓名s;
 	private String industryDomain;		// 行业领域
 	private String mainBusiness;		// 主营业务
 	private String content;		// 项目介绍
@@ -96,7 +99,7 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 		this.primaryPerson = primaryPerson;
 	}
 	
-	@Length(min=0, max=2000, message="项目小组成员长度必须介于 0 和 2000 之间")
+	@Length(min=0, max=2000, message="项目副负责人成员长度必须介于 0 和 2000 之间")
 	public String getTeamMembers() {
 		return teamMembers;
 	}
@@ -105,13 +108,31 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 		this.teamMembers = teamMembers;
 	}
 	
-	@Length(min=0, max=2000, message="项目小组成员长度必须介于 0 和 2000 之间")
+	@Length(min=0, max=2000, message="项目副负责人成员长度必须介于 0 和 2000 之间")
 	public String getTeamMemberNames() {
 		return teamMemberNames;
 	}
 
 	public void setTeamMemberNames(String teamMemberNames) {
 		this.teamMemberNames = teamMemberNames;
+	}
+
+	@Length(min=0, max=2000, message="项目小组成员长度必须介于 0 和 2000 之间")
+	public String getProjectTeamMembers() {
+		return projectTeamMembers;
+	}
+
+	public void setProjectTeamMembers(String projectTeamMembers) {
+		this.projectTeamMembers = projectTeamMembers;
+	}
+
+	@Length(min=0, max=2000, message="项目小组成员长度必须介于 0 和 2000 之间")
+	public String getProjectTeamMemberNames() {
+		return projectTeamMemberNames;
+	}
+
+	public void setProjectTeamMemberNames(String projectTeamMemberNames) {
+		this.projectTeamMemberNames = projectTeamMemberNames;
 	}
 	
 	@Length(min=0, max=2, message="行业领域长度必须介于 0 和 2 之间")

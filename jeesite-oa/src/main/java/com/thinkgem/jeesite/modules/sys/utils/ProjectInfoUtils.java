@@ -128,17 +128,31 @@ public class ProjectInfoUtils {
 	}
 
 	/**
-	 * 是否是项目副负责人成员
+	 * 是否是项目小组成员
 	 * @param projectInfo
 	 * @return
 	 */
 	public static Boolean isProjectInfoTeam(ProjectInfo projectInfo){
-		if(StringUtils.isBlank(projectInfo.getTeamMembers()))
+		if(StringUtils.isBlank(projectInfo.getProjectTeamMembers()))
 			return false;
 
-		String strTeamMembers=","+projectInfo.getTeamMembers()+",";
+		String strProjectTeamMembers=","+projectInfo.getProjectTeamMembers()+",";
 		String strUserId= ","+UserUtils.getUser().getId()+",";
-		return strTeamMembers.indexOf(strUserId)>-1;
+		return strProjectTeamMembers.indexOf(strUserId)>-1;
+	}
+
+	/**
+	 * 判断当前用户是否为项目小组成员(提供jstl fn自定义函数接口)
+	 * @param projectInfo
+	 * @return
+	 */
+	public static Boolean isProjectInfoTeam(Object projectInfo){
+		ProjectInfo _projectInfo=null;
+		if(projectInfo instanceof  ProjectInfo) {
+			_projectInfo= (ProjectInfo) projectInfo;
+			return ProjectInfoUtils.isProjectInfoTeam(_projectInfo);
+		}
+		return false;
 	}
 
 	/**
@@ -157,7 +171,10 @@ public class ProjectInfoUtils {
 		//3.当前用户可以看到 自己负责(包含副负责人)的项目,项目状态不能为 个人编辑 状态,此状态还处于材料收集阶段;
 		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)&&!StringUtils.equals("0",projectInfo.getProjectStatus()))
 			return true;
-		//4.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
+		//4.当前用户可以看到 自己参与的(所在项目小组)项目,并且项目进度小于5
+		if(ProjectInfoUtils.isProjectInfoTeam(projectInfo)&&Integer.valueOf(projectInfo.getProjectProgress())<5)
+			return true;
+		//5.当前项目进度在当前用户所拥有的项目进度集合中的,表示可以浏览
 		Set<String> projectProgressSet=UserUtils.getProjectProgressSet();
 		if(Collections3.isEmpty(projectProgressSet))
 			return false;

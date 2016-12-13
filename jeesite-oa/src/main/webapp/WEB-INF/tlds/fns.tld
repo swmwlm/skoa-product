@@ -151,6 +151,14 @@
     <function-signature>java.lang.Boolean isProjectInfoCreator(java.lang.Object)</function-signature>
     <example>${fns:isProjectInfoCreator(projectInfo)}</example>
   </function>
+
+  <function>
+    <description>判断当前用户是否为项目小组成员</description>
+    <name>isProjectInfoTeam</name>
+    <function-class>com.thinkgem.jeesite.modules.sys.utils.ProjectInfoUtils</function-class>
+    <function-signature>java.lang.Boolean isProjectInfoTeam(java.lang.Object)</function-signature>
+    <example>${fns:isProjectInfoTeam(projectInfo)}</example>
+  </function>
 	
   <!-- DictUtils -->
   <function>

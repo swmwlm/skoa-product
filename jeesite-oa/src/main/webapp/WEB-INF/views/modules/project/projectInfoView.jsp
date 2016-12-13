@@ -106,10 +106,10 @@
 			font-size: inherit;
 			overflow-y: scroll;
 		}
-		/*[contentEditable=true]:empty:not(:focus):before{
+		[contentEditable=true]:empty:not(:focus):before{
 			content:attr(data-text);
 			color:#aaa;
-		}*/
+		}
 	</style>
 
 </head>
@@ -161,6 +161,12 @@
 			<label class="control-label">项目副负责人成员：</label>
 			<div class="controls">
 				${projectInfo.teamMemberNames}
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">项目小组成员：</label>
+			<div class="controls">
+				${projectInfo.projectTeamMemberNames}
 			</div>
 		</div>
 		<div class="control-group">
@@ -294,10 +300,11 @@
 					<input type="hidden" id="projectId" name="projectId" value="${projectInfo.id}"/>
 					<input type="hidden" id="atUserids" name="atUserids" value=""/>
 					<input type="hidden" id="content" name="content" value=""/>
-					<%--<div id="editable" class="inputor" contentEditable="true" data-text="@关键字,他就能在[我的通告]收到;可使用员工中文姓名,全拼,简拼及登录名."></div>--%>
-					<div id="editable" class="inputor" contentEditable="true"></div>
+					<div id="editable" class="inputor" contentEditable="true" data-text="@关键字,他就能在[我的通告]收到;可使用员工中文姓名,全拼,简拼及登录名."></div>
+					<%--<div id="editable" class="inputor" contentEditable="true"></div>--%>
 					<input type="button" id="btnSend" class="btn btn-primary" onclick="javascript:saveProjectNote();"
-						   value="发 布"/><span class="help-inline">友情提醒:@关键字,他就能在[我的通告]收到;可使用员工中文姓名,全拼,简拼及登录名.</span>
+						   value="发 布"/>
+					<%--<span class="help-inline">友情提醒:@关键字,他就能在[我的通告]收到;可使用员工中文姓名,全拼,简拼及登录名.</span>--%>
 				</form>
 			</div>
 

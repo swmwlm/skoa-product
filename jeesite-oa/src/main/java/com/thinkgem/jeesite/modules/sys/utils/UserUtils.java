@@ -385,6 +385,11 @@ public class UserUtils {
 			List<String> teamMembers = Splitter.on(',').trimResults().omitEmptyStrings().splitToList(projectInfo.getTeamMembers());
 			resultSet.addAll(teamMembers);
 		}
+		//1.2，获取项目小组成员,且项目进度<5的成员
+		if (projectInfo.getProjectTeamMembers() != null&&projectInfo.getProjectProgress()!=null&&Integer.valueOf(projectInfo.getProjectProgress())<5) {
+			List<String> projectTeamMembers = Splitter.on(',').trimResults().omitEmptyStrings().splitToList(projectInfo.getProjectTeamMembers());
+			resultSet.addAll(projectTeamMembers);
+		}
 		//2，获取高层人
 		List<User> userList2 = userDao.findUserByStationType("1");
 		if (CollectionUtils.isNotEmpty(userList2)) {

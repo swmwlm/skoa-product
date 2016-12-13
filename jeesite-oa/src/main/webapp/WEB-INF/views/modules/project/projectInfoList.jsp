@@ -139,6 +139,9 @@
 					<c:if test="${fns:isProjectInfoCreator(projectInfo)}">
 						<span class="badge badge-success" title="项目创建者">C</span>
 					</c:if>
+					<c:if test="${fns:isProjectInfoTeam(projectInfo)}">
+						<span class="badge badge-success" title="项目小组">T</span>
+					</c:if>
 				</td>
 				<td>
 					${projectInfo.primaryPerson.name}
