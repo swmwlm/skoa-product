@@ -14,7 +14,7 @@
 	<div id="content" class="row-fluid">
 		<div id="left" class="accordion-group">
 			<div class="accordion-heading">
-		    	<a class="accordion-toggle">组织机构<i class="icon-refresh pull-right" onclick="refreshTree();"></i></a>
+		    	<a class="accordion-toggle" style="overflow: hidden;"><span class="pull-left">组织机构</span><i class="icon-refresh pull-right" onclick="refreshTree();"></i></a>
 		    </div>
 			<div id="ztree" class="ztree"></div>
 		</div>
