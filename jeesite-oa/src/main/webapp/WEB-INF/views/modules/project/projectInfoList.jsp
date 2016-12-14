@@ -115,7 +115,7 @@
 				<th>项目类型</th>
 				<th>项目状态</th>
 				<%--<th class="sort-column a.update_date">更新时间</th>--%>
-				<th>更新时间</th>
+				<th title="处于项目发布状态且超过15天未做更新的,&#10;系统将发通知提醒负责人">更新时间 <i class="icon-question-sign"></i></th>
 				<th>更新者</th>
 				<th>备注信息</th>
 				<%--<shiro:hasPermission name="project:projectInfo:edit">--%>
