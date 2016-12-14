@@ -111,7 +111,7 @@
 				<th>项目名称</th>
 				<th>项目主负责人</th>
 				<th>行业领域</th>
-				<th>项目进度</th>
+				<th title="负责人可以变更项目进度">项目进度 <i class="icon-question-sign"></i></th>
 				<th>项目类型</th>
 				<th>项目状态</th>
 				<%--<th class="sort-column a.update_date">更新时间</th>--%>
@@ -119,7 +119,7 @@
 				<th>更新者</th>
 				<th>备注信息</th>
 				<%--<shiro:hasPermission name="project:projectInfo:edit">--%>
-					<th>操作</th>
+					<th title="两种情况下可以操作:&#10;①项目创建者处于个人编辑时&#10;②项目负责人&#10;注意:项目进度处于立项后不能变更基础资料">操作 <i class="icon-question-sign"></i></th>
 				<%--</shiro:hasPermission>--%>
 			</tr>
 		</thead>
