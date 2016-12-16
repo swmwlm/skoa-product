@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.project.service;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
@@ -12,7 +13,6 @@ import com.thinkgem.jeesite.modules.project.dao.ProjectNoteDao;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.entity.ProjectNote;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +58,9 @@ public class ProjectNoteService extends CrudService<ProjectNoteDao, ProjectNote>
 			String oaNotifyRecordIds=UserUtils.getNotifyUserIdsString(projectInfo, projectNote.getAtUserids(),UserUtils.getUser().getId());
 			System.out.println("【项目动态添加：oaNotifyRecordIds:"+oaNotifyRecordIds+"】");
 
+			//当接收人为空时,不需要发布一个通知了;
+			if(StringUtils.isBlank(StringUtils.strip(oaNotifyRecordIds,",")))
+				return;
 			//邮件通知等(预留)
 			//添加到我的通告
 			OaNotify oaNotify = new OaNotify();

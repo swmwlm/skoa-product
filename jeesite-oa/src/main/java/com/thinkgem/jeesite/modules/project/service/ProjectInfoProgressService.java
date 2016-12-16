@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.project.service;
 
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.common.utils.DateUtils;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
@@ -51,6 +52,11 @@ public class ProjectInfoProgressService extends CrudService<ProjectInfoProgressD
 
         //根据项目获取需要通知的人员
         String oaNotifyRecordIds = UserUtils.getNotifyUserIdsString(projectInfo, null, UserUtils.getUser().getId());
+
+        //当接收人为空时,不需要发布一个通知了;
+        if(StringUtils.isBlank(StringUtils.strip(oaNotifyRecordIds,",")))
+            return;
+        
         StringBuilder content = new StringBuilder();
         content.append("项目进度由");
         content.append("“");
