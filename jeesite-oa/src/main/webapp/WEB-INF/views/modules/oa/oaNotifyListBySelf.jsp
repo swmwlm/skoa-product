@@ -65,12 +65,12 @@
 					</c:if>
 
 					<c:if test="${oaNotify.type==4 && not empty oaNotify.remarks}">
-						<a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectNote" title="点击回复项目动态" style="text-decoration:none">
+						<a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectNote" title="点击发布项目动态" style="text-decoration:none">
 							<i class="icon-pencil"></i>
 						</a>
 					</c:if>
 					<c:if test="${oaNotify.type==5 && not empty oaNotify.remarks}">
-						<a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectProgress" title="点击回复项目动态" style="text-decoration:none">
+						<a href="${ctx}/project/projectInfo/view?id=${oaNotify.remarks}#divProjectProgress" title="点击发布项目动态" style="text-decoration:none">
 							<i class="icon-pencil"></i>
 						</a>
 					</c:if>
