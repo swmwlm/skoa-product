@@ -175,6 +175,7 @@
 					</ul>
 				</li>
 				<li><a href="${ctx}/logout" title="退出登录">退出</a></li>
+				<li><a href="//oa.shoukeplus.com/oa-tutorials.mp4" title="使用帮助" target="_blank"><i class="icon-question-sign"></i></a></li>
 				<li>&nbsp;</li>
 			</ul>
 			<%-- <c:if test="${cookie.theme.value eq 'cerulean'}">
