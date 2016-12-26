@@ -14,6 +14,7 @@ import com.thinkgem.jeesite.restful.module.RememberedTime;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ import java.util.Map;
         value = "/api/login",
         description = "登录相关API"
 )
+@Scope("prototype")
 public class LoginControllerApi extends BaseController {
 
     @Autowired
@@ -58,11 +60,32 @@ public class LoginControllerApi extends BaseController {
                 jsonResultModel.setMessage("用户名或者密码错误！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
             }
+
+            AppUser resultappUser = new AppUser();
+
+            resultappUser.setId(checkUser.getId());
+            resultappUser.setDepartment(checkUser.getOffice() != null ? StringUtils.defaultIfBlank(checkUser.getOffice().getName(), "") : "");
+            resultappUser.setEmail(StringUtils.defaultIfBlank(checkUser.getEmail(), ""));
+            resultappUser.setMobile(StringUtils.defaultIfBlank(checkUser.getMobile(), ""));
+            resultappUser.setPhoto(StringUtils.defaultIfBlank(checkUser.getPhoto(), ""));
+            resultappUser.setName(StringUtils.defaultIfBlank(checkUser.getName(), ""));
+            resultappUser.setPassword("******");
+
+            //查询我发起的项目数目
+            ProjectInfo projectInfo1 = new ProjectInfo();
+            projectInfo1.setCreateBy(checkUser);
+            Page<ProjectInfo> page1 = projectInfoService.findPageDSFforAPP(new Page<ProjectInfo>(request, response), projectInfo1, checkUser.getId());
+            resultappUser.setFaqiNum(page1.getCount());
+
+            //查询我负责的项目数目
+            ProjectInfo projectInfo2 = new ProjectInfo();
+            projectInfo2.setPrimaryPerson(checkUser);
+            Page<ProjectInfo> page2 = projectInfoService.findPageDSFforAPP(new Page<ProjectInfo>(request, response), projectInfo2, checkUser.getId());
+            resultappUser.setFuzeNum(page2.getCount());
+
             jsonResultModel.setStateSuccess();
             jsonResultModel.setMessage("success");
-            Map resultMap = new HashMap();
-            resultMap.put("id", checkUser.getId());
-            jsonResultModel.setData(resultMap);
+            jsonResultModel.setData(resultappUser);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("参数校验失败：", e);
@@ -80,7 +103,7 @@ public class LoginControllerApi extends BaseController {
         jsonResultModel = new JsonResultModel();
         try {
             RememberedTime rememberedTime = new RememberedTime();
-            rememberedTime.setDays(1);
+            rememberedTime.setDays(30);
             rememberedTime.setNowTime(DateUtils.getCurrentDateTime());
             jsonResultModel.setStateSuccess();
             jsonResultModel.setMessage("success");

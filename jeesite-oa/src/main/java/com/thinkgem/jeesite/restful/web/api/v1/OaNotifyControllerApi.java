@@ -6,8 +6,6 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
-import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
-import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -15,9 +13,9 @@ import com.thinkgem.jeesite.restful.module.AppOaNotify;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.activiti.engine.impl.util.CollectionUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +32,7 @@ import java.util.List;
         value = "/api/oaNotifys",
         description = "通知相关API"
 )
+@Scope("prototype")
 public class OaNotifyControllerApi extends BaseController {
 
     @Autowired
@@ -48,7 +47,7 @@ public class OaNotifyControllerApi extends BaseController {
         jsonResultModel = new JsonResultModel();
         try {
             Preconditions.checkNotNull(userId, "userId不能为空");
-            Preconditions.checkNotNull(readFlag, "readType不能为空");
+            Preconditions.checkNotNull(readFlag, "readFlag不能为空");
             User checkUser = systemService.getUser(userId);
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
@@ -57,7 +56,6 @@ public class OaNotifyControllerApi extends BaseController {
             OaNotify oaNotify = new OaNotify();
             oaNotify.setReadFlag(readFlag);
             oaNotify.setSelf(true);
-            oaNotify.setReadFlag(readFlag);
             oaNotify.setCurrentUser(checkUser);
             Page<OaNotify> page = oaNotifyService.find(new Page<OaNotify>(request, response), oaNotify);
 
@@ -73,6 +71,7 @@ public class OaNotifyControllerApi extends BaseController {
                 AppOaNotify appOaNotify;
                 for (OaNotify notify : oaNotifyList) {
                     appOaNotify = new AppOaNotify();
+                    appOaNotify.setId(notify.getId());
                     appOaNotify.setType(notify.getType());
                     appOaNotify.setTitle(notify.getTitle());
                     appOaNotify.setContent(StringUtils.defaultIfBlank(notify.getContent(), ""));
@@ -98,6 +97,31 @@ public class OaNotifyControllerApi extends BaseController {
         return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
 
 
+    }
+
+
+    @ApiOperation(value = "设置已读", notes = "设置已读，更新阅读状态")
+    @RequestMapping(value = "/{userId}/read/{id}", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> setRead(@PathVariable String userId, @PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+        jsonResultModel = new JsonResultModel();
+        try {
+            Preconditions.checkNotNull(userId, "userId不能为空");
+            Preconditions.checkNotNull(id, "id不能为空");
+            User checkUser = systemService.getUser(userId);
+            Preconditions.checkNotNull(checkUser, "用户不存在");
+            OaNotify oaNotify = oaNotifyService.get(id);
+            Preconditions.checkNotNull(oaNotify, "消息不存在");
+            oaNotifyService.updateReadFlag(oaNotify, checkUser);
+            jsonResultModel.setStateSuccess();
+            jsonResultModel.setData("更新成功！");
+            jsonResultModel.setMessage("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("参数校验失败：", e);
+            jsonResultModel.setStateError();
+            jsonResultModel.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
     }
 
 

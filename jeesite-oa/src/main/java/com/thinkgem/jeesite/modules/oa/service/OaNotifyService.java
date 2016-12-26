@@ -9,6 +9,7 @@ import com.thinkgem.jeesite.modules.oa.dao.OaNotifyDao;
 import com.thinkgem.jeesite.modules.oa.dao.OaNotifyRecordDao;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotifyRecord;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,4 +80,17 @@ public class OaNotifyService extends CrudService<OaNotifyDao, OaNotify> {
 		oaNotifyRecord.setReadFlag("1");
 		oaNotifyRecordDao.update(oaNotifyRecord);
 	}
+
+	/**
+	 * 更新阅读状态APP
+	 */
+	@Transactional(readOnly = false)
+	public void updateReadFlag(OaNotify oaNotify,User user) {
+		OaNotifyRecord oaNotifyRecord = new OaNotifyRecord(oaNotify);
+		oaNotifyRecord.setUser(user);
+		oaNotifyRecord.setReadDate(new Date());
+		oaNotifyRecord.setReadFlag("1");
+		oaNotifyRecordDao.update(oaNotifyRecord);
+	}
+
 }

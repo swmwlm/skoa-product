@@ -10,6 +10,7 @@ import com.thinkgem.jeesite.restful.module.TestUserModel;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ import java.util.List;
 		value = "/api/userDemos",
 		description = "Demo Operations about user"
 )
+@Scope("prototype")
 public class DemoControllerApi extends BaseController {
 
 	@Autowired

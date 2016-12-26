@@ -15,6 +15,7 @@ import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import java.util.Map;
         value = "/api/dicts",
         description = "数据字典相关API"
 )
+@Scope("prototype")
 public class DictControllerApi extends BaseController {
 
 
@@ -70,6 +72,61 @@ public class DictControllerApi extends BaseController {
             List<Dict> list = dictService.findList(dict);
             jsonResultModel.setStateSuccess();
             jsonResultModel.setData(list);
+            jsonResultModel.setMessage("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("参数校验失败：", e);
+            jsonResultModel.setStateError();
+            jsonResultModel.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
+    }
+
+
+    public final static Map<String, String> appProjectProgressMap = new HashMap();
+
+    static {
+        appProjectProgressMap.put("0", "预研10%");
+        appProjectProgressMap.put("1", "立项20%");
+        appProjectProgressMap.put("2", "尽调30%");
+        appProjectProgressMap.put("3", "评审40%");
+        appProjectProgressMap.put("4", "投决50%");
+        appProjectProgressMap.put("5", "条款60");
+        appProjectProgressMap.put("6", "基金70%");
+        appProjectProgressMap.put("7", "协议80%");
+        appProjectProgressMap.put("8", "工商90%");
+        appProjectProgressMap.put("9", "投后100%");
+    }
+
+    @ApiOperation(value = "字典值获取", notes = "字典值获取（类型：项目级别projectGrade，项目进度projectProgress，项目状态projectStatus，项目类型projectType，行业领域industryDomain）")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> alldicts() {
+        jsonResultModel = new JsonResultModel();
+        try {
+            List<String> dictlist = new LinkedList<>();
+            dictlist.add("projectGrade");
+            dictlist.add("projectProgress");
+            dictlist.add("projectStatus");
+            dictlist.add("projectType");
+            dictlist.add("industryDomain");
+            Map resultMap = new HashMap();
+            Dict dict;
+            List<Dict> list;
+            for (String type : dictlist) {
+                dict = new Dict();
+                dict.setType(type);
+                list = dictService.findList(dict);
+
+                if (type.equals("projectProgress")) {
+                    for (Dict itemDict : list) {
+                        itemDict.setLabel(appProjectProgressMap.get(itemDict.getValue()));
+                    }
+                }
+
+                resultMap.put(type, list);
+            }
+            jsonResultModel.setStateSuccess();
+            jsonResultModel.setData(resultMap);
             jsonResultModel.setMessage("success");
         } catch (Exception e) {
             e.printStackTrace();

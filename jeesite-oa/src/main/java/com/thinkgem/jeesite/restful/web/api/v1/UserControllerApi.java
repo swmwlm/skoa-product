@@ -13,6 +13,7 @@ import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
         value = "/api/users",
         description = "用户相关API"
 )
+@Scope("prototype")
 public class UserControllerApi extends BaseController {
 
     @Autowired

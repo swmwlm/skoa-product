@@ -7,6 +7,8 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class AppOaNotify {
 
+    private String id;      //id
+
     private String type;		// 类型
 
     private String title;		// 标题
@@ -19,6 +21,14 @@ public class AppOaNotify {
     private Date createDate;	    // 创建日期
 
     private String projectInfoId;	// 项目id
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getType() {
         return type;
