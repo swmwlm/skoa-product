@@ -40,7 +40,12 @@ public class WebsocketOaNotifyMessageAspect {
     private void saveOaNotifyPointcut() {
     }
 
-    @Pointcut(value = "(execution(* updateReadFlag(*)))")
+	/**
+     * 拦截
+     * OaNotifyService.updateReadFlag(OaNotify oaNotify) 带一个参数的方法 或者
+     * OaNotifyService.updateReadFlag(OaNotify oaNotify,User user) 带两个参数的方法
+     */
+    @Pointcut(value = "(execution(* updateReadFlag(..)))")
     private void updateReadFlagOaNotifyPointcut() {
     }
 
@@ -78,15 +83,17 @@ public class WebsocketOaNotifyMessageAspect {
      */
     @Around(value = "oaNotifyServicePointcut() && updateReadFlagOaNotifyPointcut()")
     public Object updateReadFlagOaNotifyAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object arg = pjp.getArgs().length >= 1 ? pjp.getArgs()[0] : null;
+        Object arg1 = pjp.getArgs().length >= 1 ? pjp.getArgs()[0] : null;
+        Object arg2 = pjp.getArgs().length == 2 ? pjp.getArgs()[1] : UserUtils.getUser();
         Object result = null;
         try {
             result = pjp.proceed();
-            OaNotify oaNotify = (OaNotify) arg;
+            OaNotify oaNotify = (OaNotify) arg1;
+            User user = (User) arg2;
             //websocket推送 未阅读的消息数 给 当前阅读通知的用户 (该通知必须是发布状态status=1);
             if (oaNotify!=null&&"1".equals(oaNotify.getStatus())) {
                 //一条通知可能被查看许多次,这里就websocket通知多次;推送给当前用户,即阅读该通知的用户;
-                List<User> userList= Lists.newArrayList(UserUtils.getUser());
+                List<User> userList= Lists.newArrayList(user);
                 systemWebSocketHandler.sendOaNotifyCountMessageToUser(userList);
             }
         } catch (Exception e) {
