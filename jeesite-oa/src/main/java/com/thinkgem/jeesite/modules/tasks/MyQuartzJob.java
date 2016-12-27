@@ -29,10 +29,10 @@ public class MyQuartzJob {
 	private SysBatchlogService sysBatchlogService;
 
 	/**
-	 * 每天早上0:30分执行一次;
+	 * 每天早上7:30分执行一次;设置7点半为了防止 app推送消息时 半夜骚扰;
 	 * 通知项目更新时间超过15天未做更新的负责人,项目状态为 项目发布阶段(1) ;
 	 */
-	@Scheduled(cron = "0 30 0 * * ?")
+	@Scheduled(cron = "0 30 7 * * ?")
 	//@Scheduled(cron = "0 * * * * ?")//调试方便,设置每分钟执行一次;
 	public void sendOaNotify4ProjectInfoUpdateGte15days(){
 		String jobName="JOB_SendOaNotify4ProjectInfoUpdateGte15days";
