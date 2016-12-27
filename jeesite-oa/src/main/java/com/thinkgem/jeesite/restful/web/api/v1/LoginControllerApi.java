@@ -70,6 +70,8 @@ public class LoginControllerApi extends BaseController {
             resultappUser.setPhoto(StringUtils.defaultIfBlank(checkUser.getPhoto(), ""));
             resultappUser.setName(StringUtils.defaultIfBlank(checkUser.getName(), ""));
             resultappUser.setPassword("******");
+            resultappUser.setLoginName(StringUtils.defaultIfBlank(checkUser.getLoginName(), ""));
+
 
             //查询我发起的项目数目
             ProjectInfo projectInfo1 = new ProjectInfo();

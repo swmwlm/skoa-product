@@ -59,6 +59,7 @@ public class UserControllerApi extends BaseController {
             appUser.setPhoto(StringUtils.defaultIfBlank(checkUser.getPhoto(), ""));
             appUser.setName(StringUtils.defaultIfBlank(checkUser.getName(), ""));
             appUser.setPassword("******");
+            appUser.setLoginName(StringUtils.defaultIfBlank(checkUser.getLoginName(), ""));
 
             //查询我发起的项目数目
             ProjectInfo projectInfo1 = new ProjectInfo();
