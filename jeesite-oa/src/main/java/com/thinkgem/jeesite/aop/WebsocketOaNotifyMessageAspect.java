@@ -64,11 +64,11 @@ public class WebsocketOaNotifyMessageAspect {
             result = pjp.proceed();
             OaNotify oaNotify = (OaNotify) arg;
             //websocket推送给在线用户 未阅读的消息数(该通知必须是发布状态status=1,必须存在接收人);
-            if (oaNotify!=null&&"1".equals(oaNotify.getStatus()) && !Collections3.isEmpty(oaNotify.getOaNotifyRecordList())) {
-                List<User> userList=Collections3.extractToList(oaNotify.getOaNotifyRecordList(),"user");
+            if (oaNotify != null && "1".equals(oaNotify.getStatus()) && !Collections3.isEmpty(oaNotify.getOaNotifyRecordList())) {
+                List<User> userList = Collections3.extractToList(oaNotify.getOaNotifyRecordList(), "user");
                 systemWebSocketHandler.sendOaNotifyCountMessageToUser(userList);
                 //app消息推送
-                JPushUtils.sendDefaultPushToUsers(Collections3.extractToList(userList, "id"));
+                JPushUtils.sendPushToUsers(Collections3.extractToList(userList, "id"), oaNotify.getContent());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -40,9 +40,17 @@ public class JPushUtils {
 //        Integer extraType = 0;//此标识字段目前暂未使用
 //        System.out.println(sendPush(alias, alertContent, extraType));
 
-        sendDefultPush("f9b44369477643f0addb0068cf6c6020");
+        System.out.println(sendDefultPush("f9b44369477643f0addb0068cf6c6020"));
     }
 
+
+    public static void sendPushToUsers(List<String> userIds, String content) {
+        if (CollectionUtils.isNotEmpty(userIds)) {
+            for (String atUserId : userIds) {
+                sendPush(atUserId, content, Default_extraType);
+            }
+        }
+    }
 
     public static void sendDefaultPushToUsers(List<String> userIds) {
         if (CollectionUtils.isNotEmpty(userIds)) {
