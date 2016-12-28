@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.utils.Collections3;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.utils.JPushUtils;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.websocket.SystemWebSocketHandler;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -66,6 +67,8 @@ public class WebsocketOaNotifyMessageAspect {
             if (oaNotify!=null&&"1".equals(oaNotify.getStatus()) && !Collections3.isEmpty(oaNotify.getOaNotifyRecordList())) {
                 List<User> userList=Collections3.extractToList(oaNotify.getOaNotifyRecordList(),"user");
                 systemWebSocketHandler.sendOaNotifyCountMessageToUser(userList);
+                //app消息推送
+                JPushUtils.sendDefaultPushToUsers(Collections3.extractToList(userList, "id"));
             }
         } catch (Exception e) {
             e.printStackTrace();
