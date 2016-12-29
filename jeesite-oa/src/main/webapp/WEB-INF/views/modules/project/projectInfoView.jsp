@@ -50,17 +50,25 @@
 			doSaveProjectNote();
 		}
 
+		var lock = false;
 		function doSaveProjectNote() {
+
+			if (lock) {return;}
+
 			$('#content').val($('#editable').text());
 			var atUserids = "";
 			$.each($('.atwho-loginName'), function (n, value) {
 				atUserids = atUserids + "," + $(value).text();
 			});
 			$("#atUserids").val(atUserids);
+
 			$.ajax({
 				url: "${ctx}/project/projectNote/saveProjectNote",
 				type: "POST",
 				data: $('#projectNoteForm').serialize(),
+				beforeSend: function(XMLHttpRequest){
+					lock=true;
+				},
 				success: function (data, textStatus, jqXHR) {
 					$('#editable').text("");
 					$('#content').val("");
@@ -86,6 +94,9 @@
 				},
 				error: function (jqXHR, textStatus, errorMsg) {
 					showTip("发布失败!",'',1000,0);
+				},
+				complete:function(XMLHttpRequest, textStatus){
+					lock = false;
 				}
 			});
 		}
