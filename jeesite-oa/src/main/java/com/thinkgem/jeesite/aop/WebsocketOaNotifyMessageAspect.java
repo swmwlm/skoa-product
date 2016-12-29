@@ -7,6 +7,7 @@ import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.JPushUtils;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.websocket.SystemWebSocketHandler;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -68,7 +69,7 @@ public class WebsocketOaNotifyMessageAspect {
                 List<User> userList = Collections3.extractToList(oaNotify.getOaNotifyRecordList(), "user");
                 systemWebSocketHandler.sendOaNotifyCountMessageToUser(userList);
                 //app消息推送
-                JPushUtils.sendPushToUsers(Collections3.extractToList(userList, "id"), oaNotify.getContent());
+                JPushUtils.sendPushToUsers(Collections3.extractToList(userList, "id"), StringEscapeUtils.unescapeHtml4(oaNotify.getContent()));
             }
         } catch (Exception e) {
             e.printStackTrace();
