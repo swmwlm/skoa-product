@@ -5,7 +5,6 @@ package com.thinkgem.jeesite.modules.project.web;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
@@ -17,7 +16,6 @@ import com.thinkgem.jeesite.modules.project.service.ProjectNoteService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
 import com.thinkgem.jeesite.modules.sys.utils.ProjectInfoUtils;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -81,10 +79,15 @@ public class ProjectInfoController extends BaseController {
 		//新增项目;
 		if(StringUtils.isBlank(projectInfo.getId())) {
 			model.addAttribute("projectInfo", projectInfo);
-			return "modules/project/projectInfoForm";
+			return "modules/project/projectInfoFormByCreator";
 		}
 		//有项目编辑权限
 		if(ProjectInfoUtils.editableProject(projectInfo)){
+			//当是项目创建者,处于个人编辑时;
+			if(ProjectInfoUtils.isProjectInfoCreatorAndProjectStatus0(projectInfo)){
+				model.addAttribute("projectInfo", projectInfo);
+				return "modules/project/projectInfoFormByCreator";
+			}
 			//校验当前用户是否拥有该项目的编辑权限,且项目进度为null或者小于2;
 			if(null==projectInfo.getProjectProgress()||Integer.parseInt(projectInfo.getProjectProgress())<2){
 				model.addAttribute("projectInfo", projectInfo);
