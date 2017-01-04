@@ -181,6 +181,9 @@ public class ProjectInfoUtils {
 		//1.3 当项目进度为null,且项目状态为5时,且当前用户拥有合伙人角色时,可以查看;
 		if(null==projectInfo.getProjectProgress()&&ProjectInfoUtils.isProjectMeetingForSecond(projectInfo))
 			return true;
+		//1.4 项目状态为 1发布状态 下,当项目进度为null时,显示该项目;
+		if(null==projectInfo.getProjectProgress()&&StringUtils.equals("1",projectInfo.getProjectStatus()))
+			return true;
 
 		//2.当前用户可以看到项目进度为0或者1的项目,且项目状态不为 个人编辑 状态的
 		if(null!=projectInfo.getProjectProgress()&&Integer.parseInt(projectInfo.getProjectProgress())<2&&!StringUtils.equals("0",projectInfo.getProjectStatus()))
