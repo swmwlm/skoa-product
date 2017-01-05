@@ -36,6 +36,25 @@
 			}
 			return true;
 		}
+
+		function updateMeeting(id, status) {
+			$('#myMeetingModal').modal();
+			$("#meetingProjectInfoId").val(id);
+			$("#projectBoxStatus").val(status);
+		}
+		function meetingNo() {
+			$("#flag").val("0");
+			meetingSubmit();
+		}
+		function meetingYes() {
+			$("#flag").val("1");
+			meetingSubmit();
+		}
+		function meetingSubmit() {
+			$("#meetingForm").submit();
+			$('#myMeetingModal').modal('hide');
+		}
+
 	</script>
 </head>
 <body>
@@ -165,7 +184,15 @@
 					${fns:getDictLabel(projectInfo.projectType, 'projectType', '')}
 				</td>
 				<td>
-					${fns:getDictLabel(projectInfo.projectStatus, 'projectStatus', '')}
+					<c:choose>
+						<c:when test="${fns:isAllowedUpdateProjectMeeting(projectInfo)}">
+							<a href="javascript:updateMeeting('${projectInfo.id}', '${projectInfo.projectStatus}')"
+							   title="审批">
+									${fns:getDictLabel(projectInfo.projectStatus, 'projectStatus', '')}
+							</a>
+						</c:when>
+						<c:otherwise>${fns:getDictLabel(projectInfo.projectStatus, 'projectStatus', '')}</c:otherwise>
+					</c:choose>
 				</td>
 				<td>
 					<fmt:formatDate value="${projectInfo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -233,6 +260,36 @@
             </form>
         </div>
     </div>
+
+	<!-- meeting-Modal -->
+    <div class="modal fade" id="myMeetingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelMeeting" style="display: none;">
+        <div class="modal-dialog">
+            <form id="meetingForm" action="${ctx}/project/projectInfo/updateMeeting" method="post" enctype="multipart/form-data" class="form-search form-horizontal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+                        <h4 class="modal-title" id="myModalLabelMeeting">立项会审批</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input id="meetingProjectInfoId" type="hidden" name="meetingProjectInfoId" value="" />
+                        <input id="flag" type="hidden" name="flag" value="" />
+                        <div class="control-group">
+                            <label class="control-label">备注：</label>
+                            <div class="controls">
+                                <textarea name="remarks" rows="4" maxlength="255" class="input-xlarge"></textarea>
+                            </div>
+                        </div>　
+                    </div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-warning" onclick="meetingNo()">拒绝</button>
+						<button type="button" class="btn btn-success" onclick="meetingYes()">通过</button>
+					</div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 	<div class="pagination">${page}</div>
 </body>
 </html>

@@ -131,14 +131,37 @@ public class ProjectInfoUtils {
 	 * @param projectInfo
 	 * @return
 	 */
-	public static Boolean isAllowedUpdateProjectProgress(Object projectInfo){
-		ProjectInfo _projectInfo=null;
-		if(projectInfo instanceof  ProjectInfo) {
-			_projectInfo= (ProjectInfo) projectInfo;
-			return ProjectInfoUtils.isProjectInfoPrimaryPerson(_projectInfo)&&!StringUtils.equals("0",((ProjectInfo) projectInfo).getProjectStatus());
+	public static Boolean isAllowedUpdateProjectProgress(Object projectInfo) {
+		ProjectInfo _projectInfo = null;
+		if (projectInfo instanceof ProjectInfo) {
+			_projectInfo = (ProjectInfo) projectInfo;
+			return ProjectInfoUtils.isProjectInfoPrimaryPerson(_projectInfo)
+					&& !StringUtils.equals("0", ((ProjectInfo) projectInfo).getProjectStatus())
+					&& !StringUtils.equals("4", ((ProjectInfo) projectInfo).getProjectStatus())
+					&& !StringUtils.equals("5", ((ProjectInfo) projectInfo).getProjectStatus());
 		}
 		return false;
 	}
+
+
+	/**
+	 * 判断当前用户是否允许立项审批或者复审
+	 * @param projectInfo
+	 * @return
+	 */
+	public static Boolean isAllowedUpdateProjectMeeting(Object projectInfo) {
+		try {
+			ProjectInfo _projectInfo = null;
+			if (projectInfo instanceof ProjectInfo) {
+				_projectInfo = (ProjectInfo) projectInfo;
+				return ProjectInfoUtils.isProjectMeetingForOne(_projectInfo) || ProjectInfoUtils.isProjectMeetingForSecond(_projectInfo);
+			}
+		} catch (Exception ex) {
+			return false;
+		}
+		return false;
+	}
+
 
 	/**
 	 * 是否是项目小组成员
