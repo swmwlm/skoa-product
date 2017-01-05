@@ -161,8 +161,7 @@ public class UserUtils {
 	 * @return
 	 */
 	public static Boolean isPartnerRole(){
-		//List<String> roleIdList= Collections3.extractToList(UserUtils.getRoleList(),"id");
-		List<String> roleNameList= Collections3.extractToList(UserUtils.getRoleList(),"name");
+		List<String> roleNameList= Collections3.extractToList(UserUtils.getUser().getRoleList(),"name");
 		return roleNameList.contains("合伙人");
 	}
 
