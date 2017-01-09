@@ -33,6 +33,8 @@
 		a.remarks AS "remarks",
 		a.del_flag AS "delFlag",
 		o2.name AS "office.name",
+		o2.PRIMARY_PERSON AS "office.primaryPerson.id",
+		o2.DEPUTY_PERSON AS "office.deputyPerson.id",
 		a3.name AS "area.name",
 		u6.name AS "primaryPerson.name",
 		uu.name AS "updateBy.name"

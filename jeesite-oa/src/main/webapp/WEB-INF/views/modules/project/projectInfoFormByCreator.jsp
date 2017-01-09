@@ -27,8 +27,9 @@
 					}
 				}
 			});
-			$("#projectStatus option[value='0']").remove();
-			$("#projectStatus option[value='4']").remove();
+			$("#projectStatus option[value='1']").remove();
+			$("#projectStatus option[value='2']").remove();
+			$("#projectStatus option[value='3']").remove();
 			$("#projectStatus option[value='5']").remove();
 		});
 	</script>
@@ -48,111 +49,99 @@
 		<div class="control-group">
 			<label class="control-label">归属部门：</label>
 			<div class="controls">
-				<%--<sys:treeselect id="office" name="office.id" value="${projectInfo.office.id}" labelName="office.name" labelValue="${projectInfo.office.name}"
-					title="部门" url="/sys/office/treeData?type=2" cssClass="" allowClear="true" notAllowSelectParent="true"/>--%>
-						${projectInfo.office.name}
+				<sys:treeselect id="office" name="office.id" value="${projectInfo.office.id}" labelName="office.name" labelValue="${projectInfo.office.name}"
+					title="部门" url="/sys/office/treeData?type=2" cssClass="" allowClear="true" notAllowSelectParent="true"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">归属区域：</label>
 			<div class="controls">
-				<%--<sys:treeselect id="area" name="area.id" value="${projectInfo.area.id}" labelName="area.name" labelValue="${projectInfo.area.name}"
-					title="区域" url="/sys/area/treeData" cssClass="" allowClear="true" notAllowSelectParent="true"/>--%>
-						${projectInfo.area.name}
+				<sys:treeselect id="area" name="area.id" value="${projectInfo.area.id}" labelName="area.name" labelValue="${projectInfo.area.name}"
+					title="区域" url="/sys/area/treeData" cssClass="" allowClear="true" notAllowSelectParent="true"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目名称：</label>
 			<div class="controls">
-				<%--<form:input path="projectName" htmlEscape="false" maxlength="200" class="required measure-input input-xlarge"/>
-				<span class="help-inline"><font color="red">*</font> </span>--%>
-						${projectInfo.projectName}
+				<form:input path="projectName" htmlEscape="false" maxlength="200" class="required measure-input input-xlarge"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目级别：</label>
 			<div class="controls">
-				<%--<form:select path="projectGrade" class="input-xlarge ">
+				<form:select path="projectGrade" class="input-xlarge ">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('projectGrade')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>--%>
-						${fns:getDictLabel(projectInfo.projectGrade, 'projectGrade', '暂无级别')}
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目主负责人：</label>
 			<div class="controls">
-				<%--<sys:treeselect id="primaryPerson" name="primaryPerson.id" value="${projectInfo.primaryPerson.id}" labelName="primaryPerson.name" labelValue="${projectInfo.primaryPerson.name}"
+				<sys:treeselect id="primaryPerson" name="primaryPerson.id" value="${projectInfo.primaryPerson.id}" labelName="primaryPerson.name" labelValue="${projectInfo.primaryPerson.name}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true"/>
-				<span class="help-inline"><font color="red">*</font> </span>--%>
-						${projectInfo.primaryPerson.name}
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目副负责人成员：</label>
 			<div class="controls">
-				<%--<sys:treeselect id="teamMembers" name="teamMembers" value="${projectInfo.teamMembers}" labelName="teamMemberNames" labelValue="${projectInfo.teamMemberNames}"
-								title="用户" url="/sys/office/treeData?type=3" cssClass="input-xxlarge" allowClear="true" notAllowSelectParent="true" checked="true"/>--%>
-						${projectInfo.teamMemberNames}
+				<sys:treeselect id="teamMembers" name="teamMembers" value="${projectInfo.teamMembers}" labelName="teamMemberNames" labelValue="${projectInfo.teamMemberNames}"
+								title="用户" url="/sys/office/treeData?type=3" cssClass="input-xxlarge" allowClear="true" notAllowSelectParent="true" checked="true"/>
+				<span class="help-inline">设置哪些人负责当前项目,包含整个项目进度周期. </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目小组成员：</label>
 			<div class="controls">
-					<%--<sys:treeselect id="projectTeamMembers" name="projectTeamMembers" value="${projectInfo.projectTeamMembers}" labelName="projectTeamMemberNames" labelValue="${projectInfo.projectTeamMemberNames}"
-								title="用户" url="/sys/office/treeData?type=3" cssClass="input-xxlarge" allowClear="true" notAllowSelectParent="true" checked="true"/>--%>
-					${projectInfo.projectTeamMemberNames}
+				<sys:treeselect id="projectTeamMembers" name="projectTeamMembers" value="${projectInfo.projectTeamMembers}" labelName="projectTeamMemberNames" labelValue="${projectInfo.projectTeamMemberNames}"
+								title="用户" url="/sys/office/treeData?type=3" cssClass="input-xxlarge" allowClear="true" notAllowSelectParent="true" checked="true"/>
+				<span class="help-inline">设置哪些人允许看到当前项目,且项目进度为基金投决会(含)之前的. </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">行业领域：</label>
 			<div class="controls">
-				<%--<form:select path="industryDomain" class="input-xlarge ">
+				<form:select path="industryDomain" class="input-xlarge ">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('industryDomain')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>--%>
-						${fns:getDictLabel(projectInfo.industryDomain, 'industryDomain', '暂无行业领域')}
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">主营业务：</label>
 			<div class="controls">
-				<%--<form:input path="mainBusiness" htmlEscape="false" maxlength="100" class="input-xxlarge "/>
-				<span class="help-inline">可输入文本信息 </span>--%>
-						${projectInfo.mainBusiness}
+				<form:input path="mainBusiness" htmlEscape="false" maxlength="100" class="input-xxlarge "/>
+				<span class="help-inline">可输入文本信息 </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目介绍：</label>
 			<div class="controls">
-				<%--<form:textarea id="content" htmlEscape="true" path="content" rows="4" maxlength="200" class="input-xlarge"/>
-				<sys:ckeditor replace="content" uploadPath="/project/projectInfo/content" />--%>
-						${projectInfo.content}
+				<form:textarea id="content" htmlEscape="true" path="content" rows="4" maxlength="200" class="input-xlarge"/>
+				<sys:ckeditor replace="content" uploadPath="/project/projectInfo/content" />
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">附件路径：</label>
 			<div class="controls">
 				<form:hidden id="filepath" path="filepath" htmlEscape="false" maxlength="200" class="input-xlarge"/>
-				<sys:ckfinder input="filepath" type="files" uploadPath="/project/projectInfo" selectMultiple="true" addonly="true"/>
-				<%--<input type="hidden" id="filepath" value="${projectInfo.filepath}" />
-				<sys:ckfinder input="filepath" type="files" uploadPath="/project/projectInfo" selectMultiple="true" readonly="true"/>--%>
+				<sys:ckfinder input="filepath" type="files" uploadPath="/project/projectInfo" selectMultiple="true"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">年收入：</label>
 			<div class="controls">
-				<%--<form:input path="annualIncome" htmlEscape="false" maxlength="100" class="input-xlarge "/>
-				<span class="help-inline">可输入文本信息 </span>--%>
-						${projectInfo.annualIncome}
+				<form:input path="annualIncome" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				<span class="help-inline">可输入文本信息 </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">年净利润：</label>
 			<div class="controls">
-				<%--<form:input path="annualNetProfit" htmlEscape="false" maxlength="100" class="input-xlarge "/>
-				<span class="help-inline">可输入文本信息 </span>--%>
-						${projectInfo.annualNetProfit}
+				<form:input path="annualNetProfit" htmlEscape="false" maxlength="100" class="input-xlarge "/>
+				<span class="help-inline">可输入文本信息 </span>
 			</div>
 		</div>
 		<%--<div class="control-group">
@@ -167,45 +156,40 @@
 		<div class="control-group">
 			<label class="control-label">项目的开始时间：</label>
 			<div class="controls">
-				<%--<input name="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="startDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
 					value="<fmt:formatDate value="${projectInfo.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>--%>
-					<fmt:formatDate value="${projectInfo.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目推荐人：</label>
 			<div class="controls">
-				<%--<form:input path="recommendedMan" htmlEscape="false" maxlength="50" class="input-xlarge "/>
-				<span class="help-inline">可输入文本信息 </span>--%>
-						${projectInfo.recommendedMan}
+				<form:input path="recommendedMan" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<span class="help-inline">可输入文本信息 </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目的推荐时间：</label>
 			<div class="controls">
-				<%--<input name="recommendedDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
+				<input name="recommendedDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
 					value="<fmt:formatDate value="${projectInfo.recommendedDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>--%>
-					<fmt:formatDate value="${projectInfo.recommendedDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">项目类型：</label>
 			<div class="controls">
-				<%--<form:select path="projectType" class="input-xlarge ">
+				<form:select path="projectType" class="input-xlarge ">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('projectType')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-				</form:select>--%>
-						${fns:getDictLabel(projectInfo.projectType, 'projectType', '暂无类型')}
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">拟投金额：</label>
 			<div class="controls">
-				<%--<form:input path="intendedMoney" htmlEscape="false" class="input-xlarge number"/>
-				<span class="help-inline">只能为数值类型 </span>--%>
-						${projectInfo.intendedMoney}
+				<form:input path="intendedMoney" htmlEscape="false" class="input-xlarge number"/>
+				<span class="help-inline">只能为数值类型 </span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -216,7 +200,7 @@
 					<form:options items="${fns:getDictList('projectStatus')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
-				<span class="help-inline"> </span>
+				<span class="help-inline">个人编辑阶段:只有项目创建者可见;立项会初审阶段:创建者就不能编辑了. </span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -269,7 +253,7 @@
 				</c:if>
 			<%--</shiro:hasPermission>--%>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
-			<span class="help-inline">提示:项目进度立项以后,只允许上传资料,变更项目状态及备注操作. </span>
+			<span class="help-inline">提示:项目进度立项以后就不可以变更基础资料. </span>
 		</div>
 	</form:form>
 </body>

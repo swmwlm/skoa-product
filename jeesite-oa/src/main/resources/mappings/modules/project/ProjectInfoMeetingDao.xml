@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.project.dao.ProjectInfoMeetingDao">
+    
+	<sql id="projectInfoMeetingColumns">
+		a.id AS "id",
+		a.project_info_id AS "projectInfoId",
+		a.status_origin AS "statusOrigin",
+		a.status_current AS "statusCurrent",
+		a.filepath AS "filepath",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="projectInfoMeetingJoins">
+	</sql>
+    
+	<select id="get" resultType="ProjectInfoMeeting">
+		SELECT 
+			<include refid="projectInfoMeetingColumns"/>
+		FROM project_info_meeting a
+		<include refid="projectInfoMeetingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProjectInfoMeeting">
+		SELECT 
+			<include refid="projectInfoMeetingColumns"/>
+		FROM project_info_meeting a
+		<include refid="projectInfoMeetingJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProjectInfoMeeting">
+		SELECT 
+			<include refid="projectInfoMeetingColumns"/>
+		FROM project_info_meeting a
+		<include refid="projectInfoMeetingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO project_info_meeting(
+			id,
+			project_info_id,
+			status_origin,
+			status_current,
+			filepath,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{projectInfoId},
+			#{statusOrigin},
+			#{statusCurrent},
+			#{filepath},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE project_info_meeting SET 	
+			project_info_id = #{projectInfoId},
+			status_origin = #{statusOrigin},
+			status_current = #{statusCurrent},
+			filepath = #{filepath},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM project_info_meeting
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -5,19 +5,19 @@ package com.thinkgem.jeesite.modules.project.web;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
+import com.thinkgem.jeesite.modules.project.entity.ProjectInfoMeeting;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfoProgress;
 import com.thinkgem.jeesite.modules.project.entity.ProjectNote;
+import com.thinkgem.jeesite.modules.project.service.ProjectInfoMeetingService;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoProgressService;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.project.service.ProjectNoteService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
 import com.thinkgem.jeesite.modules.sys.utils.ProjectInfoUtils;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -48,6 +48,9 @@ public class ProjectInfoController extends BaseController {
 
 	@Autowired
 	private ProjectInfoProgressService projectInfoProgressService;
+
+	@Autowired
+	private ProjectInfoMeetingService projectInfoMeetingService;
 
 	@Autowired
 	private SystemService systemService;
@@ -81,10 +84,15 @@ public class ProjectInfoController extends BaseController {
 		//新增项目;
 		if(StringUtils.isBlank(projectInfo.getId())) {
 			model.addAttribute("projectInfo", projectInfo);
-			return "modules/project/projectInfoForm";
+			return "modules/project/projectInfoFormByCreator";
 		}
 		//有项目编辑权限
 		if(ProjectInfoUtils.editableProject(projectInfo)){
+			//当是项目创建者,处于个人编辑时;
+			if(ProjectInfoUtils.isProjectInfoCreatorAndProjectStatus0(projectInfo)){
+				model.addAttribute("projectInfo", projectInfo);
+				return "modules/project/projectInfoFormByCreator";
+			}
 			//校验当前用户是否拥有该项目的编辑权限,且项目进度为null或者小于2;
 			if(null==projectInfo.getProjectProgress()||Integer.parseInt(projectInfo.getProjectProgress())<2){
 				model.addAttribute("projectInfo", projectInfo);
@@ -194,6 +202,61 @@ public class ProjectInfoController extends BaseController {
 		addMessage(redirectAttributes, "项目进度更新成功!");
 		return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
 
+	}
+
+
+	@RequiresPermissions("project:projectInfo:view")
+	@RequestMapping(value = "updateMeeting")
+	public String updateMeeting(String meetingProjectInfoId, String flag, String remarks, RedirectAttributes redirectAttributes) {
+		if (StringUtils.isAnyBlank(meetingProjectInfoId, flag)) {
+			addMessage(redirectAttributes, "参数有误,审批操作失败!");
+			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
+		}
+		ProjectInfo projectInfo = projectInfoService.get(meetingProjectInfoId);
+
+		if (null == projectInfo) {
+			addMessage(redirectAttributes, "参数有误,审批操作失败!");
+			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
+		}
+
+		String newProjectStatus = getNewProjectStatus(flag, projectInfo.getProjectStatus());
+		if (StringUtils.isBlank(newProjectStatus)) {
+			addMessage(redirectAttributes, "项目状态有误,审批操作失败!");
+			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
+		}
+
+		ProjectInfoMeeting projectInfoMeeting = new ProjectInfoMeeting();
+		projectInfoMeeting.setId("");
+		projectInfoMeeting.setRemarks(remarks);
+		projectInfoMeeting.setStatusOrigin(projectInfo.getProjectStatus());
+		projectInfoMeeting.setStatusCurrent(newProjectStatus);
+
+		projectInfoMeetingService.addProjectInfoMeeting(projectInfo, projectInfoMeeting);
+
+		addMessage(redirectAttributes, "审批操作成功!");
+		return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
+
+	}
+
+	private String getNewProjectStatus(String flag, String status) {
+		if (status.equals("4")) {
+			if (flag.equals("1")) {
+				return "5";
+			}
+			if (flag.equals("0")) {
+				return "0";
+			}
+		} else {
+			if (status.equals("5")) {
+				if (flag.equals("1")) {
+					return "1";
+				}
+				if (flag.equals("0")) {
+					return "0";
+				}
+			}
+		}
+		return "";
 	}
 
 }

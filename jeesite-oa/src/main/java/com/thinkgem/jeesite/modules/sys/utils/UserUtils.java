@@ -157,6 +157,15 @@ public class UserUtils {
 	}
 
 	/**
+	 * 判断当前角色集合中是否存在
+	 * @return
+	 */
+	public static Boolean isPartnerRole(){
+		List<String> roleNameList= Collections3.extractToList(UserUtils.getUser().getRoleList(),"name");
+		return roleNameList.contains("合伙人");
+	}
+
+	/**
 	 * 获取所有岗位列表
 	 * @return
 	 */

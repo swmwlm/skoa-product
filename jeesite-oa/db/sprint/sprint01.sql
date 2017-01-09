@@ -270,3 +270,30 @@ ALTER TABLE jeesite.oa_notify_record modify COLUMN read_date datetime;
 /* 项目表增加 项目小组及姓名 */
 ALTER TABLE project_info ADD COLUMN `project_team_members` varchar(2000) COMMENT '项目小组成员';
 ALTER TABLE project_info ADD COLUMN `project_team_member_names` varchar(2000) COMMENT '项目小组成员姓名';
+
+/* 更新项目状态字典数据,支持项目立项会前置审批功能 */
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('294ec491db884c81bf8760c325e4f2ec', '5', '立项会复审', 'projectStatus', '立项会复审', 17, '0', '1', '2017-01-03 11:40:02', '1', '2017-01-03 11:41:33', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('be638c2d8c9443bd92fab9bbf454efaf', '4', '立项会初审', 'projectStatus', '立项会初审', 15, '0', '1', '2017-01-03 11:39:10', '1', '2017-01-03 11:41:54', '', '0');
+
+
+
+/* Drop Tables */
+DROP TABLE IF EXISTS project_info_meeting;
+/* 项目状态变更表 */
+CREATE TABLE project_info_meeting
+(
+	id varchar(64) NOT NULL COMMENT '编号',
+	project_info_id varchar(64) COMMENT '项目id',
+  status_origin char(2) COMMENT '项目状态-更新前',
+  status_current char(2) COMMENT '项目状态-更新后',
+  filepath varchar(2000) COMMENT '附件路径',
+	create_by varchar(64) NOT NULL COMMENT '状态更新者',
+	create_date datetime NOT NULL COMMENT '状态更新时间',
+	update_by varchar(64) NOT NULL COMMENT '状态更新者',
+	update_date datetime NOT NULL COMMENT '状态更新时间',
+	remarks varchar(255) COMMENT '状态更新备注',
+	PRIMARY KEY (id)
+) COMMENT = '项目立项审批变更表';
+CREATE INDEX project_info_meeting_projectInfo_id ON project_info_meeting (project_info_id ASC);
+
+

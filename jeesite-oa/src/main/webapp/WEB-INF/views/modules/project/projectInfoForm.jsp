@@ -27,6 +27,9 @@
 					}
 				}
 			});
+			$("#projectStatus option[value='0']").remove();
+			$("#projectStatus option[value='4']").remove();
+			$("#projectStatus option[value='5']").remove();
 		});
 	</script>
 </head>
@@ -196,7 +199,7 @@
 					<form:options items="${fns:getDictList('projectStatus')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
-				<span class="help-inline">个人编辑阶段:只有项目创建者可见;项目发布阶段:创建者就不能编辑了. </span>
+				<span class="help-inline"> </span>
 			</div>
 		</div>
 		<div class="control-group">
