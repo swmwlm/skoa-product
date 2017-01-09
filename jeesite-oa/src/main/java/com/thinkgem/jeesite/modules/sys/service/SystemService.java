@@ -9,10 +9,7 @@ import com.thinkgem.jeesite.common.security.Digests;
 import com.thinkgem.jeesite.common.security.shiro.session.SessionDAO;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.service.ServiceException;
-import com.thinkgem.jeesite.common.utils.CacheUtils;
-import com.thinkgem.jeesite.common.utils.Encodes;
-import com.thinkgem.jeesite.common.utils.Pinyin4jUtil;
-import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.utils.*;
 import com.thinkgem.jeesite.common.web.Servlets;
 import com.thinkgem.jeesite.modules.sys.dao.MenuDao;
 import com.thinkgem.jeesite.modules.sys.dao.RoleDao;
@@ -167,6 +164,35 @@ public class SystemService extends BaseService implements InitializingBean {
 //			// 清除权限缓存
 //			systemRealm.clearAllCachedAuthorizationInfo();
 		}
+	}
+
+	@Transactional(readOnly = false)
+	/**
+	 * app注册（临时接口,用于上架审批）
+	 */
+	public void saveAppUser(User user) {
+		if (!Global.getConfig("app.allowRegister").equals("true")) {
+			return;
+		}
+		user.setId(IdGen.uuid());
+
+		user.setQuanpin(Pinyin4jUtil.getPinyinToLowerCase(user.getName()));
+		user.setJianpin(Pinyin4jUtil.getPinyinJianPin(user.getName()).toLowerCase());
+
+		User createBy = getUserByLoginName(Global.getConfig("app.register.createBy.loginName"));
+		user.setCreateBy(createBy);
+		user.setCreateDate(new Date());
+		user.setUpdateBy(createBy);
+		user.setUpdateDate(new Date());
+
+		user.setCompany(new Office(Global.getConfig("app.register.company.id")));
+		user.setOffice(new Office(Global.getConfig("app.register.office.id")));
+
+		user.setLoginFlag("1");
+
+		user.setRemarks("APP注册");
+
+		userDao.insert(user);
 	}
 	
 	@Transactional(readOnly = false)

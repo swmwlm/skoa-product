@@ -72,7 +72,7 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		//1.2 当前用户可以看到 项目进度为null,且项目状态为4,且项目所属部门的主副负责人为当前用户的项目;
 		sb.append(" or (a.project_progress is null and a.project_status=4 and (o2.PRIMARY_PERSON ='"+userId+"' or o2.DEPUTY_PERSON='"+userId+"') ) ");
 		//1.3 当前用户可以看到 项目进度为null,且项目状态为5,且当前用户的角色为合伙人的项目
-		sb.append(" or (a.project_progress is null and a.project_status=5 and "+UserUtils.isPartnerRole()+" ) ");
+		sb.append(" or (a.project_progress is null and a.project_status=5 and "+UserUtils.isPartnerRole(userId)+" ) ");
 		//1.4 项目状态为 1发布状态 下,当项目进度为null时,显示该项目;
 		sb.append(" or (a.project_progress is null and a.project_status=1 ) ");
 
