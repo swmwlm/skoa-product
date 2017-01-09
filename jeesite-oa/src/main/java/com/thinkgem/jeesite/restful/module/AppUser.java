@@ -8,6 +8,7 @@ public class AppUser {
     private String photo;   //头像
     private String loginName;//登录名
     private String password;//密码
+    private String confirmPassword;//确认密码
     private String name;    //姓名
     private String mobile;  //手机
     private String email;   //邮箱
@@ -94,4 +95,13 @@ public class AppUser {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
 }

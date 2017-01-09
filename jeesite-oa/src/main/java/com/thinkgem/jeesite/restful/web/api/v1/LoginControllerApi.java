@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.restful.web.api.v1;
 
 import com.google.common.base.Preconditions;
+import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.json.JsonResultModel;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.DateUtils;
@@ -119,5 +120,52 @@ public class LoginControllerApi extends BaseController {
         return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
     }
 
+
+    //------------------- 注册 -----------------------------------------------------------------
+    @ApiOperation(value = "注册", notes = "注册")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<JsonResultModel> register(@ApiParam(
+            value = "appUser object",
+            required = true
+    ) @RequestBody AppUser appUser) {
+        jsonResultModel = new JsonResultModel();
+        try {
+            if (!Global.getConfig("app.allowRegister").equals("true")) {
+                jsonResultModel.setMessage("注册已关闭，请联系管理员！");
+                return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
+            }
+
+            Preconditions.checkNotNull(appUser.getLoginName(), "登录名不能为空");
+            Preconditions.checkNotNull(appUser.getPassword(), "密码不能为空");
+            Preconditions.checkNotNull(appUser.getConfirmPassword(), "确认密码不能为空");
+            User checkUser = systemService.getUserByLoginName(appUser.getLoginName());
+            if (checkUser != null) {
+                jsonResultModel.setMessage("登录名已存在！");
+                return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
+            }
+            if (!appUser.getPassword().equals(appUser.getConfirmPassword())) {
+                jsonResultModel.setMessage("密码不一致！");
+                return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
+            }
+
+            User user = new User();
+            user.setLoginName(appUser.getLoginName());
+            user.setName(appUser.getLoginName());
+            user.setPassword(systemService.entryptPassword(appUser.getPassword()));
+            user.setEmail(appUser.getEmail());
+            user.setPhone(appUser.getPhoto());
+            systemService.saveAppUser(user);
+
+
+            jsonResultModel.setStateSuccess();
+            jsonResultModel.setMessage("注册成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("参数校验失败：", e);
+            jsonResultModel.setStateError();
+            jsonResultModel.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
+    }
 
 }

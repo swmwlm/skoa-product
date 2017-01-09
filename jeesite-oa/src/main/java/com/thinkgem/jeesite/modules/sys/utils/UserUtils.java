@@ -160,8 +160,18 @@ public class UserUtils {
 	 * 判断当前角色集合中是否存在
 	 * @return
 	 */
-	public static Boolean isPartnerRole(){
-		List<String> roleNameList= Collections3.extractToList(UserUtils.getUser().getRoleList(),"name");
+	public static Boolean isPartnerRole() {
+		return isPartnerRole(UserUtils.getUser().getId());
+	}
+
+	/**
+	 * 判断某个用户角色集合中是否存在
+	 * @param userId
+	 * @return
+	 */
+	public static Boolean isPartnerRole(String userId) {
+		User user = get(userId);
+		List<String> roleNameList = Collections3.extractToList(user.getRoleList(), "name");
 		return roleNameList.contains("合伙人");
 	}
 
