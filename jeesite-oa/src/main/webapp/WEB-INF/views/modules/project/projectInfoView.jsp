@@ -266,6 +266,38 @@
 			</div>
 		</div>
 		<c:if test="${!fns:isProjectInfoNew(projectInfo)}">
+			<c:if test="${not empty projectInfo.projectInfoMeetingList}">
+			<div class="control-group" id="divProjectMeeting">
+				<table class="table table-hover" id="meetingTable">
+					<thead>
+					<tr>
+						<th>序号</th>
+						<th>立项会审批记录</th>
+						<th>备注</th>
+						<th>操作者</th>
+						<th>日期</th>
+					</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${projectInfo.projectInfoMeetingList}" var="pp" varStatus="status">
+							<tr>
+								<td>${status.index+1}</td>
+								<td>
+										${fns:getDictLabel(pp.statusOrigin, 'projectStatus', '暂无')}=>${fns:getDictLabel(pp.statusCurrent, 'projectStatus', '暂无')}
+								</td>
+								<td>${pp.remarks}</td>
+								<td>${pp.createBy.name}</td>
+								<td>
+									<fmt:formatDate value="${pp.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+			</c:if>
+		</c:if>
+		<c:if test="${!fns:isProjectInfoNew(projectInfo)}">
 			<div class="control-group" id="divProjectProgress">
 				<table class="table table-hover" id="progressTable">
 					<thead>

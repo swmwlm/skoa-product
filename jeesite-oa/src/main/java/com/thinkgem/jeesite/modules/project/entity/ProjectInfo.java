@@ -48,7 +48,8 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 	private BigDecimal intendedMoney;		// 拟投金额
 	private String projectStatus;		// 项目状态
 	private List<ProjectInfoProgress> projectInfoProgressList = Lists.newArrayList();		// 子表列表
-	
+	private List<ProjectInfoMeeting> projectInfoMeetingList = Lists.newArrayList();		// 子表列表
+
 	public ProjectInfo() {
 		super();
 	}
@@ -257,5 +258,13 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 
 	public void setProjectInfoProgressList(List<ProjectInfoProgress> projectInfoProgressList) {
 		this.projectInfoProgressList = projectInfoProgressList;
+	}
+
+	public List<ProjectInfoMeeting> getProjectInfoMeetingList() {
+		return projectInfoMeetingList;
+	}
+
+	public void setProjectInfoMeetingList(List<ProjectInfoMeeting> projectInfoMeetingList) {
+		this.projectInfoMeetingList = projectInfoMeetingList;
 	}
 }

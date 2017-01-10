@@ -8,8 +8,10 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
+import com.thinkgem.jeesite.modules.project.dao.ProjectInfoMeetingDao;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoProgressDao;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
+import com.thinkgem.jeesite.modules.project.entity.ProjectInfoMeeting;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfoProgress;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,10 +35,16 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 
 	@Autowired
 	private ProjectInfoProgressDao projectInfoProgressDao;
+	@Autowired
+	private ProjectInfoMeetingDao projectInfoMeetingDao;
 
 	public ProjectInfo get(String id) {
 		ProjectInfo projectInfo = super.get(id);
 		projectInfo.setProjectInfoProgressList(projectInfoProgressDao.findList(new ProjectInfoProgress(projectInfo)));
+
+		ProjectInfoMeeting projectInfoMeeting=new ProjectInfoMeeting();
+		projectInfoMeeting.setProjectInfoId(projectInfo.getId());
+		projectInfo.setProjectInfoMeetingList(projectInfoMeetingDao.findList(projectInfoMeeting));
 		return projectInfo;
 	}
 	

@@ -12,10 +12,12 @@
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		u.name AS "createBy.name"
 	</sql>
 	
 	<sql id="projectInfoMeetingJoins">
+		LEFT JOIN sys_user u ON u.id = a.create_by
 	</sql>
     
 	<select id="get" resultType="ProjectInfoMeeting">
@@ -32,14 +34,16 @@
 		FROM project_info_meeting a
 		<include refid="projectInfoMeetingJoins"/>
 		<where>
-			
+			<if test="projectInfoId != null and projectInfoId != ''">
+				AND a.project_info_id = #{projectInfoId}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.create_date ASC
 			</otherwise>
 		</choose>
 	</select>
@@ -57,7 +61,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.create_date ASC
 			</otherwise>
 		</choose>
 	</select>
