@@ -260,7 +260,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">备注信息：</label>
+			<label class="control-label">推荐理由：</label>
 			<div class="controls">
 				${projectInfo.remarks}
 			</div>
