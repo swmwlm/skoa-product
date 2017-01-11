@@ -3,14 +3,14 @@
  */
 package com.thinkgem.jeesite.modules.sys.web;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.web.BaseController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.thinkgem.jeesite.common.web.BaseController;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 标签Controller
@@ -33,6 +33,9 @@ public class TagController extends BaseController {
 		model.addAttribute("selectIds", request.getParameter("selectIds")); // 指定默认选中的ID
 		model.addAttribute("isAll", request.getParameter("isAll")); 	// 是否读取全部数据，不进行权限过滤
 		model.addAttribute("module", request.getParameter("module"));	// 过滤栏目模型（仅针对CMS的Category树）
+		String expandNodeLevelStr=request.getParameter("expandNodeLevel");
+		Integer expandNodeLevel=StringUtils.isBlank(expandNodeLevelStr)?1:Integer.parseInt(expandNodeLevelStr);
+		model.addAttribute("expandNodeLevel", expandNodeLevel);	// 展开节点的层数
 		return "modules/sys/tagTreeselect";
 	}
 	

@@ -50,7 +50,7 @@
 			<label class="control-label">归属部门：</label>
 			<div class="controls">
 				<sys:treeselect id="office" name="office.id" value="${projectInfo.office.id}" labelName="office.name" labelValue="${projectInfo.office.name}"
-					title="部门" url="/sys/office/treeData?type=2" cssClass="required" allowClear="true" notAllowSelectParent="true"/>
+					title="部门" url="/sys/office/treeData?type=2" cssClass="required" allowClear="true" notAllowSelectParent="true" expandNodeLevel="2"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

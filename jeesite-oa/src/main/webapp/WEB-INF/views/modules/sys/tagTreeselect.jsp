@@ -51,9 +51,9 @@
 					+ new Date().getTime(), function(zNodes){
 				// 初始化树结构
 				tree = $.fn.zTree.init($("#tree"), setting, zNodes);
-				
+
 				// 默认展开一级节点
-				var nodes = tree.getNodesByParam("level", 0);
+				var nodes = tree.getNodesByParam("level", ${expandNodeLevel-1});
 				for(var i=0; i<nodes.length; i++) {
 					tree.expandNode(nodes[i], true, false, false);
 				}
