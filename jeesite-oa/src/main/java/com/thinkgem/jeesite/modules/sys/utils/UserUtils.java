@@ -9,7 +9,9 @@ import com.thinkgem.jeesite.common.utils.CacheUtils;
 import com.thinkgem.jeesite.common.utils.Collections3;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
+import com.thinkgem.jeesite.modules.project.entity.ProjectInfoMeeting;
 import com.thinkgem.jeesite.modules.sys.dao.*;
 import com.thinkgem.jeesite.modules.sys.entity.*;
 import com.thinkgem.jeesite.modules.sys.security.SystemAuthorizingRealm.Principal;
@@ -53,7 +55,8 @@ public class UserUtils {
 	public static final String CACHE_OFFICE_ALL_LIST = "officeAllList";
 
 	private static DictDao dictDao=SpringContextHolder.getBean(DictDao.class);
-	
+	private static ProjectInfoDao projectInfoDao=SpringContextHolder.getBean(ProjectInfoDao.class);
+
 	/**
 	 * 根据ID获取用户
 	 * @param id
@@ -437,6 +440,66 @@ public class UserUtils {
 
 	public static String getNotifyUserIdsString(ProjectInfo projectInfo, String atUserIds, String createUserId) {
 		Set<String> stringSet = getNotifyUserIds(projectInfo, atUserIds, createUserId);
+		return Collections3.convertToString(stringSet, ",");
+	}
+
+	/**
+	 * 获取项目 立项会审批 需要通知的人员
+	 *
+	 * @param projectInfoMeeting
+	 * @param createUserId
+	 * @return
+	 */
+	public static Set<String> getMeetingNotifyUserIds(ProjectInfoMeeting projectInfoMeeting, String createUserId) {
+		ProjectInfo projectInfo = projectInfoDao.get(projectInfoMeeting.getProjectInfoId());
+		if (projectInfo == null) {
+			return null;
+		}
+		Set<String> resultSet = new HashSet<>();
+//		projectStatus:
+//		0	个人编辑
+//		4	立项会初审
+//		5	立项会复审
+//		1	项目发布
+		String statusOrigin = projectInfoMeeting.getStatusOrigin();
+		String statusCurrent = projectInfoMeeting.getStatusCurrent();
+//		1，提交初审（通知 项目的部门负责人）
+		if (statusOrigin.equals("0") && statusCurrent.equals("4")) {
+			if (projectInfo.getOffice() != null) {
+				if (projectInfo.getOffice().getPrimaryPerson() != null) {
+					resultSet.add(projectInfo.getOffice().getPrimaryPerson().getId());
+				}
+				if (projectInfo.getOffice().getDeputyPerson() != null) {
+					resultSet.add(projectInfo.getOffice().getDeputyPerson().getId());
+				}
+			}
+		}
+//		2，提交复审（通知 合伙人）
+		if (statusOrigin.equals("4") && statusCurrent.equals("5")) {
+			List<Role> roleList = roleDao.findAllList(new Role());
+			for (Role role : roleList) {
+				if (role.getName().contains("合伙人")) {
+					List<User> userList = userDao.findUserByRoleId(role.getId());
+					if (CollectionUtils.isNotEmpty(userList)) {
+						resultSet.addAll(Collections3.extractToList(userList, "id"));
+					}
+					break;
+				}
+			}
+		}
+//		3，初审驳回，或者复审驳回（通知 项目创建人员）
+		if ((statusOrigin.equals("4") || statusOrigin.equals("5")) && statusCurrent.equals("0")) {
+			resultSet.add(projectInfo.getCreateBy().getId());
+		}
+		//4,去掉创建人;去除重复的人(set自动去除了)
+		if (resultSet.contains(createUserId)) {
+			resultSet.remove(createUserId);
+		}
+		return resultSet;
+	}
+
+	public static String getMeetingNotifyUserIdsString(ProjectInfoMeeting projectInfoMeeting, String createUserId) {
+		Set<String> stringSet = getMeetingNotifyUserIds(projectInfoMeeting, createUserId);
 		return Collections3.convertToString(stringSet, ",");
 	}
 

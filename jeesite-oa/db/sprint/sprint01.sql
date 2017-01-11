@@ -296,4 +296,7 @@ CREATE TABLE project_info_meeting
 ) COMMENT = '项目立项审批变更表';
 CREATE INDEX project_info_meeting_projectInfo_id ON project_info_meeting (project_info_id ASC);
 
+/* 更新项目状态字典数据,支持项目立项会消息通知功能 */
+insert into `jeesite`.`sys_dict` ( `id`, `description`, `create_date`, `label`, `update_date`, `create_by`, `parent_id`, `update_by`, `type`, `value`, `del_flag`, `sort`, `remarks`) values ( '7be7a938e01a4182bba591d27524f924', '通知通告类型', '2017-01-11 14:43:34', '项目立项会审批', '2017-01-11 14:43:34', '1', '0', '1', 'oa_notify_type', '6', '0', '60', '');
+
 

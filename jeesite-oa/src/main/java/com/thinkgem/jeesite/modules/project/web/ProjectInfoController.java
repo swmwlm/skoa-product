@@ -121,6 +121,10 @@ public class ProjectInfoController extends BaseController {
 				return form(projectInfo, model, redirectAttributes);
 			}
 			projectInfoService.save(projectInfo);
+			if (orignProjectInfo == null || orignProjectInfo.getProjectStatus() == null || ("0").equals(orignProjectInfo.getProjectStatus())
+					&& ("4").equals(projectInfo.getProjectStatus())) {
+				projectInfoMeetingService.addProjectInfoMeeting(projectInfo, null, "0", projectInfo.getProjectStatus());
+			}
 			addMessage(redirectAttributes, "保存项目成功");
 			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
 		}
@@ -213,29 +217,18 @@ public class ProjectInfoController extends BaseController {
 			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
 		}
 		ProjectInfo projectInfo = projectInfoService.get(meetingProjectInfoId);
-
 		if (null == projectInfo) {
 			addMessage(redirectAttributes, "参数有误,审批操作失败!");
 			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
 		}
-
 		String newProjectStatus = getNewProjectStatus(flag, projectInfo.getProjectStatus());
 		if (StringUtils.isBlank(newProjectStatus)) {
 			addMessage(redirectAttributes, "项目状态有误,审批操作失败!");
 			return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
 		}
-
-		ProjectInfoMeeting projectInfoMeeting = new ProjectInfoMeeting();
-		projectInfoMeeting.setId("");
-		projectInfoMeeting.setRemarks(remarks);
-		projectInfoMeeting.setStatusOrigin(projectInfo.getProjectStatus());
-		projectInfoMeeting.setStatusCurrent(newProjectStatus);
-
-		projectInfoMeetingService.addProjectInfoMeeting(projectInfo, projectInfoMeeting);
-
+		projectInfoMeetingService.addProjectInfoMeeting(projectInfo, remarks, projectInfo.getProjectStatus(), newProjectStatus);
 		addMessage(redirectAttributes, "审批操作成功!");
 		return "redirect:" + Global.getAdminPath() + "/project/projectInfo/?repage";
-
 	}
 
 	private String getNewProjectStatus(String flag, String status) {
