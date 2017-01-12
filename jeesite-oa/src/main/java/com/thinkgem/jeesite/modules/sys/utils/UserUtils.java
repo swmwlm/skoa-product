@@ -444,7 +444,7 @@ public class UserUtils {
 	}
 
 	/**
-	 * 获取项目 立项会审批 需要通知的人员
+	 * 获取项目 申请上立项会审批 需要通知的人员
 	 *
 	 * @param projectInfoMeeting
 	 * @param createUserId
@@ -458,8 +458,8 @@ public class UserUtils {
 		Set<String> resultSet = new HashSet<>();
 //		projectStatus:
 //		0	个人编辑
-//		4	立项会初审
-//		5	立项会复审
+//		4	申请上立项会初审
+//		5	申请上立项会复审
 //		1	项目发布
 		String statusOrigin = projectInfoMeeting.getStatusOrigin();
 		String statusCurrent = projectInfoMeeting.getStatusCurrent();

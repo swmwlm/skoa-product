@@ -63,7 +63,7 @@ public class ProjectInfoUtils {
 		//1.如果当前用户是项目的创建者,且该项目的状态为 个人编辑 时,则可以编辑该项目
 		if(ProjectInfoUtils.isProjectInfoCreatorAndProjectStatus0(projectInfo))
 			return true;
-		//2.如果当前用户是项目的负责人,且项目状态不能处于0(个人编辑),4(立项会初审)或者5(立项会复审)状态,可以编辑项目
+		//2.如果当前用户是项目的负责人,且项目状态不能处于0(个人编辑),4(申请上立项会初审)或者5(申请上立项会复审)状态,可以编辑项目
 		//也即是:当前用户是项目的负责人,且项目状态为1(项目发布),2(项目暂停),3(项目完成)时,拥有编辑项目权限;
 		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)
 				&&!"0".equals(projectInfo.getProjectStatus())
@@ -229,7 +229,7 @@ public class ProjectInfoUtils {
 	}
 
 	/**
-	 * 判断当前用户 是否拥有 4立项会初审 权限
+	 * 判断当前用户 是否拥有 4申请上立项会初审 权限
 	 * 项目所属的部门的主副负责人 是当前用户,则表示有权限
 	 * @param projectInfo
 	 * @return
@@ -242,7 +242,7 @@ public class ProjectInfoUtils {
 	}
 
 	/**
-	 * 判断当前用户是否拥有 5立项会复审 权限
+	 * 判断当前用户是否拥有 5申请上立项会复审 权限
 	 * 当前用户 拥有 合伙人角色权限,表示有权限
 	 * @param projectInfo
 	 * @return

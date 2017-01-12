@@ -3,24 +3,22 @@
  */
 package com.thinkgem.jeesite.modules.project.service;
 
-import java.util.List;
-
+import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.oa.entity.OaNotify;
 import com.thinkgem.jeesite.modules.oa.service.OaNotifyService;
 import com.thinkgem.jeesite.modules.project.dao.ProjectInfoDao;
+import com.thinkgem.jeesite.modules.project.dao.ProjectInfoMeetingDao;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
-import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
+import com.thinkgem.jeesite.modules.project.entity.ProjectInfoMeeting;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.service.CrudService;
-import com.thinkgem.jeesite.modules.project.entity.ProjectInfoMeeting;
-import com.thinkgem.jeesite.modules.project.dao.ProjectInfoMeetingDao;
+import java.util.List;
 
 /**
  * 项目立项审批Service
@@ -89,19 +87,19 @@ public class ProjectInfoMeetingService extends CrudService<ProjectInfoMeetingDao
 		content.append("项目");
 //		1，提交初审
 		if (statusOrigin.equals("0") && statusCurrent.equals("4")) {
-			content.append("已提交立项会初审，请审批。");
+			content.append("已提交申请上立项会初审，请审批。");
 		}
 //		2，提交复审
 		if (statusOrigin.equals("4") && statusCurrent.equals("5")) {
-			content.append("已提交立项会复审，请审批。");
+			content.append("已提交申请上立项会复审，请审批。");
 		}
 //		3，初审驳回
 		if (statusOrigin.equals("4") && statusCurrent.equals("0")) {
-			content.append("立项会初审未通过。");
+			content.append("申请上立项会初审未通过。");
 		}
 //		4，复审驳回
 		if (statusOrigin.equals("5") && statusCurrent.equals("0")) {
-			content.append("立项会复审未通过。");
+			content.append("申请上立项会复审未通过。");
 		}
 		if (StringUtils.isNotBlank(remarks)) {
 			content.append(" 备注:" + remarks);
@@ -115,7 +113,7 @@ public class ProjectInfoMeetingService extends CrudService<ProjectInfoMeetingDao
 		oaNotify.setOaNotifyRecordIds(oaNotifyRecordIds);
 		oaNotify.setRemarks(projectInfo.getId());
 		oaNotifyService.save(oaNotify);
-		System.out.println("【项目立项会审批消息通知：(通知人员ids:" + oaNotifyRecordIds + "),（通知内容:" + content.toString() + ")】");
+		System.out.println("【项目申请上立项会审批消息通知：(通知人员ids:" + oaNotifyRecordIds + "),（通知内容:" + content.toString() + ")】");
 	}
 
 }

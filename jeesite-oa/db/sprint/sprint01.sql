@@ -271,7 +271,7 @@ ALTER TABLE jeesite.oa_notify_record modify COLUMN read_date datetime;
 ALTER TABLE project_info ADD COLUMN `project_team_members` varchar(2000) COMMENT '项目小组成员';
 ALTER TABLE project_info ADD COLUMN `project_team_member_names` varchar(2000) COMMENT '项目小组成员姓名';
 
-/* 更新项目状态字典数据,支持项目立项会前置审批功能 */
+/* 更新项目状态字典数据,支持项目申请上立项会前置审批功能 */
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('294ec491db884c81bf8760c325e4f2ec', '5', '立项会复审', 'projectStatus', '立项会复审', 17, '0', '1', '2017-01-03 11:40:02', '1', '2017-01-03 11:41:33', '', '0');
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('be638c2d8c9443bd92fab9bbf454efaf', '4', '立项会初审', 'projectStatus', '立项会初审', 15, '0', '1', '2017-01-03 11:39:10', '1', '2017-01-03 11:41:54', '', '0');
 
@@ -296,7 +296,12 @@ CREATE TABLE project_info_meeting
 ) COMMENT = '项目立项审批变更表';
 CREATE INDEX project_info_meeting_projectInfo_id ON project_info_meeting (project_info_id ASC);
 
-/* 更新项目状态字典数据,支持项目立项会消息通知功能 */
+/* 更新项目状态字典数据,支持项目申请上立项会消息通知功能 */
 insert into `jeesite`.`sys_dict` ( `id`, `description`, `create_date`, `label`, `update_date`, `create_by`, `parent_id`, `update_by`, `type`, `value`, `del_flag`, `sort`, `remarks`) values ( '7be7a938e01a4182bba591d27524f924', '通知通告类型', '2017-01-11 14:43:34', '项目立项会审批', '2017-01-11 14:43:34', '1', '0', '1', 'oa_notify_type', '6', '0', '60', '');
 
-
+/* 更新字典label,项目立项会审批 修改为 项目申请上立项会审批 */
+update `jeesite`.`sys_dict` SET `label`='项目申请上立项会审批' WHERE `id`='7be7a938e01a4182bba591d27524f924' AND `type`='oa_notify_type' AND `value`='6';
+/* 更新字典label,立项会初审 修改为 申请上立项会初审 */
+update `jeesite`.`sys_dict` SET `label`='申请上立项会初审' WHERE `id`='be638c2d8c9443bd92fab9bbf454efaf' AND `type`='projectStatus' AND `value`='4';
+/* 更新字典label,立项会复审 修改为 申请上立项会复审 */
+update `jeesite`.`sys_dict` SET `label`='申请上立项会复审' WHERE `id`='294ec491db884c81bf8760c325e4f2ec' AND `type`='projectStatus' AND `value`='5';

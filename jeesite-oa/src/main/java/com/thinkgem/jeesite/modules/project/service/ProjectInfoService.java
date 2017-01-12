@@ -103,7 +103,7 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 
 		projectInfo.getSqlMap().put("dsf",sb.toString());
 		//orderBy:1.把自己创建的项目,且处于 个人编辑 状态的,优先显示
-		//orderBy:1.1 项目状态处于4(立项会初审)或者5(立项会复审),次优显示
+		//orderBy:1.1 项目状态处于4(申请上立项会初审)或者5(申请上立项会复审),次优显示
 		//orderBy:2.是项目负责人的项目,次优显示
 		//orderBy:3.是项目小组的项目,次次优显示
 		//orderBy:4.更新时间,最后显示
