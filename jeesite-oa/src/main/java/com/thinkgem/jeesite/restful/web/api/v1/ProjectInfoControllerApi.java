@@ -135,7 +135,7 @@ public class ProjectInfoControllerApi extends BaseController {
                     appProjectInfo.setId(item.getId());
                     appProjectInfo.setProjectName(item.getProjectName());
                     appProjectInfo.setProjectProgress(item.getProjectProgress());
-                    appProjectInfo.setProjectProgressName(DictUtils.getDictLabel(item.getProjectProgress(), "projectProgress", ""));
+                    appProjectInfo.setProjectProgressName(DictUtils.getDictLabel(item.getProjectProgress(), "projectProgress", "暂无进度"));
                     appProjectInfo.setCreateByUserName(UserUtils.get(item.getCreateBy().getId()).getName());
                     appProjectInfo.setPrimaryPersonName(UserUtils.get(item.getPrimaryPerson().getId()).getName());
                     appProjectInfo.setTeamMemberNames(item.getTeamMemberNames());
