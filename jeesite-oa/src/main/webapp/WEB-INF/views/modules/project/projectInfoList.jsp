@@ -34,6 +34,7 @@
 				alertx("项目进度不能后撤");
 				return false;
 			}
+			$('#myModal').modal('hide');
 			return true;
 		}
 
@@ -51,8 +52,8 @@
 			meetingSubmit();
 		}
 		function meetingSubmit() {
-			$("#meetingForm").submit();
 			$('#myMeetingModal').modal('hide');
+			$("#meetingForm").submit();
 		}
 
 	</script>
