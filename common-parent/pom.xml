@@ -135,6 +135,13 @@
 		<commons-codec.version>1.10</commons-codec.version>
 		<morph.version>1.1.1</morph.version>
 
+		<!-- jpush相关 start -->
+		<jpush-client.version>3.2.15</jpush-client.version>
+		<jiguang-common.version>1.0.1</jiguang-common.version>
+		<netty.version>4.1.6.Final</netty.version>
+		<gson.version>2.3</gson.version>
+		<!-- jpush相关 end -->
+
 		<!--<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>-->
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 	</properties>
@@ -820,6 +827,30 @@
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>${httpclient.version}</version>
+			</dependency>
+
+			<!--JPush消息推送相关-->
+			<dependency>
+				<groupId>cn.jpush.api</groupId>
+				<artifactId>jpush-client</artifactId>
+				<version>${jpush-client.version}</version>
+			</dependency>
+			<!--JPush消息推送依赖包相关-->
+			<dependency>
+				<groupId>cn.jpush.api</groupId>
+				<artifactId>jiguang-common</artifactId>
+				<version>${jiguang-common.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-all</artifactId>
+				<version>${netty.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>${gson.version}</version>
 			</dependency>
 
 		</dependencies>

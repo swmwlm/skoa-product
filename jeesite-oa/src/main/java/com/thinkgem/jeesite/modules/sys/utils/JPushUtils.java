@@ -1,23 +1,23 @@
 package com.thinkgem.jeesite.modules.sys.utils;
 
-import com.google.common.base.Splitter;
-import com.thinkgem.jeesite.common.config.Global;
-import com.thinkgem.jeesite.common.utils.Collections3;
-import com.thinkgem.jeesite.common.utils.StringUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import cn.jiguang.commom.ClientConfig;
+import cn.jiguang.common.ClientConfig;
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jpush.api.JPushClient;
 import cn.jpush.api.push.PushResult;
-import cn.jpush.api.push.model.*;
+import cn.jpush.api.push.model.Options;
+import cn.jpush.api.push.model.Platform;
+import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
+import com.google.common.base.Splitter;
+import com.thinkgem.jeesite.common.config.Global;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -76,8 +76,7 @@ public class JPushUtils {
     }
 
     public static Boolean sendPush(String userId, String alertContent, Integer extraType) {
-        ClientConfig clientConfig = ClientConfig.getInstance();
-        JPushClient jpushClient = new JPushClient(Global.getConfig("jpush.masterSecret"), Global.getConfig("jpush.appKey"), null, clientConfig);
+        JPushClient jpushClient = new JPushClient(Global.getConfig("jpush.masterSecret"), Global.getConfig("jpush.appKey"), null, ClientConfig.getInstance());
 
         PushPayload payload = buildPushObject_android_and_ios(userId, alertContent, extraType);
 
