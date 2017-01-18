@@ -51,7 +51,7 @@ public class DictControllerApi extends BaseController {
     private SystemService systemService;
 
 
-    @ApiOperation(value = "字典值获取", notes = "字典值获取（类型：项目级别projectGrade，项目进度projectProgress，项目状态projectStatus，项目类型projectType，行业领域industryDomain）")
+    @ApiOperation(value = "字典值获取", notes = "字典值获取（类型：项目级别projectGrade，项目进度projectProgress，项目状态projectStatus，项目阶段projectType，行业领域industryDomain）")
     @RequestMapping(value = "/{type}", method = RequestMethod.GET)
     public ResponseEntity<JsonResultModel> dicts(@PathVariable String type) {
         jsonResultModel = new JsonResultModel();
@@ -98,7 +98,7 @@ public class DictControllerApi extends BaseController {
         appProjectProgressMap.put("9", "投后100%");
     }
 
-    @ApiOperation(value = "字典值获取", notes = "字典值获取（类型：项目级别projectGrade，项目进度projectProgress，项目状态projectStatus，项目类型projectType，行业领域industryDomain）")
+    @ApiOperation(value = "字典值获取", notes = "字典值获取（类型：项目级别projectGrade，项目进度projectProgress，项目状态projectStatus，项目阶段projectType，行业领域industryDomain）")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<JsonResultModel> alldicts() {
         jsonResultModel = new JsonResultModel();

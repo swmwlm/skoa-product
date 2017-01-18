@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.thinkgem.jeesite.common.json.JsonResultModel;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
-import com.thinkgem.jeesite.common.utils.cglib.SimpleBeanCopier;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.sys.entity.Area;
@@ -16,7 +15,6 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.restful.module.AppProjectInfo;
 import com.thinkgem.jeesite.restful.module.AppProjectInfoDetail;
 import com.thinkgem.jeesite.restful.module.AppProjectInfoSearch;
-import com.thinkgem.jeesite.restful.module.AppUser;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -95,7 +93,7 @@ public class ProjectInfoControllerApi extends BaseController {
             if (StringUtils.isNotBlank(appProjectInfoSearch.getProjectStatus())) {
                 projectInfo.setProjectStatus(appProjectInfoSearch.getProjectStatus());
             }
-//            项目类型
+//            项目阶段
             if (StringUtils.isNotBlank(appProjectInfoSearch.getProjectType())) {
                 projectInfo.setProjectType(appProjectInfoSearch.getProjectType());
             }

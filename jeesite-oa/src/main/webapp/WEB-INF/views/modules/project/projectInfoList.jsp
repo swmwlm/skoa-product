@@ -107,7 +107,7 @@
 					<form:options items="${fns:getDictList('projectProgress')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
-			<li><label>项目类型：</label>
+			<li><label>项目阶段：</label>
 				<form:select path="projectType" class="input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('projectType')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
@@ -132,7 +132,7 @@
 				<th>项目主负责人</th>
 				<th>行业领域</th>
 				<th title="负责人可以变更项目进度">项目进度 <i class="icon-question-sign"></i></th>
-				<th>项目类型</th>
+				<th>项目阶段</th>
 				<th>项目状态</th>
 				<%--<th class="sort-column a.update_date">更新时间</th>--%>
 				<th title="处于项目发布状态且超过15天未做更新的,&#10;系统将发通知提醒负责人">更新时间 <i class="icon-question-sign"></i></th>

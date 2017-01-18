@@ -25,7 +25,7 @@ CREATE TABLE project_info
 	start_date datetime COMMENT '项目的开始时间',
 	recommended_man VARCHAR(50) COMMENT '项目推荐人',
 	recommended_date datetime COMMENT '项目的推荐时间',
-	project_type char(2) COMMENT '项目类型',
+	project_type char(2) COMMENT '项目阶段',
   intended_money DECIMAL(20,2) DEFAULT NULL COMMENT '拟投金额',
   project_status char(1) DEFAULT '0' NOT NULL COMMENT '项目状态:0,个人编辑;1,项目发布;2项目暂停;3项目完成',
 
@@ -78,10 +78,6 @@ INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('1d8569f1e4964186b4c0441c04ba4d00', '0', '个人编辑', 'projectStatus', '推介人编辑', 10, '0', '1', '2016-09-23 09:52:18', '1', '2016-09-23 09:52:18', '推介人编辑状态，项目的基础资料录入', '0');
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('2c9591ec55584b91a904d07635eee438', '2', '项目暂停', 'projectStatus', '项目负责人设置项目暂停状态', 30, '0', '1', '2016-09-23 09:55:26', '1', '2016-09-23 09:55:26', '项目负责人设置项目暂停状态', '0');
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('fdf311be46774255beb71b0da142df1a', '1', '项目发布', 'projectStatus', '项目负责人管理状态', 20, '0', '1', '2016-09-23 09:53:25', '1', '2016-09-23 09:53:25', '项目负责人对项目进行管理维护', '0');
-
-/* 更新项目类型字典数据 */
-DELETE from jeesite.sys_dict WHERE type='projectType';
-INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('3bda1ee6467d41f788068efbc39a89b6', '1', 'A轮', 'projectType', 'A轮', 10, '0', '1', '2016-09-23 09:45:47', '1', '2016-09-23 09:45:47', '', '0');
 
 /* 更新项目级别字典数据 */
 DELETE from jeesite.sys_dict WHERE type='projectGrade';
@@ -305,3 +301,16 @@ update `jeesite`.`sys_dict` SET `label`='项目申请上立项会审批' WHERE `
 update `jeesite`.`sys_dict` SET `label`='申请上立项会初审' WHERE `id`='be638c2d8c9443bd92fab9bbf454efaf' AND `type`='projectStatus' AND `value`='4';
 /* 更新字典label,立项会复审 修改为 申请上立项会复审 */
 update `jeesite`.`sys_dict` SET `label`='申请上立项会复审' WHERE `id`='294ec491db884c81bf8760c325e4f2ec' AND `type`='projectStatus' AND `value`='5';
+
+
+/* 更新项目阶段字典数据 */
+DELETE from jeesite.sys_dict WHERE type='projectType';
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('3694604f9fa740ebb5ea668645bb2def', '1', '种子', 'projectType', '项目阶段', 10, '0', '1', '2017-01-18 16:12:04', '1', '2017-01-18 16:12:04', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('089aedf0a0a9433cb8599bc6dc471d1f', '2', '天使', 'projectType', '项目阶段', 20, '0', '1', '2017-01-18 16:12:18', '1', '2017-01-18 16:12:18', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('b611989247ef49b199c81213ef7bc26f', '3', 'VC', 'projectType', '项目阶段', 30, '0', '1', '2017-01-18 16:12:29', '1', '2017-01-18 16:12:29', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('3bda1ee6467d41f788068efbc39a89b6', '4', 'A轮', 'projectType', '项目阶段', 40, '0', '1', '2016-09-23 09:45:47', '1', '2017-01-18 16:11:44', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('de6ff83eda714606a39cbc61ef582253', '5', 'B轮', 'projectType', '项目阶段', 50, '0', '1', '2016-11-28 09:26:01', '1', '2017-01-18 16:11:37', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('654576af284f4167b87eb6382949e245', '6', 'C轮', 'projectType', '项目阶段', 60, '0', '1', '2016-11-28 09:26:24', '1', '2017-01-18 16:11:30', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('026c9d913f7243e294c3b2be6447fa3e', '7', 'PE', 'projectType', '项目阶段', 70, '0', '1', '2017-01-18 16:12:42', '1', '2017-01-18 16:12:42', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('7893f89419464e7eb81c19761469ab8c', '8', '新三板定增', 'projectType', '项目阶段', 80, '0', '1', '2017-01-18 16:12:53', '1', '2017-01-18 16:12:53', '', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('f6f1b99d3aa14694937dad4e06147403', '9', 'PreIPO', 'projectType', '项目阶段', 90, '0', '1', '2017-01-18 16:13:05', '1', '2017-01-18 16:13:05', '', '0');

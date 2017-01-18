@@ -21,7 +21,7 @@ public class AppProjectInfoDetail {
     private Date   recommendedDate;        // 项目的推荐时间
     private String annualIncome;        // 年收入
     private String annualNetProfit;    // 年净利润
-    private String projectType;       // 项目类型
+    private String projectType;       // 项目阶段
     private Date   startDate;          // 项目的开始时间
     private BigDecimal intendedMoney;        // 拟投金额
     private String projectProgress;         // 项目进度

@@ -44,7 +44,7 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 	private Date startDate;		// 项目的开始时间
 	private String recommendedMan;		// 项目推荐人
 	private Date recommendedDate;		// 项目的推荐时间
-	private String projectType;		// 项目类型
+	private String projectType;		// 项目阶段
 	private BigDecimal intendedMoney;		// 拟投金额
 	private String projectStatus;		// 项目状态
 	private List<ProjectInfoProgress> projectInfoProgressList = Lists.newArrayList();		// 子表列表
@@ -226,7 +226,7 @@ public class ProjectInfo extends DataEntity<ProjectInfo> {
 		this.recommendedDate = recommendedDate;
 	}
 	
-	@Length(min=0, max=2, message="项目类型长度必须介于 0 和 2 之间")
+	@Length(min=0, max=2, message="项目阶段长度必须介于 0 和 2 之间")
 	public String getProjectType() {
 		return projectType;
 	}

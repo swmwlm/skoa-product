@@ -34,8 +34,8 @@ public class MyQuartzJob {
 	 */
 	@Scheduled(cron = "0 30 7 * * ?")
 	//@Scheduled(cron = "0 * * * * ?")//调试方便,设置每分钟执行一次;
-	public void sendOaNotify4ProjectInfoUpdateGte15days(){
-		String jobName="JOB_SendOaNotify4ProjectInfoUpdateGte15days";
+	public void sendOaNotify4ProjectInfoUpdateGte3days(){
+		String jobName="JOB_SendOaNotify4ProjectInfoUpdateGte3days";
 		Date lastExecuteTime=sysBatchlogService.selectLastExecuteTimeByJobName(jobName);
 
 		Calendar calendar = Calendar.getInstance();
@@ -46,7 +46,7 @@ public class MyQuartzJob {
 			return;
 		}
 		if (lastExecuteTime != null && lastExecuteTime.before(currentExecuteTime)) {
-			List<ProjectInfo> projectInfoList=projectInfoService.selectProjectInfoUpdateGte15days(lastExecuteTime,currentExecuteTime);
+			List<ProjectInfo> projectInfoList=projectInfoService.selectProjectInfoUpdateGte3days(lastExecuteTime,currentExecuteTime);
 
 			if(!Collections3.isEmpty(projectInfoList)){
 				OaNotify oaNotify = new OaNotify();
@@ -55,7 +55,7 @@ public class MyQuartzJob {
 				oaNotify.setCreateBy(new User("1"));
 				oaNotify.setUpdateBy(new User("1"));
 				for(ProjectInfo p :projectInfoList){
-					oaNotify.setTitle(p.getProjectName()+" 已经超过十五天没有更新啦");
+					oaNotify.setTitle(p.getProjectName()+" 已经超过三天没有更新啦");
 					oaNotify.setContent(p.getProjectName()+" 最后一次更新于"+ DateUtils.formatDateTime(p.getUpdateDate()));
 					//1.Joiner先以','拼装主负责人和副负责人 2.Splitter以','拆分成一个可迭代的集合 3.把集合转化为set,去除重复的人员id
 					Set<String> idSet=new HashSet<>(Splitter.on(',').omitEmptyStrings().trimResults().splitToList(Joiner.on(',').join(p.getPrimaryPerson(),p.getTeamMembers())));

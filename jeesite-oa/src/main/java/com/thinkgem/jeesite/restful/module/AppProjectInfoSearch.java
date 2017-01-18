@@ -15,7 +15,7 @@ public class AppProjectInfoSearch {
     private String projectGrade;           //项目级别
     private String projectProgress;        //项目进度
     private String projectStatus;          //项目状态
-    private String projectType;            //项目类型
+    private String projectType;            //项目阶段
 
     private String industryDomain;         //行业领域
 

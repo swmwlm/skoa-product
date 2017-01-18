@@ -178,7 +178,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">项目类型：</label>
+			<label class="control-label">项目阶段：</label>
 			<div class="controls">
 				<form:select path="projectType" class="input-xlarge ">
 					<form:option value="" label=""/>

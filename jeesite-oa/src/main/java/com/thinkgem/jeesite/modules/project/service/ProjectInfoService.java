@@ -133,18 +133,18 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 	}
 
 	/**
-	 * 获取更新时间+15天 in (lastExecuteTime,currentExecuteTime]
-	 * 筛选出 15天以上未更新的项目,做通知提醒
+	 * 获取更新时间+3天 in (lastExecuteTime,currentExecuteTime]
+	 * 筛选出 3天以上未更新的项目,做通知提醒
 	 * @param lastExecuteTime
 	 * @param currentExecuteTime
 	 * @return
 	 */
-	public List<ProjectInfo> selectProjectInfoUpdateGte15days(Date lastExecuteTime, Date currentExecuteTime){
+	public List<ProjectInfo> selectProjectInfoUpdateGte3days(Date lastExecuteTime, Date currentExecuteTime){
 		ProjectInfo projectInfo=new ProjectInfo();
 		projectInfo.setProjectStatus("1");
 		//测试时使用的条件
 		//projectInfo.getSqlMap().put("dsf"," and date_add(a.update_date, interval 23 hour)> '"+ DateUtils.formatDateTime(lastExecuteTime)+"' and date_add(a.update_date, interval 23 hour) <='"+DateUtils.formatDateTime(currentExecuteTime)+"' ");
-		projectInfo.getSqlMap().put("dsf"," and date_add(a.update_date, interval 15 day)> '"+DateUtils.formatDateTime(lastExecuteTime)+"' and date_add(a.update_date, interval 15 day) <='"+DateUtils.formatDateTime(currentExecuteTime)+"' ");
+		projectInfo.getSqlMap().put("dsf"," and date_add(a.update_date, interval 3 day)> '"+DateUtils.formatDateTime(lastExecuteTime)+"' and date_add(a.update_date, interval 3 day) <='"+DateUtils.formatDateTime(currentExecuteTime)+"' ");
 		return super.findList(projectInfo);
 	}
 	
