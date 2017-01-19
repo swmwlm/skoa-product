@@ -40,7 +40,13 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 
 	public ProjectInfo get(String id) {
 		ProjectInfo projectInfo = super.get(id);
-		projectInfo.setProjectInfoProgressList(projectInfoProgressDao.findList(new ProjectInfoProgress(projectInfo)));
+
+		ProjectInfoProgress projectInfoProgress=new ProjectInfoProgress(projectInfo);
+		Page page=new Page();
+		page.setOrderBy(" a.create_date DESC ");
+		projectInfoProgress.setPage(page);
+
+		projectInfo.setProjectInfoProgressList(projectInfoProgressDao.findList(projectInfoProgress));
 
 		ProjectInfoMeeting projectInfoMeeting=new ProjectInfoMeeting();
 		projectInfoMeeting.setProjectInfoId(projectInfo.getId());

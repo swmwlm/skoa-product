@@ -209,6 +209,12 @@
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
 			</div>
 		</div>
+		<div class="control-group">
+			<label class="control-label">项目创建时间：</label>
+			<div class="controls">
+				<fmt:formatDate value="${projectInfo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</div>
+		</div>
 		<c:if test="${!fns:isProjectInfoNew(projectInfo)}">
 			<c:if test="${not empty projectInfo.projectInfoMeetingList}">
 				<div class="control-group" id="divProjectMeeting">
