@@ -11,6 +11,8 @@ import com.thinkgem.jeesite.common.utils.CacheUtils;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
@@ -20,6 +22,8 @@ import java.util.Set;
  * API的TOKE工具类
  */
 public class JwtTokenUtils {
+
+    private static Logger logger = LoggerFactory.getLogger(JwtTokenUtils.class);
 
     private static final String TOKEN_CACHE = "jwtTokenCache";
     private static final String TOKEN_CACHE_ID_ = "userId_";
@@ -53,8 +57,10 @@ public class JwtTokenUtils {
         } catch (JWTCreationException e) {
             //Invalid Signing configuration / Couldn't convert Claims.
             e.printStackTrace();
+            logger.error("createToken.JWTCreationException:", e);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            logger.error("createToken.UnsupportedEncodingException:", e);
         }
 
         if (StringUtils.isNotBlank(token)) {
@@ -64,11 +70,9 @@ public class JwtTokenUtils {
             Set<String> cacheTokenSet = (Set<String>) CacheUtils.get(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId);
             if (CollectionUtils.isNotEmpty(cacheTokenSet)) {
                 tokenSet.addAll(cacheTokenSet);
-                CacheUtils.remove(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId);
             }
             CacheUtils.put(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId, tokenSet);
-            System.out.println("【createToken】用户:" + userId + " 获取新的token。当前TOKEN数目:" + tokenSet.size());
-
+            logger.info("用户{}获取新的token:{}", userId, token);
         }
 
         return token;
@@ -90,15 +94,16 @@ public class JwtTokenUtils {
             Claim claim = jwt.getClaim(Claim_USER_Id);
             Set<String> cacheTokenSet = (Set<String>) CacheUtils.get(TOKEN_CACHE, TOKEN_CACHE_ID_ + claim.asString());
             if (CollectionUtils.isNotEmpty(cacheTokenSet)) {
-                System.out.println("【getUserIdByToken】用户:" + claim.asString() + " 当前TOKEN数目:" + cacheTokenSet.size());
                 if (cacheTokenSet.contains(token)) {
                     return claim.asString();
                 }
             }
         } catch (JWTVerificationException e) {
             e.printStackTrace();
+            logger.error("getUserIdByToken.JWTVerificationException:", e);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            logger.error("getUserIdByToken.UnsupportedEncodingException:", e);
         }
         return null;
     }
@@ -115,7 +120,7 @@ public class JwtTokenUtils {
         Set<String> cacheTokenSet = (Set<String>) CacheUtils.get(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId);
         if (CollectionUtils.isNotEmpty(cacheTokenSet)) {
             CacheUtils.remove(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId);
-            System.out.println("【removeTokensByUserId】用户:" + userId + " 的所有TOKEN被清除，数目:" + cacheTokenSet.size());
+            logger.info("用户{}的所有TOKEN被清除，数目:{}", userId, cacheTokenSet.size());
         }
     }
 
@@ -137,11 +142,12 @@ public class JwtTokenUtils {
             return false;
         }
         cacheTokenSet.remove(token);
-        CacheUtils.remove(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId);
         if (CollectionUtils.isNotEmpty(cacheTokenSet)) {
             CacheUtils.put(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId, cacheTokenSet);
+        } else {
+            CacheUtils.remove(TOKEN_CACHE, TOKEN_CACHE_ID_ + userId);
         }
-        System.out.println("【removeToken】用户:" + userId + " 退出系统，清除token：" + token);
+        logger.info("用户{}退出系统，清除token:{}", userId, token);
         return true;
     }
 
