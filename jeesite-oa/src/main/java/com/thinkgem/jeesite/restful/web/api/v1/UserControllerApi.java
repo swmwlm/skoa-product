@@ -105,8 +105,7 @@ public class UserControllerApi extends BaseController {
         try {
             TokenUtils.removeToken(getJwtUserId(), request.getHeader("token"));
             jsonResultModel.setStateSuccess();
-            jsonResultModel.setData("退出成功！");
-            jsonResultModel.setMessage("success");
+            jsonResultModel.setMessage("退出成功！");
         } catch (Exception e) {
             e.printStackTrace();
             jsonResultModel.setStateError();
