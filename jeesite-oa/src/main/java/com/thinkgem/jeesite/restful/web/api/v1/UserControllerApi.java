@@ -40,15 +40,11 @@ public class UserControllerApi extends BaseController {
     private ProjectInfoService projectInfoService;
 
     @ApiOperation(value = "获取用户基本信息", notes = "获取用户基本信息")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> userinfo(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> userinfo(HttpServletRequest request, HttpServletResponse response) {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(id, "id不能为空");
-
-            System.out.println("测试：id:" + getJwtUserId());
-
-            User checkUser = systemService.getUser(id);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
