@@ -15,6 +15,7 @@ public class AppUser {
     private Long faqiNum;//发起的项目数目
     private Long fuzeNum;//负责的项目数目
     private String department;//部门名称
+    private String token;
 
     public String getId() {
         return id;
@@ -104,4 +105,11 @@ public class AppUser {
         this.confirmPassword = confirmPassword;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
