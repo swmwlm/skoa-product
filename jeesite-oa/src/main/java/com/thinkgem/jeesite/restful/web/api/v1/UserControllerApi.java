@@ -1,6 +1,5 @@
 package com.thinkgem.jeesite.restful.web.api.v1;
 
-import com.google.common.base.Preconditions;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.json.JsonResultModel;
 import com.thinkgem.jeesite.common.persistence.Page;
@@ -9,7 +8,7 @@ import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
-import com.thinkgem.jeesite.modules.sys.utils.TokenUtils;
+import com.thinkgem.jeesite.modules.sys.utils.JwtTokenUtils;
 import com.thinkgem.jeesite.restful.module.AppUser;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.Api;
@@ -99,7 +98,7 @@ public class UserControllerApi extends BaseController {
     public ResponseEntity<JsonResultModel> quit(HttpServletRequest request, HttpServletResponse response) {
         jsonResultModel = new JsonResultModel();
         try {
-            TokenUtils.removeToken(getJwtUserId(), request.getHeader("token"));
+            JwtTokenUtils.removeToken(getJwtUserId(), request.getHeader("token"));
             jsonResultModel.setStateSuccess();
             jsonResultModel.setMessage("退出成功！");
         } catch (Exception e) {

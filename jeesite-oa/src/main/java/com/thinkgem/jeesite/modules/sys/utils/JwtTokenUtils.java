@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * API的TOKE工具类
  */
-public class TokenUtils {
+public class JwtTokenUtils {
 
     private static final String TOKEN_CACHE = "jwtTokenCache";
     private static final String TOKEN_CACHE_ID_ = "userId_";

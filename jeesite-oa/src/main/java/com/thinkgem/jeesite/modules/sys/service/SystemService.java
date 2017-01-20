@@ -17,7 +17,7 @@ import com.thinkgem.jeesite.modules.sys.dao.UserDao;
 import com.thinkgem.jeesite.modules.sys.entity.*;
 import com.thinkgem.jeesite.modules.sys.security.SystemAuthorizingRealm;
 import com.thinkgem.jeesite.modules.sys.utils.LogUtils;
-import com.thinkgem.jeesite.modules.sys.utils.TokenUtils;
+import com.thinkgem.jeesite.modules.sys.utils.JwtTokenUtils;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
@@ -164,7 +164,7 @@ public class SystemService extends BaseService implements InitializingBean {
 			UserUtils.clearCache(user);
 			// 清除TOKEN缓存
 			if(Global.NO.equals(user.getLoginFlag())){
-				TokenUtils.removeTokensByUserId(user.getId());
+				JwtTokenUtils.removeTokensByUserId(user.getId());
 			}
 //			// 清除权限缓存
 //			systemRealm.clearAllCachedAuthorizationInfo();
@@ -218,7 +218,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		// 清除用户缓存
 		UserUtils.clearCache(user);
 		// 清除TOKEN缓存
-		TokenUtils.removeTokensByUserId(user.getId());
+		JwtTokenUtils.removeTokensByUserId(user.getId());
 //		// 清除权限缓存
 //		systemRealm.clearAllCachedAuthorizationInfo();
 	}
@@ -232,7 +232,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		user.setLoginName(loginName);
 		UserUtils.clearCache(user);
 		// 清除TOKEN缓存
-		TokenUtils.removeTokensByUserId(id);
+		JwtTokenUtils.removeTokensByUserId(id);
 //		// 清除权限缓存
 //		systemRealm.clearAllCachedAuthorizationInfo();
 	}

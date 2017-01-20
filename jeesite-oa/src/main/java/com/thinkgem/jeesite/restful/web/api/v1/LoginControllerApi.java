@@ -10,7 +10,7 @@ import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
-import com.thinkgem.jeesite.modules.sys.utils.TokenUtils;
+import com.thinkgem.jeesite.modules.sys.utils.JwtTokenUtils;
 import com.thinkgem.jeesite.restful.module.AppUser;
 import com.thinkgem.jeesite.restful.module.RememberedTime;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @RestController
@@ -92,7 +90,7 @@ public class LoginControllerApi extends BaseController {
             resultappUser.setFuzeNum(page2.getCount());
 
             //生成TOKEN，并返回给用户。
-            String token = TokenUtils.createToken(checkUser.getId());
+            String token = JwtTokenUtils.createToken(checkUser.getId());
             if (StringUtils.isBlank(token)) {
                 jsonResultModel.setMessage("生成TOKEN失败！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);

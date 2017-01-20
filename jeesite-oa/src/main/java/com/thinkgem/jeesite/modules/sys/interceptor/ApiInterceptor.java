@@ -2,7 +2,7 @@ package com.thinkgem.jeesite.modules.sys.interceptor;
 
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
-import com.thinkgem.jeesite.modules.sys.utils.TokenUtils;
+import com.thinkgem.jeesite.modules.sys.utils.JwtTokenUtils;
 import org.json.simple.JSONObject;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +29,7 @@ public class ApiInterceptor extends BaseService implements HandlerInterceptor {
             }
         }
         String token = request.getHeader("token");
-        String userId = TokenUtils.getUserIdByToken(token);
+        String userId = JwtTokenUtils.getUserIdByToken(token);
         if (StringUtils.isBlank(userId)) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=UTF-8");
