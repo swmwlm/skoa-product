@@ -91,7 +91,7 @@ public class DictControllerApi extends BaseController {
         appProjectProgressMap.put("2", "尽调30%");
         appProjectProgressMap.put("3", "评审40%");
         appProjectProgressMap.put("4", "投决50%");
-        appProjectProgressMap.put("5", "条款60");
+        appProjectProgressMap.put("5", "条款60%");
         appProjectProgressMap.put("6", "基金70%");
         appProjectProgressMap.put("7", "协议80%");
         appProjectProgressMap.put("8", "工商90%");
