@@ -163,7 +163,7 @@ public class SystemService extends BaseService implements InitializingBean {
 			// 清除用户缓存
 			UserUtils.clearCache(user);
 			// 清除TOKEN缓存
-			if(Global.NO.equals(user.getLoginFlag())){
+			if (StringUtils.isNotBlank(user.getNewPassword()) || Global.NO.equals(user.getLoginFlag())) {
 				JwtTokenUtils.removeTokensByUserId(user.getId());
 			}
 //			// 清除权限缓存
