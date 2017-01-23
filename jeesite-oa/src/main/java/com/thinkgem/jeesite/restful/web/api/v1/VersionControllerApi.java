@@ -45,12 +45,6 @@ public class VersionControllerApi extends BaseController {
             }
             Version resultVersion = VersionManager.getInstance().check(version, clientType);
 
-            if (null==resultVersion) {
-                jsonResultModel.setStateError();
-                jsonResultModel.setMessage("客户端无更新");
-                return new ResponseEntity<>(jsonResultModel, HttpStatus.OK);
-            }
-
             jsonResultModel.setStateSuccess();
             jsonResultModel.setData(resultVersion);
             jsonResultModel.setMessage("success");
