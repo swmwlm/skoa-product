@@ -208,6 +208,14 @@
     <function-signature>java.lang.String getDictListJson(java.lang.String)</function-signature>
     <example>${fns:getDictListJson(type)}</example>  
   </function>
+
+  <function>
+    <description>获取客户端类型列表</description>
+    <name>getClientTypeList</name>
+    <function-class>com.thinkgem.jeesite.restful.version.ClientType</function-class>
+    <function-signature>java.util.List getClientTypeList()</function-signature>
+    <example>${fns:getDictList(type)}</example>
+  </function>
   
   <!-- Encodes -->
   <function>

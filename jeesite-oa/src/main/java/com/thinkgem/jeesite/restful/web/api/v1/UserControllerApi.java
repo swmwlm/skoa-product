@@ -1,6 +1,6 @@
 package com.thinkgem.jeesite.restful.web.api.v1;
 
-import com.google.common.base.Preconditions;
+import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.json.JsonResultModel;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
@@ -8,6 +8,7 @@ import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
+import com.thinkgem.jeesite.modules.sys.utils.JwtTokenUtils;
 import com.thinkgem.jeesite.restful.module.AppUser;
 import com.thinkgem.jeesite.restful.web.api.BaseController;
 import io.swagger.annotations.Api;
@@ -38,15 +39,17 @@ public class UserControllerApi extends BaseController {
     private ProjectInfoService projectInfoService;
 
     @ApiOperation(value = "获取用户基本信息", notes = "获取用户基本信息")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> userinfo(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> userinfo(HttpServletRequest request, HttpServletResponse response) {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(id, "id不能为空");
-
-            User checkUser = systemService.getUser(id);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
+                return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
+            }
+            if (Global.NO.equals(checkUser.getLoginFlag())) {
+                jsonResultModel.setMessage("当前用户被禁止登陆！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
             }
 
@@ -73,6 +76,8 @@ public class UserControllerApi extends BaseController {
             Page<ProjectInfo> page2 = projectInfoService.findPageDSFforAPP(new Page<ProjectInfo>(request, response), projectInfo2, checkUser.getId());
             appUser.setFuzeNum(page2.getCount());
 
+            appUser.setToken(request.getHeader("token"));
+
             jsonResultModel.setStateSuccess();
             jsonResultModel.setData(appUser);
             jsonResultModel.setMessage("success");
@@ -85,6 +90,23 @@ public class UserControllerApi extends BaseController {
         return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
 
 
+    }
+
+
+    @ApiOperation(value = "用户退出", notes = "用户退出")
+    @RequestMapping(value = "/quit", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> quit(HttpServletRequest request, HttpServletResponse response) {
+        jsonResultModel = new JsonResultModel();
+        try {
+            JwtTokenUtils.removeToken(getJwtUserId(), request.getHeader("token"));
+            jsonResultModel.setStateSuccess();
+            jsonResultModel.setMessage("退出成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResultModel.setStateError();
+            jsonResultModel.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
     }
 
 

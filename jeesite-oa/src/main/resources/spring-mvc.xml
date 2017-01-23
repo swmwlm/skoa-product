@@ -112,6 +112,11 @@
 			<mvc:mapping path="/**" />
 			<bean class="com.thinkgem.jeesite.modules.sys.interceptor.MobileInterceptor" />
 		</mvc:interceptor>
+		<!--API的拦截器-->
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**"/>
+			<bean class="com.thinkgem.jeesite.modules.sys.interceptor.ApiInterceptor"></bean>
+		</mvc:interceptor>
 	</mvc:interceptors>
 	
 	<!-- 支持Shiro对Controller的方法级AOP安全控制 begin-->

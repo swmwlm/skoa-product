@@ -314,3 +314,6 @@ INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('026c9d913f7243e294c3b2be6447fa3e', '7', 'PE', 'projectType', '项目阶段', 70, '0', '1', '2017-01-18 16:12:42', '1', '2017-01-18 16:12:42', '', '0');
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('7893f89419464e7eb81c19761469ab8c', '8', '新三板定增', 'projectType', '项目阶段', 80, '0', '1', '2017-01-18 16:12:53', '1', '2017-01-18 16:12:53', '', '0');
 INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('f6f1b99d3aa14694937dad4e06147403', '9', 'PreIPO', 'projectType', '项目阶段', 90, '0', '1', '2017-01-18 16:13:05', '1', '2017-01-18 16:13:05', '', '0');
+
+/* 更新hmac_client表结构;增加客户端类型字段 */
+ALTER TABLE hmac_client ADD COLUMN `clientType` varchar(255);

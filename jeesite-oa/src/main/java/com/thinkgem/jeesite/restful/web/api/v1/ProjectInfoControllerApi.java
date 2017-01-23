@@ -51,9 +51,7 @@ public class ProjectInfoControllerApi extends BaseController {
     public ResponseEntity<JsonResultModel> projectInfos(@RequestBody AppProjectInfoSearch appProjectInfoSearch, HttpServletRequest request, HttpServletResponse response) {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(appProjectInfoSearch.getUserId(), "userId不能为空");
-
-            User checkUser = systemService.getUser(appProjectInfoSearch.getUserId());
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
@@ -161,13 +159,12 @@ public class ProjectInfoControllerApi extends BaseController {
 
 
     @ApiOperation(value = "获取项目详情", notes = "获取项目详情，url包含用户id和项目id")
-    @RequestMapping(value = "/{userId}/{projectInfoId}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> projectInfo(@PathVariable String userId, @PathVariable String projectInfoId) {
+    @RequestMapping(value = "/{projectInfoId}", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> projectInfo(@PathVariable String projectInfoId) {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(userId, "userId不能为空");
             Preconditions.checkNotNull(projectInfoId, "projectInfoId不能为空");
-            User checkUser = systemService.getUser(userId);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);

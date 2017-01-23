@@ -41,14 +41,13 @@ public class OaNotifyControllerApi extends BaseController {
     @Autowired
     private OaNotifyService oaNotifyService;
 
-    @ApiOperation(value = "获取通知列表", notes = "获取项目列表,readFlag: 0:未读,1:已读")
-    @RequestMapping(value = "/{userId}/{readFlag}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> projectInfos(@PathVariable String userId, @PathVariable String readFlag, HttpServletRequest request, HttpServletResponse response) {
+    @ApiOperation(value = "获取通知列表", notes = "获取通知列表,readFlag: 0:未读,1:已读")
+    @RequestMapping(value = "/{readFlag}", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> projectInfos(@PathVariable String readFlag, HttpServletRequest request, HttpServletResponse response) {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(userId, "userId不能为空");
             Preconditions.checkNotNull(readFlag, "readFlag不能为空");
-            User checkUser = systemService.getUser(userId);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
@@ -101,13 +100,12 @@ public class OaNotifyControllerApi extends BaseController {
 
 
     @ApiOperation(value = "设置已读", notes = "设置已读，更新阅读状态")
-    @RequestMapping(value = "/{userId}/read/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> setRead(@PathVariable String userId, @PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/read/{id}", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> setRead(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(userId, "userId不能为空");
             Preconditions.checkNotNull(id, "id不能为空");
-            User checkUser = systemService.getUser(userId);
+            User checkUser = systemService.getUser(getJwtUserId());
             Preconditions.checkNotNull(checkUser, "用户不存在");
             OaNotify oaNotify = oaNotifyService.get(id);
             Preconditions.checkNotNull(oaNotify, "消息不存在");

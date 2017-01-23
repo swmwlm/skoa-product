@@ -442,6 +442,12 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 
+		<!--JWT-->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+		</dependency>
+
 		
 		<!-- 自定义jar依赖包
 		<dependency>

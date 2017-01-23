@@ -91,7 +91,7 @@ public class DictControllerApi extends BaseController {
         appProjectProgressMap.put("2", "尽调30%");
         appProjectProgressMap.put("3", "评审40%");
         appProjectProgressMap.put("4", "投决50%");
-        appProjectProgressMap.put("5", "条款60");
+        appProjectProgressMap.put("5", "条款60%");
         appProjectProgressMap.put("6", "基金70%");
         appProjectProgressMap.put("7", "协议80%");
         appProjectProgressMap.put("8", "工商90%");
@@ -139,12 +139,11 @@ public class DictControllerApi extends BaseController {
 
 
     @ApiOperation(value = "获取部门列表", notes = "获取部门列表")
-    @RequestMapping(value = "/common/{userId}/offices", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> offices(@PathVariable String userId) {
+    @RequestMapping(value = "/common/offices", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> offices() {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(userId, "userId不能为空");
-            User checkUser = systemService.getUser(userId);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
@@ -165,12 +164,11 @@ public class DictControllerApi extends BaseController {
     }
 
     @ApiOperation(value = "获取区域", notes = "获取区域")
-    @RequestMapping(value = "/common/{userId}/areas", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> areas(@PathVariable String userId) {
+    @RequestMapping(value = "/common/areas", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> areas() {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(userId, "userId不能为空");
-            User checkUser = systemService.getUser(userId);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);
@@ -192,12 +190,11 @@ public class DictControllerApi extends BaseController {
 
 
     @ApiOperation(value = "获取人员列表", notes = "获取人员列表")
-    @RequestMapping(value = "/common/{userId}/users", method = RequestMethod.GET)
-    public ResponseEntity<JsonResultModel> users(@PathVariable String userId) {
+    @RequestMapping(value = "/common/users", method = RequestMethod.GET)
+    public ResponseEntity<JsonResultModel> users() {
         jsonResultModel = new JsonResultModel();
         try {
-            Preconditions.checkNotNull(userId, "userId不能为空");
-            User checkUser = systemService.getUser(userId);
+            User checkUser = systemService.getUser(getJwtUserId());
             if (checkUser == null) {
                 jsonResultModel.setMessage("用户不存在！");
                 return new ResponseEntity<JsonResultModel>(jsonResultModel, HttpStatus.OK);

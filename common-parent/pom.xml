@@ -142,6 +142,10 @@
 		<gson.version>2.3</gson.version>
 		<!-- jpush相关 end -->
 
+		<!-- JWT相关 start -->
+		<jwt.version>3.1.0</jwt.version>
+		<!-- JWT相关 end -->
+
 		<!--<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>-->
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 	</properties>
@@ -851,6 +855,13 @@
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
 				<version>${gson.version}</version>
+			</dependency>
+
+			<!--JWT-->
+			<dependency>
+				<groupId>com.auth0</groupId>
+				<artifactId>java-jwt</artifactId>
+				<version>${jwt.version}</version>
 			</dependency>
 
 		</dependencies>
