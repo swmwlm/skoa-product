@@ -7,6 +7,7 @@
 		a.client_name AS "clientName",
 		a.client_id AS "clientId",
 		a.client_secret AS "clientSecret",
+		a.clientType AS "clientType",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -33,6 +34,9 @@
 		<include refid="hmacClientJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="clientType != null and clientType != ''">
+				AND a.clientType = #{clientType}
+			</if>
 			<if test="clientName != null and clientName != ''">
 				AND a.client_name = #{clientName}
 			</if>
@@ -77,6 +81,7 @@
 			client_name,
 			client_id,
 			client_secret,
+			clientType,
 			create_by,
 			create_date,
 			update_by,
@@ -88,6 +93,7 @@
 			#{clientName},
 			#{clientId},
 			#{clientSecret},
+			#{clientType},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -102,6 +108,7 @@
 			client_name = #{clientName},
 			client_id = #{clientId},
 			client_secret = #{clientSecret},
+			clientType = #{clientType},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}

@@ -25,6 +25,12 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
+			<li><label>客户端类型：</label>
+				<form:select path="clientType" class="input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getClientTypeList()}" itemLabel="type" itemValue="type" htmlEscape="false"/>
+				</form:select>
+			</li>
 			<li><label>客户端名称：</label>
 				<form:input path="clientName" htmlEscape="false" maxlength="200" class="input-medium"/>
 			</li>
@@ -42,6 +48,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
+				<th>类型</th>
 				<th>客户端名称</th>
 				<th>appId</th>
 				<th>appKey</th>
@@ -53,6 +60,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="hmacClient">
 			<tr>
+				<td>
+						${hmacClient.clientType}
+				</td>
 				<td><a href="${ctx}/client/hmacClient/form?id=${hmacClient.id}">
 					${hmacClient.clientName}
 				</a></td>

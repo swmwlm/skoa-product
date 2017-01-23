@@ -34,6 +34,17 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
 		<div class="control-group">
+			<label class="control-label">客户端类型：</label>
+			<div class="controls">
+				<form:select path="clientType" class="input-xlarge required">
+					<form:option value="" label=""/>
+					<form:options items="${fns:getClientTypeList()}" itemLabel="type" itemValue="type" htmlEscape="false"/>
+				</form:select>
+				<span class="help-inline"><font color="red">*</font> </span>
+				<span class="help-inline"> </span>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">客户端名称：</label>
 			<div class="controls">
 				<form:input path="clientName" htmlEscape="false" maxlength="200" class="input-xlarge "/>

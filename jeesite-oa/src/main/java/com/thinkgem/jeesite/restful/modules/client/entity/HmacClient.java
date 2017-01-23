@@ -3,9 +3,8 @@
  */
 package com.thinkgem.jeesite.restful.modules.client.entity;
 
-import org.hibernate.validator.constraints.Length;
-
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import org.hibernate.validator.constraints.Length;
 
 /**
  * restfulEntity
@@ -18,6 +17,7 @@ public class HmacClient extends DataEntity<HmacClient> {
 	private String clientName;		// 客户端名称
 	private String clientId;		// client_id
 	private String clientSecret;		// client_secret
+	private String clientType;//客户端类型
 	private Boolean regernate=false;  //是否重新生成appId,appKey
 
 	public HmacClient() {
@@ -61,5 +61,13 @@ public class HmacClient extends DataEntity<HmacClient> {
 
 	public void setRegernate(Boolean regernate) {
 		this.regernate = regernate;
+	}
+
+	public String getClientType() {
+		return clientType;
+	}
+
+	public void setClientType(String clientType) {
+		this.clientType = clientType;
 	}
 }

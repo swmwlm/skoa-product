@@ -1,6 +1,8 @@
 package com.thinkgem.jeesite.restful.version;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 终端类型枚举
@@ -29,5 +31,9 @@ public enum ClientType  implements Serializable {
 		}
 
 		return null;
+	}
+
+	public static List<ClientType> getClientTypeList(){
+		return Arrays.asList(ClientType.values());
 	}
 }
