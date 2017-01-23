@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <client>
+        <android default="v0.1.2">
+            <entry>
+                <version>v0.1.2</version>
+                <url>http://xxx.com/yyy_0_1_2.apk</url>
+                <message>修复bug</message>
+            </entry>
+            <entry>
+                <version>v0.1.0</version>
+                <url>http://xxx.com/yyy_0_1_0.apk</url>
+                <message>第一个版本</message>
+            </entry>
+        </android>
+        <iphone default="v1">
+           <!-- <entry>
+                <version>1.0.2</version>
+                <url>http://xxx.com/yyy_1_0_2.ipa</url>
+                <message>修复bug</message>
+            </entry>-->
+            <entry>
+                <version>v1</version>
+                <url>https://itunes.apple.com/us/app/skoa/id1190437626?l=zh&ls=1&mt=8</url>
+                <message>第一个版本</message>
+            </entry>
+        </iphone>
+    </client>
+</root>
