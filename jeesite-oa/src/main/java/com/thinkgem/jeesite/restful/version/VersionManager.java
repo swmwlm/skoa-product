@@ -13,12 +13,12 @@ public class VersionManager {
 	private VersionProperty property; //文件配置
 	private static String propertyName = "/version.xml"; //默认的配置文件
 
-	public VersionManager() {
+	private VersionManager() {
 		this(VersionManager.propertyName);
 	}
 
 
-	public VersionManager(String propertyName) {
+	private VersionManager(String propertyName) {
 		try {
 			property = new VersionProperty(VersionManager.class.getResource(propertyName).getPath());
 		} catch (IOException e) {
