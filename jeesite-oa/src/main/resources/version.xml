@@ -14,14 +14,14 @@
                 <message>第一个版本</message>
             </entry>
         </android>
-        <iphone default="v1">
+        <iphone default="V1.0.2">
            <!-- <entry>
                 <version>1.0.2</version>
                 <url>http://xxx.com/yyy_1_0_2.ipa</url>
                 <message>修复bug</message>
             </entry>-->
             <entry>
-                <version>v1</version>
+                <version>V1.0.2</version>
                 <url>https://itunes.apple.com/us/app/skoa/id1190437626?l=zh&amp;ls=1&amp;mt=8</url>
                 <message>第一个版本</message>
             </entry>
