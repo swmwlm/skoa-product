@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-@RequestMapping(value = "/api/login", headers = "api-version=v1")
+@RequestMapping(value = "/api/login", headers = "api-version=V1.0.2")
 @Api(
         value = "/api/login",
         description = "登录相关API"

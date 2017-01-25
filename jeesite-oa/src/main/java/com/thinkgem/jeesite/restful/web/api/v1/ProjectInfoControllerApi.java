@@ -32,7 +32,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/projectInfos", headers = "api-version=v1")
+@RequestMapping(value = "/api/projectInfos", headers = "api-version=V1.0.2")
 @Api(
         value = "/api/projectInfos",
         description = "项目相关API"

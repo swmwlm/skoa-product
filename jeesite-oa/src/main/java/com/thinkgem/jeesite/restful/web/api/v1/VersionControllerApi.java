@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping(value = "/api/version", headers = "api-version=v1")
+@RequestMapping(value = "/api/version", headers = "api-version=V1.0.2")
 @Api(
         value = "/api/version",
         description = "版本更新检查"

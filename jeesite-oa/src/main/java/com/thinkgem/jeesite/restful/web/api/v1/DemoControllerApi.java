@@ -26,7 +26,7 @@ import java.util.List;
  * restful 规范 参照http://www.tuicool.com/articles/ruqqaiE
  */
 @RestController
-@RequestMapping(value = "/api/userDemos", headers = "api-version=v1")
+@RequestMapping(value = "/api/userDemos", headers = "api-version=V1.0.2")
 //@RequestMapping(value = "/api1/userDemo")
 @Api(
 		value = "/api/userDemos",

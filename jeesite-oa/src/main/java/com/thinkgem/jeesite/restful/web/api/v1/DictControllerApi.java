@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/dicts", headers = "api-version=v1")
+@RequestMapping(value = "/api/dicts", headers = "api-version=V1.0.2")
 @Api(
         value = "/api/dicts",
         description = "数据字典相关API"
