@@ -317,3 +317,5 @@ INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_
 
 /* 更新hmac_client表结构;增加客户端类型字段 */
 ALTER TABLE hmac_client ADD COLUMN `clientType` varchar(255);
+/* 更新project_info表结构;修改content字段为longtext */
+ALTER TABLE project_info modify COLUMN `content` longtext;
