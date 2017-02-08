@@ -30,6 +30,7 @@
 			$("#projectStatus option[value='1']").remove();
 			$("#projectStatus option[value='2']").remove();
 			$("#projectStatus option[value='3']").remove();
+			$("#projectStatus option[value='4.5']").remove();
 			$("#projectStatus option[value='5']").remove();
 		});
 	</script>

@@ -317,5 +317,26 @@ INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_
 
 /* 更新hmac_client表结构;增加客户端类型字段 */
 ALTER TABLE hmac_client ADD COLUMN `clientType` varchar(255);
+
+-- update 2017.2.8 13:44 by sunwm
 /* 更新project_info表结构;修改content字段为longtext */
 ALTER TABLE project_info modify COLUMN `content` longtext;
+/* 更新project_info表结构;修改project_status char(1)字段为char(3) */
+ALTER TABLE project_info modify COLUMN `project_status` char(3);
+
+/* 更新sys_dict 字典 type=projectStatus */
+DELETE from jeesite.sys_dict WHERE type='projectStatus';
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('1277ee67ceae466d89ae050175ffdba6', '3', '项目完成', 'projectStatus', '项目负责人设置项目完成状态', 40, '0', '1', '2016-09-23 09:55:47', '1', '2016-09-23 09:55:47', '项目负责人设置项目完成状态', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('1d8569f1e4964186b4c0441c04ba4d00', '0', '个人编辑', 'projectStatus', '推介人编辑', 10, '0', '1', '2016-09-23 09:52:18', '1', '2016-09-23 09:52:18', '推介人编辑状态，项目的基础资料录入', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('294ec491db884c81bf8760c325e4f2ec', '5', '申请上立项会审批', 'projectStatus', '申请上立项会审批', 17, '0', '1', '2017-01-03 11:40:02', '1', '2017-02-08 13:48:03', '申请上立项会审批，合伙人角色', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('2c9591ec55584b91a904d07635eee438', '2', '项目暂停', 'projectStatus', '项目负责人设置项目暂停状态', 30, '0', '1', '2016-09-23 09:55:26', '1', '2016-09-23 09:55:26', '项目负责人设置项目暂停状态', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('be638c2d8c9443bd92fab9bbf454efaf', '4', '申请上立项会初审', 'projectStatus', '立项会初审', 15, '0', '1', '2017-01-03 11:39:10', '1', '2017-02-08 13:47:29', '立项会初审，部门负责人', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('ef8e009f4a5a4ac4847c52928efa7618', '4.5', '申请上立项会复审', 'projectStatus', '申请上立项会复审', 16, '0', '1', '2017-02-08 13:46:16', '1', '2017-02-08 13:47:49', '申请上立项会复审，投资部总经理角色', '0');
+INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_id, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('fdf311be46774255beb71b0da142df1a', '1', '项目发布', 'projectStatus', '项目负责人管理状态', 20, '0', '1', '2016-09-23 09:53:25', '1', '2017-01-03 11:41:05', '项目负责人对项目进行管理维护', '0');
+
+/* 更新sys_role;增加投资部总经理角色;给该角色分配人员由在线系统里完成 */
+INSERT INTO jeesite.sys_role (id, office_id, name, enname, role_type, data_scope, is_sys, useable, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('b7f5e0ac6a7745c6bbe8e449104fed0c', '1', '投资部总经理', 'investmentManager', null, '8', '1', '1', '1', '2017-02-08 14:05:19', '1', '2017-02-08 14:13:56', '', '0');
+
+
+
+

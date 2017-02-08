@@ -168,7 +168,7 @@ public class UserUtils {
 	}
 
 	/**
-	 * 判断某个用户角色集合中是否存在
+	 * 判断某个用户角色集合中是否拥有 合伙人 角色
 	 * @param userId
 	 * @return
 	 */
@@ -176,6 +176,25 @@ public class UserUtils {
 		User user = get(userId);
 		List<String> roleNameList = Collections3.extractToList(user.getRoleList(), "name");
 		return roleNameList.contains("合伙人");
+	}
+
+	/**
+	 * 判断当前用户角色集合中是否拥有 投资部总经理 角色
+	 * @return
+	 */
+	public static Boolean isInvestmentManager() {
+		return isInvestmentManager(UserUtils.getUser().getId());
+	}
+
+	/**
+	 * 判断某个用户角色集合中是否拥有 投资部总经理 角色
+	 * @param userId
+	 * @return
+	 */
+	public static Boolean isInvestmentManager(String userId) {
+		User user = get(userId);
+		List<String> roleNameList = Collections3.extractToList(user.getRoleList(), "name");
+		return roleNameList.contains("投资部总经理");
 	}
 
 	/**

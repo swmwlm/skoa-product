@@ -85,6 +85,8 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 		sb.append(" (a.project_progress<2 and a.project_status!=0)");
 		//1.2 当前用户可以看到 项目进度为null,且项目状态为4,且项目所属部门的主副负责人为当前用户的项目;
 		sb.append(" or (a.project_progress is null and a.project_status=4 and (o2.PRIMARY_PERSON ='"+userId+"' or o2.DEPUTY_PERSON='"+userId+"') ) ");
+		//1.2.1 当前用户可以看到 项目进度为null,且项目状态为4.5,且当前用户的角色为 投资部总经理 的项目
+		sb.append(" or (a.project_progress is null and a.project_status='4.5' and "+UserUtils.isInvestmentManager(userId)+" ) ");
 		//1.3 当前用户可以看到 项目进度为null,且项目状态为5,且当前用户的角色为合伙人的项目
 		sb.append(" or (a.project_progress is null and a.project_status=5 and "+UserUtils.isPartnerRole(userId)+" ) ");
 		//1.4 项目状态为 1发布状态 下,当项目进度为null时,显示该项目;
@@ -109,11 +111,11 @@ public class ProjectInfoService extends CrudService<ProjectInfoDao, ProjectInfo>
 
 		projectInfo.getSqlMap().put("dsf",sb.toString());
 		//orderBy:1.把自己创建的项目,且处于 个人编辑 状态的,优先显示
-		//orderBy:1.1 项目状态处于4(申请上立项会初审)或者5(申请上立项会复审),次优显示
+		//orderBy:1.1 项目状态处于4(申请上立项会初审)或者4.5(申请上立项会复审)或者5(申请上立项会审批),次优显示
 		//orderBy:2.是项目负责人的项目,次优显示
 		//orderBy:3.是项目小组的项目,次次优显示
 		//orderBy:4.更新时间,最后显示
-		String orderBy="(a.create_by = '"+userId+"' and a.project_status=0) DESC,(a.project_status=4 or a.project_status=5) DESC,(a.primary_person='"+userId+"' or find_in_set('"+userId+"',a.team_members)) DESC,(find_in_set('"+userId+"',a.project_team_members)) DESC,a.update_date DESC";
+		String orderBy="(a.create_by = '"+userId+"' and a.project_status=0) DESC,(a.project_status=4 or a.project_status='4.5' or a.project_status=5) DESC,(a.primary_person='"+userId+"' or find_in_set('"+userId+"',a.team_members)) DESC,(find_in_set('"+userId+"',a.project_team_members)) DESC,a.update_date DESC";
 		//page.setOrderBy(orderBy);//该方式会过滤orderby;Page.getOrderBy;不适用本场景
 		projectInfo.getSqlMap().put("orderBy",orderBy);
 		return super.findPage(page, projectInfo);

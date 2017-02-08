@@ -29,6 +29,7 @@
 			});
 			$("#projectStatus option[value='0']").remove();
 			$("#projectStatus option[value='4']").remove();
+			$("#projectStatus option[value='4.5']").remove();
 			$("#projectStatus option[value='5']").remove();
 		});
 	</script>

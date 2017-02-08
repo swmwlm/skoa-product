@@ -21,6 +21,10 @@
 			<id property="office.name" column="userList.office.name" />
 			<id property="company.name" column="userList.company.name" />
 		</collection> -->
+		<association property="office" column="office" javaType="Office">
+			<id property="id" column="office.id"/>
+			<result property="name" column="office.name"/>
+		</association>
 		<collection property="menuList" ofType="Menu">
 			<id property="id" column="menuList.id" />
 		</collection>

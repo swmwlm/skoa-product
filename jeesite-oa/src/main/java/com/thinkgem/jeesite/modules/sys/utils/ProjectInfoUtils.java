@@ -63,11 +63,12 @@ public class ProjectInfoUtils {
 		//1.如果当前用户是项目的创建者,且该项目的状态为 个人编辑 时,则可以编辑该项目
 		if(ProjectInfoUtils.isProjectInfoCreatorAndProjectStatus0(projectInfo))
 			return true;
-		//2.如果当前用户是项目的负责人,且项目状态不能处于0(个人编辑),4(申请上立项会初审)或者5(申请上立项会复审)状态,可以编辑项目
+		//2.如果当前用户是项目的负责人,且项目状态不能处于0(个人编辑),4(申请上立项会初审)或者4.5(申请上立项会复审)状态或者5(申请上立项会审批)状态,可以编辑项目
 		//也即是:当前用户是项目的负责人,且项目状态为1(项目发布),2(项目暂停),3(项目完成)时,拥有编辑项目权限;
 		if(ProjectInfoUtils.isProjectInfoPrimaryPerson(projectInfo)
 				&&!"0".equals(projectInfo.getProjectStatus())
 				&&!"4".equals(projectInfo.getProjectStatus())
+				&&!"4.5".equals(projectInfo.getProjectStatus())
 				&&!"5".equals(projectInfo.getProjectStatus()))
 			return true;
 		return false;
@@ -138,6 +139,7 @@ public class ProjectInfoUtils {
 			return ProjectInfoUtils.isProjectInfoPrimaryPerson(_projectInfo)
 					&& !StringUtils.equals("0", ((ProjectInfo) projectInfo).getProjectStatus())
 					&& !StringUtils.equals("4", ((ProjectInfo) projectInfo).getProjectStatus())
+					&& !StringUtils.equals("4.5", ((ProjectInfo) projectInfo).getProjectStatus())
 					&& !StringUtils.equals("5", ((ProjectInfo) projectInfo).getProjectStatus());
 		}
 		return false;
@@ -145,7 +147,7 @@ public class ProjectInfoUtils {
 
 
 	/**
-	 * 判断当前用户是否允许立项审批或者复审
+	 * 判断当前用户是否允许立项审批或者复审或者审批
 	 * @param projectInfo
 	 * @return
 	 */
@@ -154,7 +156,7 @@ public class ProjectInfoUtils {
 			ProjectInfo _projectInfo = null;
 			if (projectInfo instanceof ProjectInfo) {
 				_projectInfo = (ProjectInfo) projectInfo;
-				return ProjectInfoUtils.isProjectMeetingForOne(_projectInfo) || ProjectInfoUtils.isProjectMeetingForSecond(_projectInfo);
+				return ProjectInfoUtils.isProjectMeetingForOne(_projectInfo) || ProjectInfoUtils.isProjectMeetingForSecond(_projectInfo)|| ProjectInfoUtils.isProjectMeetingForThird(_projectInfo);
 			}
 		} catch (Exception ex) {
 			return false;
@@ -201,8 +203,11 @@ public class ProjectInfoUtils {
 		//1.2 当项目进度为null,且项目状态为4,且当前用户是项目所属部门的部门负责人,可以查看;
 		if(null==projectInfo.getProjectProgress()&&ProjectInfoUtils.isProjectMeetingForOne(projectInfo))
 			return true;
-		//1.3 当项目进度为null,且项目状态为5时,且当前用户拥有合伙人角色时,可以查看;
+		//1.2.1 当项目进度为null,且项目状态为4.5时,且当前用户拥有 投资部总经理 角色时,可以查看;
 		if(null==projectInfo.getProjectProgress()&&ProjectInfoUtils.isProjectMeetingForSecond(projectInfo))
+			return true;
+		//1.3 当项目进度为null,且项目状态为5时,且当前用户拥有 合伙人 角色时,可以查看;
+		if(null==projectInfo.getProjectProgress()&&ProjectInfoUtils.isProjectMeetingForThird(projectInfo))
 			return true;
 		//1.4 项目状态为 1发布状态 下,当项目进度为null时,显示该项目;
 		if(null==projectInfo.getProjectProgress()&&StringUtils.equals("1",projectInfo.getProjectStatus()))
@@ -242,12 +247,22 @@ public class ProjectInfoUtils {
 	}
 
 	/**
-	 * 判断当前用户是否拥有 5申请上立项会复审 权限
-	 * 当前用户 拥有 合伙人角色权限,表示有权限
+	 * 判断当前用户是否拥有 4.5申请上立项会复审 权限
+	 * 当前用户 拥有 投资部总经理 角色权限,表示有权限
 	 * @param projectInfo
 	 * @return
 	 */
 	public static Boolean isProjectMeetingForSecond(ProjectInfo projectInfo){
+		return StringUtils.equals("4.5",projectInfo.getProjectStatus())&&UserUtils.isInvestmentManager();
+	}
+
+	/**
+	 * 判断当前用户是否拥有 5申请上立项会审批 权限
+	 * 当前用户 拥有 合伙人角色权限,表示有权限
+	 * @param projectInfo
+	 * @return
+	 */
+	public static Boolean isProjectMeetingForThird(ProjectInfo projectInfo){
 		return StringUtils.equals("5",projectInfo.getProjectStatus())&&UserUtils.isPartnerRole();
 	}
 }
