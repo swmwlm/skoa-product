@@ -493,8 +493,21 @@ public class UserUtils {
 				}
 			}
 		}
-//		2，提交复审（通知 合伙人）
-		if (statusOrigin.equals("4") && statusCurrent.equals("5")) {
+//		2，提交复审（通知 投资部总经理角色）
+		if (statusOrigin.equals("4") && statusCurrent.equals("4.5")) {
+			List<Role> roleList = roleDao.findAllList(new Role());
+			for (Role role : roleList) {
+				if (role.getName().contains("投资部总经理")) {
+					List<User> userList = userDao.findUserByRoleId(role.getId());
+					if (CollectionUtils.isNotEmpty(userList)) {
+						resultSet.addAll(Collections3.extractToList(userList, "id"));
+					}
+					break;
+				}
+			}
+		}
+//		3，提交审批（通知 合伙人 角色）
+		if (statusOrigin.equals("4.5") && statusCurrent.equals("5")) {
 			List<Role> roleList = roleDao.findAllList(new Role());
 			for (Role role : roleList) {
 				if (role.getName().contains("合伙人")) {
@@ -506,8 +519,8 @@ public class UserUtils {
 				}
 			}
 		}
-//		3，初审驳回，或者复审驳回（通知 项目创建人员）
-		if ((statusOrigin.equals("4") || statusOrigin.equals("5")) && statusCurrent.equals("0")) {
+//		4，驳回（通知 项目创建人员）
+		if ((statusOrigin.equals("4") || statusOrigin.equals("4.5") || statusOrigin.equals("5")) && statusCurrent.equals("0")) {
 			resultSet.add(projectInfo.getCreateBy().getId());
 		}
 		//4,去掉创建人;去除重复的人(set自动去除了)

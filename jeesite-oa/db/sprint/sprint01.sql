@@ -338,5 +338,9 @@ INSERT INTO jeesite.sys_dict (id, value, label, type, description, sort, parent_
 INSERT INTO jeesite.sys_role (id, office_id, name, enname, role_type, data_scope, is_sys, useable, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('b7f5e0ac6a7745c6bbe8e449104fed0c', '1', '投资部总经理', 'investmentManager', null, '8', '1', '1', '1', '2017-02-08 14:05:19', '1', '2017-02-08 14:13:56', '', '0');
 
 
+/* 更新project_info_meeting表结构;修改 status_origin,status_current char(2)字段为char(3) */
+ALTER TABLE project_info_meeting modify COLUMN `status_origin`  char(3);
+ALTER TABLE project_info_meeting modify COLUMN `status_current` char(3);
+
 
 

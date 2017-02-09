@@ -121,7 +121,7 @@ public class ProjectInfoController extends BaseController {
 				return form(projectInfo, model, redirectAttributes);
 			}
 			projectInfoService.save(projectInfo);
-			if (orignProjectInfo == null || orignProjectInfo.getProjectStatus() == null || ("0").equals(orignProjectInfo.getProjectStatus())
+			if ((orignProjectInfo == null || orignProjectInfo.getProjectStatus() == null || ("0").equals(orignProjectInfo.getProjectStatus()))
 					&& ("4").equals(projectInfo.getProjectStatus())) {
 				projectInfoMeetingService.addProjectInfoMeeting(projectInfo, null, "0", projectInfo.getProjectStatus());
 			}
@@ -232,21 +232,17 @@ public class ProjectInfoController extends BaseController {
 	}
 
 	private String getNewProjectStatus(String flag, String status) {
-		if (status.equals("4")) {
-			if (flag.equals("1")) {
-				return "5";
-			}
-			if (flag.equals("0")) {
-				return "0";
-			}
-		} else {
-			if (status.equals("5")) {
-				if (flag.equals("1")) {
+		if (flag.equals("0")) {
+			return "0";
+		}
+		if (flag.equals("1")) {
+			switch (status) {
+				case "4":
+					return "4.5";
+				case "4.5":
+					return "5";
+				case "5":
 					return "1";
-				}
-				if (flag.equals("0")) {
-					return "0";
-				}
 			}
 		}
 		return "";

@@ -85,25 +85,31 @@ public class ProjectInfoMeetingService extends CrudService<ProjectInfoMeetingDao
 
 		StringBuilder content = new StringBuilder();
 		content.append("项目");
-//		1，提交初审
+
 		if (statusOrigin.equals("0") && statusCurrent.equals("4")) {
 			content.append("已提交申请上立项会初审，请审批。");
 		}
-//		2，提交复审
-		if (statusOrigin.equals("4") && statusCurrent.equals("5")) {
+		if (statusOrigin.equals("4") && statusCurrent.equals("4.5")) {
 			content.append("已提交申请上立项会复审，请审批。");
 		}
-//		3，初审驳回
+		if (statusOrigin.equals("4.5") && statusCurrent.equals("5")) {
+			content.append("已提交申请上立项会审批，请审批。");
+		}
+
 		if (statusOrigin.equals("4") && statusCurrent.equals("0")) {
 			content.append("申请上立项会初审未通过。");
 		}
-//		4，复审驳回
-		if (statusOrigin.equals("5") && statusCurrent.equals("0")) {
+		if (statusOrigin.equals("4.5") && statusCurrent.equals("0")) {
 			content.append("申请上立项会复审未通过。");
 		}
+		if (statusOrigin.equals("5") && statusCurrent.equals("0")) {
+			content.append("申请上立项会审批未通过。");
+		}
+
 		if (StringUtils.isNotBlank(remarks)) {
 			content.append(" 备注:" + remarks);
 		}
+
 		//添加到我的通告
 		OaNotify oaNotify = new OaNotify();
 		oaNotify.setType("6");
