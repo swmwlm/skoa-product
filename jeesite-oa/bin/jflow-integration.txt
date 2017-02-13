@@ -37,7 +37,7 @@ DROP table IF EXISTS `port_emp`;
 DROP VIEW IF EXISTS `port_emp`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `port_emp` AS select `sys_user`.`login_name` AS `No`,`sys_user`.`name` AS `Name`,`sys_user`.`password` AS `Pass`,`sys_user`.`office_id` AS `FK_Dept`,cast(floor((1 + (rand() * 10000))) as char charset utf8) AS `SID`,NULL AS `FK_Duty`,NULL AS `Leader`,`sys_user`.`no` AS `EmpNo`,`sys_user`.`phone` AS `Tel`,`sys_user`.`email` AS `Email`,NULL AS `NumOfDept`,NULL AS `Idx` from `sys_user`
 union
-select 'admin' AS `No`,'admin' AS `Name`,'pub' AS `Pass`,NULL AS `FK_Dept`,cast(floor((1 + (rand() * 10000))) as char charset utf8) AS `SID`,NULL AS `FK_Duty`,NULL AS `Leader`,NULL AS `EmpNo`,NULL AS `Tel`,NULL AS `Email`,NULL AS `NumOfDept`,NULL AS `Idx`;
+select 'admin' AS `No`,'admin' AS `Name`,'pub' AS `Pass`,'1' AS `FK_Dept`,cast(floor((1 + (rand() * 10000))) as char charset utf8) AS `SID`,NULL AS `FK_Duty`,NULL AS `Leader`,NULL AS `EmpNo`,NULL AS `Tel`,NULL AS `Email`,NULL AS `NumOfDept`,NULL AS `Idx`;
 
 # 5.员工岗位视图表
 DROP table IF EXISTS `port_empstation`;
