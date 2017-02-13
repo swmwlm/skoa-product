@@ -14,7 +14,8 @@ jdbc.url=jdbc:mysql://127.0.0.1:3306/jeesite?useUnicode=true&characterEncoding=u
 JFLOW提供的工具类ContextHolderUtils.getRequest();否则在JFLOW前台在跑一个流程时,比如保存,或者向下流转流程时报错:FK_Dept相关的错误
 
 ============================数据库集成======================================
-# 0.执行db/jflow/下jflow.bare.sql或者jflow.example.sql
+# 0.运行系统,执行/WF/Admin/DBInstall.jsp ,安装数据库;
+# 注意:jflow.properties中AppCenterDBDatabase与AppCenterDSN中设置的数据库要保持一致;
 # 1.部门表视图
 DROP table IF EXISTS `port_dept`;
 DROP VIEW IF EXISTS `port_dept`;
