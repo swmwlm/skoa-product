@@ -13,10 +13,12 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		u.name AS "createBy.name"
+		u.name AS "createBy.name",
+		p.project_name AS "projectInfoName"
 	</sql>
 	
 	<sql id="projectInfoMeetingJoins">
+		LEFT JOIN project_info p ON p.id = a.project_info_id
 		LEFT JOIN sys_user u ON u.id = a.create_by
 	</sql>
     
@@ -36,6 +38,9 @@
 		<where>
 			<if test="projectInfoId != null and projectInfoId != ''">
 				AND a.project_info_id = #{projectInfoId}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
 			</if>
 		</where>
 		<choose>

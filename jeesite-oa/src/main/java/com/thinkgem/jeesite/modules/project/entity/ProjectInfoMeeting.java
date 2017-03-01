@@ -16,6 +16,7 @@ public class ProjectInfoMeeting extends DataEntity<ProjectInfoMeeting> {
 	
 	private static final long serialVersionUID = 1L;
 	private String projectInfoId;		// 项目id
+	private String projectInfoName;		// 项目id
 	private String statusOrigin;		// 项目状态-更新前
 	private String statusCurrent;		// 项目状态-更新后
 	private String filepath;		// 附件路径
@@ -63,5 +64,12 @@ public class ProjectInfoMeeting extends DataEntity<ProjectInfoMeeting> {
 	public void setFilepath(String filepath) {
 		this.filepath = filepath;
 	}
-	
+
+	public String getProjectInfoName() {
+		return projectInfoName;
+	}
+
+	public void setProjectInfoName(String projectInfoName) {
+		this.projectInfoName = projectInfoName;
+	}
 }
