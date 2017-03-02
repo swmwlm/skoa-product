@@ -343,4 +343,6 @@ ALTER TABLE project_info_meeting modify COLUMN `status_origin`  char(3);
 ALTER TABLE project_info_meeting modify COLUMN `status_current` char(3);
 
 
+/* 添加菜单“我的审批” */
+insert into `jeesite`.`sys_menu` ( `id`, `create_date`, `parent_id`, `href`, `create_by`, `permission`, `update_date`, `update_by`, `is_show`, `target`, `icon`, `del_flag`, `parent_ids`, `sort`, `name`, `remarks`) values ( 'a8708f68a09447938aed8bf16a288355', '2017-03-01 11:23:06', 'e22d3ad2e03b415fa1ceb212cd76ed5a', '/project/projectInfoMeeting', '1', 'project:projectInfoMeeting:view,project:projectInfoMeeting:edit', '2017-03-01 11:23:06', '1', '1', '', '', '0', '0,1,5c503ff8bdef4172a68233b2dfd8b048,e22d3ad2e03b415fa1ceb212cd76ed5a,', '5060', '我的审批', '');
 
