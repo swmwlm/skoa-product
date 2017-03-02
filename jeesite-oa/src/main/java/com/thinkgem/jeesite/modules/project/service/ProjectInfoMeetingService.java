@@ -48,6 +48,7 @@ public class ProjectInfoMeetingService extends CrudService<ProjectInfoMeetingDao
 	
 	public Page<ProjectInfoMeeting> findPage(Page<ProjectInfoMeeting> page, ProjectInfoMeeting projectInfoMeeting) {
 		projectInfoMeeting.setCreateBy(UserUtils.getUser());
+		page.setOrderBy("a.create_date DESC");
 		return super.findPage(page, projectInfoMeeting);
 	}
 	
