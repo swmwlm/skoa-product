@@ -25,7 +25,7 @@
     <li class="active"><a href="${ctx}/project/projectInfoMeeting/">上立项会审批记录</a></li>
 </ul>
 <form:form id="searchForm" modelAttribute="projectInfoMeeting" action="${ctx}/project/projectInfoMeeting/" method="post"
-           class="breadcrumb form-search">
+           class="breadcrumb form-search" style="display:none">
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 </form:form>
