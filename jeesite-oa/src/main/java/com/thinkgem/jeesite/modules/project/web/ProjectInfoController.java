@@ -8,7 +8,6 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfo;
-import com.thinkgem.jeesite.modules.project.entity.ProjectInfoMeeting;
 import com.thinkgem.jeesite.modules.project.entity.ProjectInfoProgress;
 import com.thinkgem.jeesite.modules.project.entity.ProjectNote;
 import com.thinkgem.jeesite.modules.project.service.ProjectInfoMeetingService;
@@ -76,6 +75,14 @@ public class ProjectInfoController extends BaseController {
 		Page<ProjectInfo> page = projectInfoService.findPageDSF(new Page<ProjectInfo>(request, response), projectInfo);
 		model.addAttribute("page", page);
 		return "modules/project/projectInfoList";
+	}
+
+	@RequiresPermissions("project:projectInfo:view")
+	@RequestMapping(value = {"listn"})
+	public String listn(ProjectInfo projectInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<ProjectInfo> page = projectInfoService.findPage(new Page<ProjectInfo>(request, response), projectInfo);
+		model.addAttribute("page", page);
+		return "modules/project/projectInfoListn";
 	}
 
 	@RequiresPermissions("project:projectInfo:view")
