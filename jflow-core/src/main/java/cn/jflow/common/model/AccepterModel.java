@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
+import BP.DA.Log;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.Sys.OSModel;
@@ -133,7 +134,7 @@ public class AccepterModel extends BaseModel{
 			if (this.getIsMFZ() && getToNode() == 0)
 			{
 				IsMultiple = true;
-				//this.BindMStations();
+				//this.BindMStations();	
 				return;
 			}
 			mySelector = new Selector(this.getToNode());
@@ -260,63 +261,7 @@ public class AccepterModel extends BaseModel{
 	private boolean IsMultiple = false;
 		///#endregion 属性.
 
-	//public DataTable GetTable()
-	//{
-	//    if (this.ToNode == 0)
-	//        throw new Exception("@流程设计错误，没有转向的节点。举例说明: 当前是A节点。如果您在A点的属性里启用了[接受人]按钮，那么他的转向节点集合中(就是A可以转到的节点集合比如:A到B，A到C, 那么B,C节点就是转向节点集合)，必须有一个节点是的节点属性的[访问规则]设置为[由上一步发送人员选择]");
-
-	//    NodeStations stas = new NodeStations(this.ToNode);
-	//    if (stas.Count == 0)
-	//    {
-	//        Node toNd = new Node(this.ToNode);
-	//        throw new Exception("@流程设计错误：设计员没有设计节点[" + toNd.Name + "]，接受人的岗位范围。");
-	//    }
-
-	//    string sql = "";
-	//    if (initParameterValue("IsNextDept"] != null)
-	//    {
-	//        int len = this.FK_Dept.Length + 2;
-	//        string sqlDept = "SELECT No FROM Port_Dept WHERE " + SystemConfig.AppCenterDBLengthStr + "(No)=" + len + " AND No LIKE '" + this.FK_Dept + "%'";
-	//        sql = "SELECT A.No,A.Name, A.FK_Dept, B.Name as DeptName FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND a.NO IN ( ";
-	//        sql += "SELECT FK_EMP FROM Port_EmpSTATION WHERE FK_STATION ";
-	//        sql += "IN (SELECT FK_STATION FROM WF_NodeStation WHERE FK_Node=" + this.ToNode + ") ";
-	//        sql += ") AND A.No IN( SELECT No FROM Port_Emp WHERE  " + SystemConfig.AppCenterDBLengthStr + "(FK_Dept)=" + len + " AND FK_Dept LIKE '" + this.FK_Dept + "%')";
-	//        sql += " ORDER BY FK_DEPT ";
-	//        return BP.DA.DBAccess.RunSQLReturnTable(sql);
-	//    }
-
-
-	//    // 优先解决本部门的问题。
-	//    if (this.FK_Dept == WebUser.FK_Dept)
-	//    {
-	//        if (BP.WF.Glo.OSModel == OSModel.OneMore)
-	//        {
-	//            sql = "SELECT A.No,A.Name, A.FK_Dept, B.Name as DeptName FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND a.NO IN ( ";
-	//            sql += "SELECT FK_EMP FROM Port_DeptEmpStation WHERE FK_STATION ";
-	//            sql += "IN (SELECT FK_STATION FROM WF_NodeStation WHERE FK_Node=" + ToNode + ") ";
-	//            sql += ") AND a.No IN (SELECT FK_Emp FROM Port_EmpDept WHERE FK_Dept ='" + WebUser.FK_Dept + "')";
-	//            sql += " ORDER BY FK_DEPT ";
-	//        }
-	//        else
-	//        {
-	//            sql = "SELECT A.No,A.Name, A.FK_Dept, B.Name as DeptName FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND a.NO IN ( ";
-	//            sql += "SELECT FK_EMP FROM Port_EmpSTATION WHERE FK_STATION ";
-	//            sql += "IN (SELECT FK_STATION FROM WF_NodeStation WHERE FK_Node=" + ToNode + ") ";
-	//            sql += ") AND a.No IN (SELECT FK_Emp FROM Port_EmpDept WHERE FK_Dept ='" + WebUser.FK_Dept + "')";
-	//            sql += " ORDER BY FK_DEPT ";
-	//        }
-
-	//        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-	//        if (dt.Rows.Count != 0)
-	//            return dt;
-	//    }
-
-	//    sql = "SELECT A.No,A.Name, A.FK_Dept, B.Name as DeptName FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND a.NO IN ( ";
-	//    sql += "SELECT FK_EMP FROM Port_EmpSTATION WHERE FK_STATION ";
-	//    sql += "IN (SELECT FK_STATION FROM WF_NodeStation WHERE FK_Node=" + ToNode + ") ";
-	//    sql += ") ORDER BY FK_DEPT ";
-	//    return BP.DA.DBAccess.RunSQLReturnTable(sql);
-	//}
+	
 	public final DataTable GetTable()
 	{
 		if (this.getToNode() == 0)
@@ -378,7 +323,7 @@ public class AccepterModel extends BaseModel{
 	private Node _HisNode = null;
 	/** 
 	 它的节点
-	 
+	
 	*/
 	public final Node getHisNode()
 	{
@@ -388,6 +333,7 @@ public class AccepterModel extends BaseModel{
 		}
 		return _HisNode;
 	}
+
 	/** 
 	 是否多分支
 	 
@@ -507,15 +453,42 @@ public class AccepterModel extends BaseModel{
 		sqlDB = sqlDB.replace("@WebUser.Name", WebUser.getName());
 		sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
-		//DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
-		//DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
-
-		//if (this.MySelector.SelectorDBShowWay == SelectorDBShowWay.Table)
-		//    this.BindBySQL_Table(dtGroup, dtDB);
-		//else
-		//    this.BindBySQL_Tree(dtGroup, dtDB);
 		DataTable ParDt = DBAccess.RunSQLReturnTable("select No from Port_Dept where ParentNo='0'");
-		String BindBySQL = String.format("select No,Name,FK_Dept as ParentNo,'0' IsParent from (%1$s) emp" + " union  select No,Name,'%3$s' ParentNo,'1' IsParent from (%2$s) dept" + " union  select No,Name,'0' ParentNo,'1' IsParent from Port_Dept where ParentNo='0'", sqlDB, sqlGroup, ParDt.Rows.get(0).getValue(0).toString());
+		//String BindBySQL = String.format("select No,Name,FK_Dept as ParentNo,'0' IsParent from (%1$s) emp" + " union  select No,Name,'%3$s' ParentNo,'1' IsParent from (%2$s) dept" + " union  select No,Name,'0' ParentNo,'1' IsParent from Port_Dept where ParentNo='0'", sqlDB, sqlGroup, ParDt.Rows.get(0).getValue(0).toString());
+		
+		
+		//查询sql
+		String bindDeptSql = null;
+		String BindBySQL = null;
+		
+		if(StringHelper.isNullOrEmpty(sqlGroup)&&StringHelper.isNullOrEmpty(sqlDB)){
+			Log.DebugWriteError("参数1和参数2均为空！");
+			DdlEmpSql ="param";
+			return "参数1和参数2均为空！" ;
+		}else if(StringHelper.isNullOrEmpty(sqlDB))
+		{
+			BindBySQL = String.format("select No,Name,fk_dept ParentNo,'0' IsParent from (%1$s) emp2 ",sqlGroup);
+			bindDeptSql = String.format("union  select No,Name,'0' ParentNo,'1' IsParent from Port_Dept where ParentNo='0' union SELECT t.NO, t.NAME, ParentNo, '1' IsParent FROM PORT_DEPT t WHERE ParentNo != '0' and t.NO IN(select fk_Dept from (%1$s) emp2 union select No from Port_Dept where ParentNo = '0')"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent  FROM PORT_DEPT where no in(SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp2))"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT where no in (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp2)))"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT where no in (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp2) )))",sqlGroup);
+		}else if(StringHelper.isNullOrEmpty(sqlGroup))
+		{
+			BindBySQL = String.format("select No,Name,fk_dept ParentNo,'0' IsParent from (%1$s) emp1 ",sqlDB);
+			bindDeptSql = String.format("union  select No,Name,'0' ParentNo,'1' IsParent from Port_Dept where ParentNo='0' union SELECT t.NO, t.NAME, ParentNo, '1' IsParent FROM PORT_DEPT t WHERE ParentNo != '0' and t.NO IN(select fk_Dept from (%1$s) emp2 union select No from Port_Dept where ParentNo = '0')"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent  FROM PORT_DEPT where no in(SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp1))"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT where no in (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp1)))"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT where no in (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp1))))",sqlDB);
+		}else{
+			BindBySQL = String.format("select No,Name,FK_Dept as ParentNo,'0' IsParent from (%1$s) emp1 union  select No,Name,fk_dept ParentNo,'1' IsParent from (%2$s) emp2 ",sqlDB, sqlGroup);
+			bindDeptSql = String.format("union  select No,Name,'0' ParentNo,'1' IsParent from Port_Dept where ParentNo='0' union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT  WHERE ParentNo != '0' and NO IN (select  FK_Dept from (%1$s) emp1 union  select FK_Dept from (%2$s) emp2) " 
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent  FROM PORT_DEPT where no in(SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp1 union select FK_Dept from (%2$s) emp2))"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT where no in (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp1 union select FK_Dept from (%2$s) emp2)))"
+					+"union SELECT NO, NAME, ParentNo, '1' IsParent FROM PORT_DEPT where no in (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (SELECT  ParentNo FROM Port_Dept  WHERE NO IN (select FK_Dept from (%1$s) emp1 union select FK_Dept from (%2$s) emp2) )))",sqlDB, sqlGroup);
+		}
+		
+		
+		
 		//????????????
 		//DataTable empDt = DBAccess.RunSQLReturnTable(sqlDB);
 		//string empsStr = "";
@@ -532,40 +505,39 @@ public class AccepterModel extends BaseModel{
 		//DdlEmpSql = string.Format("select No,Name from Port_Emp  WHERE No in ({0})", empsStr);
 
 
-		DdlEmpSql = sqlDB; //No,Name没有的情况会报错
-		DataTable BindBySQLDt = DBAccess.RunSQLReturnTable(BindBySQL);
+		DdlEmpSql = "select No, Name, ParentNo, '0' IsParent from ("+ BindBySQL+"  ) a  group by ParentNo,No,Name" ; //No,Name没有的情况会报错
+		
+		DataTable BindBySQLDt = DBAccess.RunSQLReturnTable(BindBySQL+bindDeptSql);
 
 		return GetTreeJsonByTable(BindBySQLDt, "NO", "NAME", "ParentNo", "0", "IsParent", "");
 
 	}
+	
 	/** 
 	 按BindByEmp 方式
 	 
 	*/
 	public final String BindByEmp()
 	{
-		//string sqlGroup = "SELECT No,Name FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM Port_Emp WHERE No in(SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node='" + MySelector.NodeID + "'))";
-		//string sqlDB = "SELECT No,Name,FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node='" + MySelector.NodeID + "')";
-
-		//DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
-		//DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
-
-		//if (this.MySelector.SelectorDBShowWay == SelectorDBShowWay.Table)
-		//    this.BindBySQL_Table(dtGroup, dtDB);
-		//else
-		//    this.BindBySQL_Tree(dtGroup, dtDB);
 
 		String BindByEmpSql = String.format("select No,Name,ParentNo,'1' IsParent  from Port_Dept   WHERE No IN (SELECT FK_Dept FROM " + "Port_Emp WHERE No in(SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node=%1$s)) or ParentNo=0 union " + "select No,Name,FK_Dept as ParentNo,'0' IsParent  from Port_Emp  WHERE No in (SELECT FK_EMP " + "FROM WF_NodeEmp WHERE FK_Node=%1$s)", mySelector.getNodeID());
+		String BindDeptParentSql = String.format("union select No, Name, ParentNo, '1' IsParent from port_dept where no in(select ParentNo from port_dept where no in(SELECT FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node =%1$s)))"
+				+"union select No, Name, ParentNo, '1' IsParent from port_dept where no in(select ParentNo from port_dept where no in(select ParentNo from port_dept where no in(SELECT FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node =%1$s))))"
+				+"union select No, Name, ParentNo, '1' IsParent from port_dept where no in(select ParentNo from port_dept where no in(select ParentNo from port_dept where no in(select ParentNo from port_dept where no in(SELECT FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node =%1$s)))))"
+				+"union select No, Name, ParentNo, '1' IsParent from port_dept where no in(select ParentNo from port_dept where no in(select ParentNo from port_dept where no in(select ParentNo from port_dept where no in(select ParentNo from port_dept where no in(SELECT FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node =%1$s))))))", mySelector.getNodeID());
 		DdlEmpSql = String.format("select No,Name from Port_Emp  WHERE No in (SELECT FK_EMP " + "FROM WF_NodeEmp WHERE FK_Node=%1$s)", mySelector.getNodeID());
-		DataTable BindByEmpDt = DBAccess.RunSQLReturnTable(BindByEmpSql);
+		DataTable BindByEmpDt = DBAccess.RunSQLReturnTable(BindByEmpSql + BindDeptParentSql);
 		DataTable ParDt = DBAccess.RunSQLReturnTable("select No from Port_Dept where ParentNo='0'");
+		/* 该代码没有实际作用，注释掉
 		for (DataRow r : BindByEmpDt.Rows)
 		{
 			if (r.getValue("IsParent").toString().equals("1") && !r.getValue("ParentNo").toString().equals("0"))
 			{
 				r.setValue("ParentNo", ParDt.Rows.get(0).getValue(0).toString());
 			}
+			BindByEmpDt.Rows.add(i, r);;
 		}
+		*/
 		return GetTreeJsonByTable(BindByEmpDt, "NO", "NAME", "ParentNo", "0", "IsParent", "");
 	}
 	public String DdlEmpSql = "";
@@ -585,15 +557,12 @@ public class AccepterModel extends BaseModel{
 		}
 
 		method = initParameterValue("method").toString();
-//C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a string member and was converted to Java 'if-else' logic:
-//			switch (method)
-//ORIGINAL LINE: case "getTreeDateMet":
-		if (method.equals("getTreeDateMet")) //获取数据
+
+		if ("getTreeDateMet".equals(method)) //获取数据
 		{
 				s_responsetext = getTreeDateMet(whichMet);
 		}
-//ORIGINAL LINE: case "saveMet":
-		else if (method.equals("saveMet"))
+		else if ("saveMet".equals(method))
 		{
 				saveMet();
 		}
@@ -604,6 +573,7 @@ public class AccepterModel extends BaseModel{
 		}
 		s_responsetext = AppendJson(s_responsetext);
 		s_responsetext = DdlValue(s_responsetext, DdlEmpSql);
+		
 		//组装ajax字符串格式,返回调用客户端 树型
 		printResult(s_responsetext);
 	}
@@ -652,52 +622,54 @@ public class AccepterModel extends BaseModel{
 	}
 	public final String DdlValue(String StrJson, String Str)
 	{
+		DataTable dt = null;
 		StringBuilder SBuilder = new StringBuilder();
 		SBuilder.append(StrJson);
-		DataTable dt = DBAccess.RunSQLReturnTable(Str);
-
-		SBuilder.append(",ddl:[");
-		for (int i = 0; i < dt.Rows.size(); i++)
-		{
-			if (i == 0)
-			{
-				SBuilder.append("{\"id\":\"" + dt.Rows.get(i).getValue("No").toString() + "\",\"text\":\"" + dt.Rows.get(i).getValue("Name").toString() + "\",\"selected\":\"selected\"}");
-			}
-			else
-			{
-				SBuilder.append("{\"id\":\"" + dt.Rows.get(i).getValue("No").toString() + "\",\"text\":\"" + dt.Rows.get(i).getValue("Name").toString() + "\"}");
-			}
-			if (i == dt.Rows.size() - 1)
-			{
-				SBuilder.append("");
-				continue;
-			}
-			SBuilder.append(",");
+		if("param".equals(DdlEmpSql)){
+			return SBuilder.toString();
 		}
-		SBuilder.append("]}");
+		if(!"saveMet".equals(initParameterValue("method"))){
+			dt = DBAccess.RunSQLReturnTable(Str);
+			
+			SBuilder.append(",ddl:[");
+			for (int i = 0; i < dt.Rows.size(); i++)
+			{
+				if (i == 0)
+				{
+					SBuilder.append("{\"id\":\"" + dt.Rows.get(i).getValue("No").toString() + "\",\"text\":\"" + dt.Rows.get(i).getValue("Name").toString() + "\",\"selected\":\"selected\"}");
+				}
+				else
+				{
+					SBuilder.append("{\"id\":\"" + dt.Rows.get(i).getValue("No").toString() + "\",\"text\":\"" + dt.Rows.get(i).getValue("Name").toString() + "\"}");
+				}
+				if (i == dt.Rows.size() - 1)
+				{
+					SBuilder.append("");
+					continue;
+				}
+				SBuilder.append(",");
+			}
+			SBuilder.append("]}");
+		}
 		return SBuilder.toString();
 	}
 	public final String getTreeDateMet(String Met)
 	{
 //C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a string member and was converted to Java 'if-else' logic:
 //			switch (Met)
-//ORIGINAL LINE: case "BindByEmp":
-		if (Met.equals("BindByEmp"))
+		if ("BindByEmp".equals(Met))
 		{
 				return BindByEmp();
 		}
-//ORIGINAL LINE: case "BindByDept":
-		else if (Met.equals("BindByDept"))
+		else if ("BindByDept".equals(Met))
 		{
 				return BindByDept();
 		}
-//ORIGINAL LINE: case "BindByStation":
-		else if (Met.equals("BindByStation"))
+		else if ("BindByStation".equals(Met))
 		{
 				return BindByStation();
 		}
-//ORIGINAL LINE: case "BindBySQL":
-		else if (Met.equals("BindBySQL"))
+		else if ("BindBySQL".equals(Met))
 		{
 				return BindBySQL();
 		}
@@ -708,25 +680,18 @@ public class AccepterModel extends BaseModel{
 	}
 	public final String BindByDept()
 	{
-		//string sqlGroup = "SELECT No,Name FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node='" + MySelector.NodeID + "')";
-		//string sqlDB = "SELECT No,Name, FK_Dept FROM Port_Emp WHERE FK_Dept IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node='" + MySelector.NodeID + "')";
-
-		//DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
-		//DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
-
-		//if (this.MySelector.SelectorDBShowWay == SelectorDBShowWay.Table)
-		//this.BindBySQL_Table(dtGroup, dtDB);
-		//else
-		//    this.BindBySQL_Tree(dtGroup, dtDB);
-
-
+		
 		String BindByDeptSql = String.format("SELECT  No,Name,ParentNo,'1' IsParent  FROM Port_Dept WHERE No IN (SELECT " + "FK_Dept FROM WF_NodeDept WHERE FK_Node=%1$s) or ParentNo=0 union SELECT No,Name,FK_Dept " + "as ParentNo,'0' IsParent FROM Port_Emp WHERE FK_Dept IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node=%1$s)", mySelector.getNodeID());
+		String BindDeptPrentNoSql = String.format("union SELECT No, Name, ParentNo, '1' IsParent FROM Port_Dept where no in  (SELECT  ParentNo FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node = %1$s))"
+				+" union SELECT No, Name, ParentNo, '1' IsParent FROM Port_Dept where no in(SELECT  ParentNo FROM Port_Dept where no in (SELECT  ParentNo FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node =%1$s)))"
+				+" union SELECT No, Name, ParentNo, '1' IsParent FROM Port_Dept where no in(SELECT  ParentNo FROM Port_Dept where no in(SELECT  ParentNo FROM Port_Dept where no in (SELECT  ParentNo FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node =%1$s))))"
+				+" union SELECT No, Name, ParentNo, '1' IsParent FROM Port_Dept where no in(SELECT  ParentNo FROM Port_Dept where no in(SELECT  ParentNo FROM Port_Dept where no in(SELECT  ParentNo FROM Port_Dept where no in (SELECT  ParentNo FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node =%1$s)))))", mySelector.getNodeID());
 
 		DdlEmpSql = String.format("SELECT No,Name FROM Port_Emp WHERE FK_Dept IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node=%1$s)", mySelector.getNodeID());
 
-
-		DataTable BindByDeptDt = DBAccess.RunSQLReturnTable(BindByDeptSql);
+		DataTable BindByDeptDt = DBAccess.RunSQLReturnTable(BindByDeptSql+BindDeptPrentNoSql);
 		DataTable ParDt = DBAccess.RunSQLReturnTable("select No from Port_Dept where ParentNo='0'");
+		/* 该代码没有实际作用，注释掉
 		for (DataRow r : BindByDeptDt.Rows)
 		{
 			if (r.get("IsParent").toString().equals("1") && !r.get("ParentNo").toString().equals("0"))
@@ -734,6 +699,7 @@ public class AccepterModel extends BaseModel{
 				r.setValue("ParentNo", ParDt.Rows.get(0).getValue(0).toString());
 			}
 		}
+		*/
 		return GetTreeJsonByTable(BindByDeptDt, "NO", "NAME", "ParentNo", "0", "IsParent", "");
 	}
 	/** 
@@ -823,136 +789,6 @@ public class AccepterModel extends BaseModel{
 	{
 		return GetTreeJsonByTable(this.GetTable(), "No", "Name", "ParentNo", "0", "IsParent", "");
 
-
-		//DataTable dt = this.GetTable(); //获取人员列表。
-		//SelectAccpers accps = new SelectAccpers();
-		//accps.QueryAccepter(this.FK_Node, WebUser.No, this.WorkID);
-
-		//Dept dept = new Dept();
-		//string fk_dept = "";
-		//string info = "";
-
-		//if (IsMultiple)
-		//    this.Pub1.AddTable("width=400px");
-		//else
-		//    this.Pub1.AddTable("width=100%");
-
-		//if (WebUser.FK_Dept.Length > 2)
-		//{
-		//    if (this.FK_Dept == WebUser.FK_Dept)
-		//        info = "<b><a href='Accepter.aspx?ToNode=" + this.ToNode + "&WorkID=" + this.WorkID + "&FK_Node=" + this.FK_Node + "&type=1&FK_Dept=" + WebUser.FK_Dept.Substring(0, WebUser.FK_Dept.Length - 2) + "'>上一级部门人员</b></a>|<b><a href='Accepter.aspx?ToNode=" + this.ToNode + "&WorkID=" + this.WorkID + "&FK_Node=" + this.FK_Node + "&type=1&FK_Dept=" + this.FK_Dept + "&IsNextDept=1' >下一级部门人员</b></a>";
-		//    else
-		//        info = "<b><a href='Accepter.aspx?ToNode=" + this.ToNode + "&WorkID=" + this.WorkID + "&FK_Node=" + this.FK_Node + "&type=1&FK_Dept=" + WebUser.FK_Dept + "'>本部门人员</a></b>";
-		//}
-		//else
-		//{
-		//    info = "<b><a href='Accepter.aspx?ToNode=" + this.ToNode + "&WorkID=" + this.WorkID + "&FK_Node=" + this.FK_Node + "&type=1&FK_Dept=" + WebUser.FK_Dept + "'>本部门人员</a> | <a href='Accepter.aspx?ToNode=" + this.ToNode + "&WorkID=" + this.WorkID + "&FK_Node=" + this.FK_Node + "&type=1&FK_Dept=" + this.FK_Dept + "&IsNextDept=1' >下一级部门人员</b></a>";
-		//}
-
-
-		//Node toNode = new Node(this.ToNode);
-		//this.Pub1.AddCaptionLeft("<span style='color:red'>到达节点:[" + toNode.Name + "]</span>");
-		//this.Pub1.AddCaptionLeft("可选择范围:" + dt.Rows.Count + " 位." + info);
-
-		//if (dt.Rows.Count > 50)
-		//{
-		//    /*多于一定的数，就显示导航。*/
-		//    this.Pub1.AddTRSum();
-		//    this.Pub1.Add("<TD class=BigDoc colspan=5>");
-		//    foreach (DataRow dr in dt.Rows)
-		//    {
-		//        if (fk_dept != dr["FK_Dept"].ToString())
-		//        {
-		//            fk_dept = dr["FK_Dept"].ToString();
-		//            dept = new Dept(fk_dept);
-		//            dr["DeptName"] = dept.Name;
-		//            this.Pub1.Add("<a href='#d" + dept.No + "' >" + dept.Name + "</a>&nbsp;");
-		//        }
-		//    }
-		//    this.Pub1.AddTDEnd();
-		//    this.Pub1.AddTREnd();
-		//}
-
-		//int idx = -1;
-		//bool is1 = false;
-		//foreach (DataRow dr in dt.Rows)
-		//{
-		//    idx++;
-		//    if (fk_dept != dr["FK_Dept"].ToString())
-		//    {
-		//        switch (idx)
-		//        {
-		//            case 0:
-		//                break;
-		//            case 1:
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTREnd();
-		//                break;
-		//            case 2:
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTREnd();
-		//                break;
-		//            case 3:
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTREnd();
-		//                break;
-		//            case 4:
-		//                this.Pub1.AddTD();
-		//                this.Pub1.AddTREnd();
-		//                break;
-		//            default:
-		//                throw new Exception("error");
-		//        }
-
-		//        this.Pub1.AddTRSum();
-		//        fk_dept = dr["FK_Dept"].ToString();
-		//        string deptName = dr["DeptName"].ToString();
-		//        this.Pub1.AddTD("colspan=5 aligen=left class=FDesc ", "<a name='d" + dept.No + "'>" + deptName + "</a>");
-		//        this.Pub1.AddTREnd();
-		//        is1 = false;
-		//        idx = 0;
-		//    }
-
-		//    string no = dr["No"].ToString();
-		//    string name = dr["Name"].ToString();
-
-		//    CheckBox cb = new CheckBox();
-		//    cb.Text = BP.WF.Glo.DealUserInfoShowModel(no, name);
-
-		//    cb.ID = "CB_" + no;
-		//    if (accps.Contains("FK_Emp", no))
-		//        cb.Checked = true;
-
-		//    switch (idx)
-		//    {
-		//        case 0:
-		//            is1 = this.Pub1.AddTR(is1);
-		//            this.Pub1.AddTD(cb);
-		//            break;
-		//        case 1:
-		//        case 2:
-		//        case 3:
-		//            this.Pub1.AddTD(cb);
-		//            break;
-		//        case 4:
-		//            this.Pub1.AddTD(cb);
-		//            this.Pub1.AddTREnd();
-		//            idx = -1;
-		//            break;
-		//        default:
-		//            throw new Exception("error");
-		//    }
-		//    this.Pub1.AddTREnd();
-		//}
-		//this.Pub1.AddTableEnd();
-
-		//this.BindEnd();
 	}
 	/** 
 	 处理绑定结束
@@ -991,12 +827,6 @@ public class AccepterModel extends BaseModel{
 		mycb.setText("以后发送都按照本次设置计算");
 		appendPub1(mycb.toString());
 
-		//CheckBox mycb = new CheckBox();
-		//mycb.ID = "CB_IsSetNextTime";
-		//mycb.Text = "以后发送都按照本次设置计算";
-		//mycb.Checked = accps.IsSetNextTime;
-		//this.Pub1.Add(mycb);
-
 	}
 	//保存
 	public final void saveMet()
@@ -1025,11 +855,10 @@ public class AccepterModel extends BaseModel{
 
 		//设置人员.
 		BP.WF.Dev2Interface.WorkOpt_SetAccepter(this.getToNode(), this.getWorkID(), this.getFID(), getSaveNo, false);
-
         if (this.getIsWinOpen() == 0)
         {
             /*如果是 MyFlow.aspx 调用的, 就要调用发送逻辑. */
-            // this.DoSend();
+            //this.DoSend();
             return;
         }
 
@@ -1045,28 +874,7 @@ public class AccepterModel extends BaseModel{
 
         }
 
-		///#warning 刘文辉 保存收件人后调用发送按钮
-
-		//            BtnLab nd = new BtnLab(this.FK_Node);
-		//            if (nd.SelectAccepterEnable == 1)
-		//            {
-		//                if (initParameterValue("IsEUI"] == null)
-		//                {
-
-		//                    /*如果是1不说明直接关闭它.*/
-		//                    this.WinClose();
-		//                    //ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "", "this.close();", true);
-		//                }
-		//                else
-		//                {
-		//                    PubClass.ResponseWriteScript("window.parent.$('windowIfrem').window('close');");
-
-		//                }
-		//            }
-		//            else
-		//            {
-		//                ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "", "send();", true);
-		//            }
+		
 	}
 
 	/** 
@@ -1075,86 +883,6 @@ public class AccepterModel extends BaseModel{
 	 @param sender
 	 @param e
 	*/
-//	private void btn_Save_Click(Object sender, EventArgs e)
-//	{
-//		Button btn = (Button)sender;
-//		if (btn.getId().equals("Btn_Cancel"))
-//		{
-//			String url = "../MyFlow.jsp?FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID();
-//			get_response().sendRedirect(url);
-//			return;
-//		}
-//
-//		//DataTable dt = this.GetTable();
-//		String emps = "";
-//		for (Control ctl : this.Pub1.Controls)
-//		{
-//			CheckBox cb = (CheckBox)((ctl instanceof CheckBox) ? ctl : null);
-//			if (cb == null || cb.ID == null || cb.ID.Contains("CBs_") || cb.ID.equals("CB_IsSetNextTime"))
-//			{
-//				continue;
-//			}
-//
-//			if (cb.Checked == false)
-//			{
-//				continue;
-//			}
-//			emps += cb.ID.Replace("CB_", "") + ",";
-//		}
-//
-//		if (emps.length() < 2)
-//		{
-//			this.Alert("您没有选择人员。");
-//			return;
-//		}
-//
-//		//获取是否下次自动设置.
-//		boolean isNextTime = this.Pub1.GetCBByID("CB_IsSetNextTime").Checked;
-//
-//		//设置人员.
-//		BP.WF.Dev2Interface.WorkOpt_SetAccepter(this.getToNode(), this.getWorkID(), this.getFID(), emps, isNextTime);
-//
-//		if (this.getIsWinOpen() == 0)
-//		{
-//			//如果是 MyFlow.aspx 调用的, 就要调用发送逻辑. 
-//			this.DoSend();
-//			return;
-//		}
-//
-//
-//		if (initParameterValue("IsEUI"] == null)
-//		{
-//			this.WinClose();
-//		}
-//		else
-//		{
-//			PubClass.ResponseWriteScript("window.parent.$('windowIfrem').window('close');");
-//		}
-//
-//
-/////#warning 刘文辉 保存收件人后调用发送按钮
-//
-//		BtnLab nd = new BtnLab(this.getFK_Node());
-//		if (nd.SelectAccepterEnable == 1)
-//		{
-//			if (initParameterValue("IsEUI"] == null)
-//			{
-//
-//				//如果是1不说明直接关闭它.
-//				this.WinClose();
-//				//ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "", "this.close();", true);
-//			}
-//			else
-//			{
-//				PubClass.ResponseWriteScript("window.parent.$('windowIfrem').window('close');");
-//
-//			}
-//		}
-//		else
-//		{
-//			ScriptManager.RegisterStartupScript(this.Page, Page.class, "", "send();", true);
-//		}
-//	}
 
 	public final void DoSend()
 	{
@@ -1264,7 +992,7 @@ public class AccepterModel extends BaseModel{
 						return;
 					}
 				}
-///#warning 为上海修改了如果找不到路径就让它按系统的信息提示。
+				//#warning 为上海修改了如果找不到路径就让它按系统的信息提示。
 				this.ToMsg(msg, "info");
 				//throw new Exception("您定义的转向条件不成立，没有出口。");
 				break;
@@ -1320,23 +1048,28 @@ public class AccepterModel extends BaseModel{
 			
 			if (pId.toString().equals(""))
 			{
-				//filer = String.format("%1$s is null", rela);
+
 				filer.put(rela, null);
 			}
 			else
 			{
-				//filer = String.format("%1$s='%2$s'", rela, pId);
+				
 				filer.put(rela, pId);
 			}
 			try {
 				List<DataRow> rows = tabel.Select(filer);
-				//DataRow[] rows = tabel.Select(filer);
 				if (rows.size() > 0) //修改
 				{
-				
+					String noList = "";
 					for (DataRow row : rows)
 					{
-						String deptNo = (String) (row.getValue(idCol) instanceof String ? row.getValue(idCol) : null);
+						//增加去重判断
+						if(noList.contains(row.get("no").toString()))
+						{
+							continue;
+						}
+						noList += row.get("no").toString();
+						
 						HashMap<String, Object> filerMap = new HashMap<String, Object>();
 						filerMap.put(rela, row.getValue(idCol));
 						
@@ -1376,5 +1109,21 @@ public class AccepterModel extends BaseModel{
 			}
 		}
 		return treeJson;
+	}
+	
+	/**
+	 * 重定向到myflowInfo.jsp
+	 * @param msg
+	 */
+	public final String getToMsg(String msg)
+	{
+		get_request().getSession().setAttribute("info", msg.trim());
+		try {
+			BP.WF.Glo.setSessionMsg(msg);
+			return BP.WF.Glo.getCCFlowAppPath()+"WF/MyFlowInfo.jsp?FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&WorkID=" + getWorkID() + "&FID=" + getFID()+ "&FK_Emp=" +WebUser.getNo() + "&SID=" + WebUser.getSID();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

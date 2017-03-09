@@ -91,7 +91,6 @@
           }
 
           var pushData = eval('(' + js + ')');
-
           $('#cc').combobox({
               data: pushData.ddl,
               valueField: 'id',
@@ -239,7 +238,9 @@
               FK_Flow: FK_Flow
           };
           queryData(params, function (js, scope) { }, this);
+          window.opener.location.reload();
           window.close();
+
       }
       //关闭
       function cancelMet() {

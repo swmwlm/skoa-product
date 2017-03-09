@@ -7708,7 +7708,7 @@ public class Dev2Interface {
 			// ds.Tables.add(dt1);
 			break;
 		case SQL:
-			ds = WorkOpt_Accepter_BySQL(nodeID);
+			ds = WorkOpt_Accepter_BySQL(nodeID,WorkID);
 			break;
 		case Dept:
 			ds = WorkOpt_Accepter_ByDept(nodeID);
@@ -7770,25 +7770,12 @@ public class Dev2Interface {
 	/**
 	 * 按sql方式
 	 */
-	public static DataSet WorkOpt_Accepter_BySQL(int ToNode) {
+	public static DataSet WorkOpt_Accepter_BySQL(int ToNode,long WorkID) {
 		DataSet ds = new DataSet();
-		Selector MySelector = new Selector(ToNode);
-		String sqlGroup = MySelector.getSelectorP1();
-		sqlGroup = sqlGroup.replace("@WebUser.getNo()", WebUser.getNo());
-		sqlGroup = sqlGroup.replace("@WebUser.getName()", WebUser.getName());
-		sqlGroup = sqlGroup.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-
-		String sqlDB = MySelector.getSelectorP2();
-		sqlDB = sqlDB.replace("@WebUser.getNo()", WebUser.getNo());
-		sqlDB = sqlDB.replace("@WebUser.getName()", WebUser.getName());
-		sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-
-		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
-		dtGroup.TableName = "Port_Dept";
-		ds.Tables.add(dtGroup);
-		DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
-		dtDB.TableName = "Port_Emp";
-		ds.Tables.add(dtDB);
+		String alreadyHadEmps = String.format("select No, Name from Port_Emp where No in( select FK_Emp from WF_SelectAccper " + "where FK_Node=%1$s and WorkID=%2$s)", ToNode, WorkID);
+		DataTable dt = DBAccess.RunSQLReturnTable(alreadyHadEmps);
+		dt.TableName="Port_Emp";
+		ds.Tables.add(dt);
 
 		return ds;
 	}
