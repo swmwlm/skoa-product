@@ -215,7 +215,7 @@ public class BillControlle {
 				// 如果包含这二个字段。
 				//String fileName = file.PostedFile.FileName;
 				String fileName=file.getOriginalFilename();
-				fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+				fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 				if (bt.getName().equals("")) {
 
 					bt.setName(fileName.replace(".rtf", ""));

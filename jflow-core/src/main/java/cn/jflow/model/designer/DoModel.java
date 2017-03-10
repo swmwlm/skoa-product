@@ -51,7 +51,7 @@ public class DoModel extends BaseModel{
 			Entity enF = BP.En.ClassFactory.GetEn(this.getEnName());
             enF.setPKVal(this.get_request().getParameter("PK"));
             enF.Retrieve();
-            String pPath = enF.GetValStringByKey("MyFilePath") + "\\" + enF.getPKVal() + "." + enF.GetValStringByKey("MyFileExt");
+            String pPath = enF.GetValStringByKey("MyFilePath") + "/" + enF.getPKVal() + "." + enF.GetValStringByKey("MyFileExt");
             BP.Sys.PubClass.DownloadFile(pPath,
                 enF.GetValStringByKey("MyFileName"));
             this.WinClose();

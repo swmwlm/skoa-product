@@ -5,6 +5,8 @@ import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityOID;
 import BP.En.Map;
+import BP.En.RefMethod;
+import BP.En.RefMethodType;
 
 /**
  * GroupField
@@ -108,13 +110,31 @@ public class GroupField extends EntityOID
 		map.setEnType(EnType.Sys);
 		
 		map.AddTBIntPKOID();
-		map.AddTBString(GroupFieldAttr.Lab, null, "Lab", true, false, 0, 500,
+		map.AddTBString(GroupFieldAttr.Lab, null, "标签Lab", true, false, 0, 500,
 				20);
 		map.AddTBString(GroupFieldAttr.EnName, null, "主表", true, false, 0, 200,
 				20);
-		map.AddTBInt(GroupFieldAttr.Idx, 99, "Idx", true, false);
+		map.AddTBInt(GroupFieldAttr.Idx, 99, "顺序号Idx", true, false);
 		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddTBString(GroupFieldAttr.CtrlType, null, "控件类型", false, false, 0, 50, 20);
+		map.AddTBString(GroupFieldAttr.CtrlID, null, "控件ID", false, false, 0, 500, 20);
+		map.AddTBAtParas(3000);
 		
+		RefMethod rm = new RefMethod();
+		//rm.Title = "增加字段";
+		//rm.Icon = "../WF/Img/Btn/New.gif";
+		//rm.ClassMethodName = this.ToString() + ".DoAddField";
+		//rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		//map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "删除隶属分组的字段";
+		rm.Icon = "../WF/Img/Btn/Delete.gif";
+		rm.Warning = "您确定要删除该分组下的所有字段吗？";
+		rm.ClassMethodName = this.toString() + ".DoDelAllField";
+		rm.refMethodType = RefMethodType.Func;
+		map.AddRefMethod(rm);
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
@@ -148,13 +168,14 @@ public class GroupField extends EntityOID
 	@Override
 	protected boolean beforeInsert()
 	{
+		/*
 		if (this.IsExit(GroupFieldAttr.EnName, this.getEnName(),
 				GroupFieldAttr.Lab, this.getLab()))
 		{
 			throw new RuntimeException("@已经在(" + this.getEnName() + ")里存在("
 					+ this.getLab() + ")的分组了。");
 		}
-		
+		*/
 		try
 		{
 			String sql = "SELECT MAX(IDX) FROM "

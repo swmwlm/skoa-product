@@ -112,7 +112,7 @@ input[type=text]{
 <table style="width: 100%">
 	<caption>发起限制规则</caption>
 	<tr>
-		<td valign=top style="width: 20%;"   >
+		<td valign=top style="width: 20%;">
 			<fieldset>
 				<legend> 填写帮助</legend>
 
@@ -174,9 +174,10 @@ input[type=text]{
 			</fieldset>
 			
 			<fieldset>
+			
 				<legend>
-					<input type = "radio" id="RB_OnlyOneSubFlow" name=""xzgx>为子流程时，仅仅只能被调用1次
-			    </legen>
+					<input type="radio" id="RB_OnlyOneSubFlow" name="xzgz" value=""/>为子流程时，仅仅只能被调用1次
+				</legend>
 				<ul>
 					<li>如果当前为子流程，仅仅只能被调用1次。</li>
 				</ul>

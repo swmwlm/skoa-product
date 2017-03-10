@@ -589,8 +589,7 @@ function parseVal2Float(ctrl) {
 function TBHelp(ctrl, appPath, attrKey, enName) {
     //alert("woshiduohangwenbenkuang:" + ctrl + "-" + appPath + "-" + attrKey + "-" + enName);
     //双击多行文本框 woshiduohangwenbenkuang:TB_WTMS-/-WTMS-ND1101
-
-    var url = "/WF/Comm/HelperOfTBEUI.jsp?AttrKey=" + attrKey + "&WordsSort=3" + "&FK_MapData=" + enName + "&id=" + ctrl;
+    var url = '/jflow-web/WF/Comm/HelperOfTBEUI.jsp?AttrKey=' + attrKey + '&WordsSort=3' + '&FK_MapData=' + enName + '&id=' + ctrl;
     var explorer = window.navigator.userAgent;
     var str = "";
     if (explorer.indexOf("Chrome") >= 0) {

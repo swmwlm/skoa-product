@@ -46,8 +46,9 @@ public class MessagesReplayController {
 		
 		        sms.setMyPK(DBAccess.GenerGUID());
 		        sms.setRDT(DataType.getCurrentDataTime());  
+		        sms.setSendToEmpNo(sms.getSender());//先赋发给谁，然后再赋发送人
 		        sms.setSender(WebUser.getNo());
-		        sms.setSendToEmpNo(sms.getSender());
+		       
 		              
 		        sms.setTitle(title);
 		        sms.setDocOfEmail(con);

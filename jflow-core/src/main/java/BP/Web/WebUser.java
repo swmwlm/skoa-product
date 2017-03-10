@@ -189,7 +189,7 @@ public class WebUser {
 			WebUser.setFK_DeptName(null);
 			WebUser.setSID(null);
 			WebUser.setAuth(null);
-			WebUser.setUserWorkDev(null);
+			//WebUser.setUserWorkDev(null);
 			WebUser.setSysLang(null);
 			if (SystemConfig.getIsBSsystem()) {
 				int expiry = 60 * 60 * 24 * 2;
@@ -398,18 +398,18 @@ public class WebUser {
 	 * @return
 	 */
 	public static boolean CheckSID(String UserNo, String SID) {
-		/*String mysid = null;
-		try {
-			mysid = DBAccess.RunSQLReturnStringIsNull(
-					"SELECT SID FROM Port_Emp WHERE No='" + UserNo + "'", null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (SID != null && SID.equals(mysid)) {
-			return true;
-		} else {
-			return false;
-		}*/
+//		String mysid = null;
+//		try {
+//			mysid = DBAccess.RunSQLReturnStringIsNull(
+//					"SELECT SID FROM Port_Emp WHERE No='" + UserNo + "'", null);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if (SID != null && SID.equals(mysid)) {
+//			return true;
+//		} else {
+//			return false;
+//		}
 		return true;
 	}
 

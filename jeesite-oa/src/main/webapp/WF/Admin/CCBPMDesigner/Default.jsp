@@ -8,7 +8,7 @@
     bpmd.page_load(request, response);
     %>
 <head>
-<title>BPM2.0</title>
+<title>CCBPM2.0</title>
 <link rel="stylesheet" type="text/css" href="normalize/css/demo.css" />
 <link rel="stylesheet" type="text/css" href="normalize/css/ns-default.css" />
 <link rel="stylesheet" type="text/css" href="normalize/css/ns-style-bar.css" />
@@ -464,10 +464,7 @@
     <div class="window-mask mymask" style="width: 100%; height: 100%; display: block;
         z-index: 21006;">
     </div>
-    <div data-options="region:'west',border:true,split:true"
-         <%--title="<div class='logpanel'><div class='icon-logPic'></div><div class='logPicspan'>驰骋BPM</div></div>"--%>
-         title="<div class='logpanel'><div class='logPicspan'>工作流设计器</div></div>"
-         style="width: 280px;">
+    <div data-options="region:'west',border:true,split:true" title="<div class='logpanel'><div class='icon-logPic'></div><div class='logPicspan'>驰骋BPM</div></div>" style="width: 280px;">
         <div id="menuTab" class="easyui-tabs" data-options="fit:true,border:false">
         </div>
     </div>
@@ -526,7 +523,7 @@
 
     </div>
 	<div id="mFormRoot" class="easyui-menu" style="width: 120px;">
-		<div onclick="newSrc()" data-options="iconCls:'icon-add'">新建数据源</div>
+		<!-- <div onclick="newSrc()" data-options="iconCls:'icon-add'">新建数据源</div> -->
 		<div onclick="newFrm()" data-options="iconCls:'icon-new'">新建表单</div>
 		<div onclick="RefreshNode('formTree', '0')"
 			data-options="iconCls:'icon-reload'">刷新</div>
@@ -538,17 +535,17 @@
 		<div onclick="newSrc()" data-options="iconCls:'icon-add'">新建数据源</div>
 	</div>
 	<div id="mFormSort" class="easyui-menu" style="width: 120px;">
-		<div onclick="newFrm()" data-options="iconCls:'icon-add'">新建/导入</div>
-		<div onclick="remove()" data-options="iconCls:'icon-new'">新建同级类别</div>
-		<div onclick="remove()" data-options="iconCls:'icon-new'">新建子级类别</div>
-		<div onclick="remove()" data-options="iconCls:'icon-edit'">编辑</div>
-		<div onclick="remove()" data-options="iconCls:'icon-delete'">删除</div>
+		<div onclick="newFrm()" data-options="iconCls:'icon-add'">新建/导入表单</div>
+		<div onclick="newFrmSort(false)" data-options="iconCls:'icon-new'">新建同级类别</div>
+		<div onclick="newFrmSort(true)" data-options="iconCls:'icon-new'">新建子级类别</div>
+		<div onclick="editFrmSort()" data-options="iconCls:'icon-edit'">编辑</div>
+		<div onclick="DeleteFrmSort()" data-options="iconCls:'icon-delete'">删除</div>
 		<div onclick="RefreshNode('formTree', '0')" data-options="iconCls:'icon-reload'">刷新</div>
 	</div>
 	<div id="mForm" class="easyui-menu" style="width: 120px;">
-		<div onclick="designFrm()" data-options="iconCls:'icon-open'">设计表单</div>
-		<div onclick="remove()" data-options="iconCls:'icon-property'">表单属性</div>
-		<div onclick="remove()" data-options="iconCls:'icon-delete'">删除</div>
+		<div onclick="remove()" data-options="iconCls:'icon-open'">设计表单</div><!-- designFrm() -->
+		<div onclick="FrmProperty()" data-options="iconCls:'icon-property'">表单属性</div>
+		<div onclick="DeleteFrm()" data-options="iconCls:'icon-delete'">删除</div>
 
 	</div>
 	<div id="mSrcRoot" class="easyui-menu" style="width: 120px;">

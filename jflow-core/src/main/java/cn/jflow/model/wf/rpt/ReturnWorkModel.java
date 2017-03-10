@@ -64,9 +64,11 @@ public class ReturnWorkModel extends BaseModel {
 		WorkNode wn = new WorkNode(this.getWorkID(), this.getFK_Node());
 		WorkNode pwn = wn.GetPreviousWorkNode();
 		for (DataRow dr : dt.Rows) {
+			/*   该代码不能退回上一个节点，与功能不符，暂时注释
 			if(dr.get("no").equals(pwn.getHisNode().getNodeID())){
 				continue;
 			}
+			*/
 			list.add(dr);
 		}
 		

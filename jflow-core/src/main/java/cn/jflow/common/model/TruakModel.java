@@ -572,12 +572,42 @@ public class TruakModel extends BaseModel
 				myemp = myemp.replace(")", "");
 				String[] strs = myemp.split("[,]", -1);
 				str += "<br>" + BP.WF.Glo.GenerUserImgHtml(strs[0], strs[1]) + "。</p>";
+				
+				str += "<div class='more'> ";
+				for(int i=0;i<gwls.size();i++){
+					GenerWorkerList swl =(GenerWorkerList) gwls.get(i);
+					if(swl.getIsRead()){
+						str +="<p style='margin-left: 2px' class='intro'>处理人："+swl.getFK_DeptT()+"("+swl.getFK_EmpText()+")已读</p>";
+					}else{
+						str +="<p style='margin-left: 2px' class='intro'>处理人："+swl.getFK_DeptT()+"("+swl.getFK_EmpText()+")未读</p>";
+					}
+				}
+				
+				str +="</div><br><br>";
 			}
 			else {
-			 //   str += "<br>处理人员:（" + gwf.TodoEmps + "）计（" + gwf.TodoEmpsNum + "）个，。</p>";
+				str += "<br>处理人员:(" + gwf.getTodoEmps() + ")计(" + gwf.getTodoEmpsNum() + ")人。</p><br>";
+				str += "<div class='more'> ";
+				for(int i=0;i<gwls.size();i++){
+					GenerWorkerList swl =(GenerWorkerList) gwls.get(i);
+					if(swl.getIsRead()){
+						if(swl.getIsPass()){ // 如果已读并且已经通过（标识处理完成）
+							str +="<p style='margin-left: 2px' class='intro'>处理人："+swl.getFK_DeptT()+"("+swl.getFK_EmpText()+")已处理</p><br>";
+						}else{
+							str +="<p style='margin-left: 2px' class='intro'>处理人："+swl.getFK_DeptT()+"("+swl.getFK_EmpText()+")已读</p><br>";
+						}
+						
+					}else{
+						str +="<p style='margin-left: 2px' class='intro'>处理人："+swl.getFK_DeptT()+"("+swl.getFK_EmpText()+")未读</p><br>";
+					}
+				}
+				str +="</div><br><br>";
 			}
 
-			str += "<div></div><br><br>";
+			
+			
+			//str += "<div></div><br><br>";原
+			
 			if (nd.getHisNodeWorkType() == NodeWorkType.WorkFL || nd.getHisNodeWorkType() == NodeWorkType.StartWorkFL || nd.getHisNodeWorkType() == NodeWorkType.WorkFHL) {
 				str += "<div><ul>";
 				for(int i=0;i<gwls.size();i++){

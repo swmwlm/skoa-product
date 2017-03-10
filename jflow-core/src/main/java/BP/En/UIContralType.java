@@ -20,7 +20,23 @@ public enum UIContralType
 	/**
 	 * 单选择按钮
 	 */
-	RadioBtn(3);
+	RadioBtn(3),
+	/**
+	 * 地图定位
+	 */
+	MapPin(4),
+	/**
+	 * 录音控件
+	 */
+	 MicHot(5),
+	 /**
+	  * 附件展示控件
+	  */
+	 AthShow(6),
+	 /**
+	  * 拍照控件
+	  */
+	 Picture(7);
 	
 	private int intValue;
 	private static java.util.HashMap<Integer, UIContralType> mappings;

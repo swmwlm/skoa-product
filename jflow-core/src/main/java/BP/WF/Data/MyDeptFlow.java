@@ -7,6 +7,7 @@ import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.*;
 import BP.WF.*;
 import BP.WF.Glo;
+import BP.WF.Template.FlowAttr;
 import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
@@ -489,6 +490,8 @@ public class MyDeptFlow extends Entity
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", BP.Web.WebUser.getFK_Dept(), 0, true);
 
+		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
+		
 		map.getAttrsOfSearch().Add(search);
 
 		RefMethod rm = new RefMethod();

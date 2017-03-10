@@ -25,6 +25,10 @@ public class MapDataAttr extends EntityNoNameAttr
 	 */
 	public static final String TableWidth = "TableWidth";
 	/**
+	 * 表格高度
+	 */
+	public static final String TableHeight = "TableHeight";
+	/**
 	 * 来源
 	 */
 	public static final String FrmFrom = "FrmFrom";

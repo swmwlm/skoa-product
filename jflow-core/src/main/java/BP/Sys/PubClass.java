@@ -11,7 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +29,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpRequest;
 
 import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBAccess;
@@ -44,6 +49,7 @@ import BP.En.EnType;
 import BP.En.Entities;
 import BP.En.Entity;
 import BP.En.FieldType;
+import BP.En.Map;
 import BP.En.QueryObject;
 import BP.En.UIContralType;
 import BP.Sys.Frm.GroupField;
@@ -52,6 +58,7 @@ import BP.Sys.Frm.MapData;
 import BP.Sys.Frm.MapDatas;
 import BP.Sys.Frm.MapDtl;
 import BP.Sys.Frm.MapDtls;
+import BP.Tools.StringHelper;
 import BP.Web.WebUser;
 
 /**
@@ -1552,7 +1559,33 @@ public class PubClass {
 				fis.close();
 		}
 	}
+	
+	/**
+	 * 转换
+	 * @param ht
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public static DataTable HashtableToDataTable(Hashtable ht)
+	{
+				DataTable dt = new DataTable();
+				dt.TableName = "Hashtable";
+				Set<String> keys = ht.keySet();
+				for (String key : keys)
+				{
+					dt.Columns.Add(key, String.class);
+				}
 
+				DataRow dr = dt.NewRow();
+				for (String key : keys)	
+				{
+					 dr.setValue(key,ht.get(key));
+				}
+				dt.Rows.Add(dr);
+				return dt;
+	}
+
+	
 	// public static void To(String url)
 	// {
 	// System.Web.HttpContext.Current.Response.Redirect(url,true);
@@ -1579,7 +1612,6 @@ public class PubClass {
 	 */
 	public static BP.En.Entity copyFromRequest(BP.En.Entity en, HttpServletRequest reqest) {
 		ArrayList<String> requestKeys = new ArrayList<String>();
-
 		Enumeration enu = reqest.getParameterNames();
 		while (enu.hasMoreElements()) {
 			// 判断是否有内容，hasNext()
@@ -1638,7 +1670,6 @@ public class PubClass {
 		}
 		return en;
 	}
-
 	public static void WinClose() {
 		String clientscript = "<script language='javascript'> window.close(); </script>";
 		try {
@@ -1872,4 +1903,225 @@ public class PubClass {
 			e.printStackTrace();
 		}
 	}
+
+	public static Entity CopyDtlFromRequests(Entity en, String pk, Map map) {
+		String allKeys = ";";
+		if (pk == null || pk.equals("")) {
+			pk = "";
+		}
+		else {
+			pk = "_" + pk;
+		}
+
+		for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
+			String myK= (String) iter.next();  
+			allKeys += myK + ";";
+		}
+
+		Attrs attrs = map.getAttrs();
+		for (Attr attr : attrs) {
+			String relKey = null;
+			switch (attr.getUIContralType()) {
+				case TB:
+					relKey = "TB_" + attr.getKey() + pk;
+					break;
+				case CheckBok:
+					relKey = "CB_" + attr.getKey() + pk;
+					break;
+				case DDL:
+					relKey = "DDL_" + attr.getKey() + pk;
+					break;
+				case RadioBtn:
+					relKey = "RB_" + attr.getKey() + pk;
+					break;
+				default:
+					break;
+			}
+
+			if (relKey == null) {
+				continue;
+			}
+
+			if (allKeys.contains(relKey + ";")) {
+				//说明已经找到了这个字段信息。
+				for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
+					String myK= (String) iter.next(); 
+					if (myK == null || "".equals(myK)) {
+						continue;
+					}
+
+					if (myK.endsWith(relKey)) {
+						if (attr.getUIContralType() == UIContralType.CheckBok) {
+							String val = Glo.getRequest().getParameter(myK);
+							if (val.equals("on") || val.equals("1") || val.contains(",on")) {
+								en.SetValByKey(attr.getKey(), 1);
+							}
+							else {
+								en.SetValByKey(attr.getKey(), 0);
+							}
+						}
+						else {
+							en.SetValByKey(attr.getKey(), Glo.getRequest().getParameter(myK));
+						}
+					}
+				}
+				continue;
+			}
+		}
+		if (map.getIsHaveAutoFull() == false) {
+			return en;
+		}
+		en.AutoFull();
+		return en;
+	}
+	
+	public static BP.En.Entity CopyFromRequest(BP.En.Entity en) {
+		return CopyFromRequest(en, Glo.getRequest());
+	}
+	public static BP.En.Entity CopyFromRequest(BP.En.Entity en, HttpServletRequest reqest) {
+		String allKeys = ";";
+		//for (String myK : reqest.Params.keySet()) {
+		for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
+			String myK= (String) iter.next();  
+			allKeys += myK + ";";
+		}
+
+		// 给每个属性值.            
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr item : attrs) {
+			String relKey = null;
+			switch (item.getUIContralType()) {
+				case TB:
+					relKey = "TB_" + item.getKey();
+					break;
+				case CheckBok:
+					relKey = "CB_" + item.getKey();
+					break;
+				case DDL:
+					relKey = "DDL_" + item.getKey();
+					break;
+				case RadioBtn:
+					relKey = "RB_" + item.getKey();
+					break;
+				default:
+					break;
+			}
+
+			if (relKey == null) {
+				continue;
+			}
+
+			if (allKeys.contains(relKey + ";")) {
+				//说明已经找到了这个字段信息。
+				/*for (String myK : BP.Sys.Glo.Request.Params.keySet()) {
+					if (myK == null || myK.equals("")) {
+						continue;
+					}*/
+				for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
+					String myK= (String) iter.next(); 
+					if (myK == null || "".equals(myK)) {
+						continue;
+					}
+					if (myK.endsWith(relKey)) {
+						if (item.getUIContralType() == UIContralType.CheckBok) {
+							String val = Glo.getRequest().getParameter(myK);
+							if (val.equals("on") || val.equals("1") || val.contains(",on")) {
+								en.SetValByKey(item.getKey(), 1);
+							}
+							else {
+								en.SetValByKey(item.getKey(), 0);
+							}
+						}
+						else {
+							en.SetValByKey(item.getKey(), Glo.getRequest().getParameter(myK));
+						}
+					}
+				}
+				continue;
+			}
+		}
+		return en;
+	}
+
+	public static BP.En.Entity CopyFromRequestByPost(BP.En.Entity en, HttpServletRequest reqest) {		
+	
+		String allKeys = ";";
+		//获取传递来的所有的checkbox ids 用于设置该属性为false.
+        String checkBoxIDs = Glo.getRequest().getParameter("CheckBoxIDs");
+        if(checkBoxIDs!=null)
+        {
+            String[] strs = checkBoxIDs.split(",");
+            for(String str : strs)
+            {
+                if (str == null || str == "")
+                    continue;
+
+                if (str.contains("CBPara"))
+                {
+                    /*如果是参数字段.*/
+                 	en.getRow().SetValByKey(str.replace("CBPara_",""),0);
+                }
+                else
+                {
+                    //设置该属性为false.
+                	en.getRow().SetValByKey(str.replace("CB_",""),0);
+                }
+
+            }
+        }
+
+		for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
+			String myK= (String) iter.next();  
+			allKeys += myK + ";";
+		}
+
+		// 给每个属性值.            
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr item : attrs) {
+			String relKey = null;
+			switch (item.getUIContralType()) {
+				case TB:
+					relKey = "TB_" + item.getKey();
+					break;
+				case CheckBok:
+					relKey = "CB_" + item.getKey();
+					break;
+				case DDL:
+					relKey = "DDL_" + item.getKey();
+					break;
+				case RadioBtn:
+					relKey = "RB_" + item.getKey();
+					break;
+				default:
+					break;
+			}
+
+			if (relKey == null) {
+				continue;
+			}
+
+			if (allKeys.contains(relKey + ";")) {
+				//说明已经找到了这个字段信息。
+				for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
+					String myK= (String) iter.next(); 
+					if (myK == null || "".equals(myK)) {
+						continue;
+					}
+					String val = Glo.getRequest().getParameter(myK);
+					if (myK.endsWith(relKey)) {
+						if (item.getUIContralType() == UIContralType.CheckBok) {							
+							if (myK.indexOf("CB_") == 0 || myK.indexOf("CBPara_") == 0) {
+								en.SetValByKey(item.getKey(), 1);
+							 }							
+						   }else {
+							en.SetValByKey(item.getKey(), val);
+						}
+					}
+				}
+				continue;
+			}
+		}
+		return en;
+	}
+	
 }

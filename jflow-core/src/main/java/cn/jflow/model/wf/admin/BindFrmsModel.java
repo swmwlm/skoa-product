@@ -379,7 +379,7 @@ public class BindFrmsModel extends BaseModel {
 			{
 				ddl = new DDL();
 				ddl.setId("DDL_File_" + md.getNo());
-				File files = new File(BP.Sys.SystemConfig.getPathOfDataUser() + "\\FrmOfficeTemplate\\");
+				File files = new File(BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/");
 				FileUtils.listFiles(files, new String[]{"xls"}, true);
 				File[] fs = files.listFiles();
 				//String[] files = Directory.GetFiles(BP.Sys.SystemConfig.getPathOfDataUser() + "\\FrmOfficeTemplate\\", md.getNo() + "*.xls");

@@ -20,7 +20,6 @@ import cn.jflow.system.ui.core.HtmlUtils;
 import BP.En.FieldTypeS;
 import BP.En.QueryObject;
 import BP.Sys.SFTable;
-import BP.Sys.SFTable.SrcType;
 import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrAttr;
 import BP.Sys.Frm.MapAttrs;
@@ -82,7 +81,7 @@ public class SFSQLController{
 			}
 			
 			//设置它的数据源类型.
-			main.setSrcType(SrcType.SQL);
+			main.setSrcType(BP.Sys.SrcType.SQL);
 			if (main.getNo().length() == 0) {
 				BaseModel.Alert("编号不能为空");
 			}

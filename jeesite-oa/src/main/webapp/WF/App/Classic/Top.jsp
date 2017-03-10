@@ -14,6 +14,16 @@
     {
         margin: 0 auto;
     }
+    a
+    {
+        color:#0066CC;
+        text-decoration:none;
+    }
+    a:hover
+    {
+        color:#0084C5;
+        text-decoration:underline;
+    }
     .top
     {
         width: 100%;
@@ -88,7 +98,8 @@
  <ul>
     <li>账号：<%=WebUser.getNo() %></li>
     <li>姓名：<%=WebUser.getName() %></li>
-    <li>部门：<%=WebUser.getFK_DeptName() %></li>
+    <li style="width:400px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">部门：
+    <span title="<%=WebUser.getFK_DeptName()%>"><%=WebUser.getFK_DeptName() %></span></li>
 </ul>
 </div>
  <div class="logo_cz2">

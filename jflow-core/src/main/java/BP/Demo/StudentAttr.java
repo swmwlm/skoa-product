@@ -42,6 +42,27 @@ public class StudentAttr extends EntityNoNameAttr
 	
 	public static final String SQ = "SQ";
 	
+	/**
+	 * 是否特困生？
+	 */
+    public static final String IsTeKunSheng = "IsTeKunSheng";
+    /**
+     * 是否有重大疾病史？
+     */
+    public static final String IsJiBing = "IsJiBing";
+   /**
+    * 是否偏远山区？
+    */
+    public static final String IsPianYuanShanQu = "IsPianYuanShanQu";
+    /**
+     * 是否独生子
+     */
+    public static final String IsDuShengZi = "IsDuShengZi";
+    /**
+     * 政治面貌
+     */
+    public static final String ZZMM = "ZZMM";
+	
 	/** 
 	 登录系统密码
 	*/

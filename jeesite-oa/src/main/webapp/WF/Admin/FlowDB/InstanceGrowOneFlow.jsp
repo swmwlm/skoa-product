@@ -60,7 +60,7 @@
                                 正在运行数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState!='" + BP.WF.WFState.Complete + "' ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState!='" + BP.WF.WFState.Complete.getValue() + "' ")%>
                             </td>
                             <td>
                                 个
@@ -71,7 +71,7 @@
                                 完成数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.Complete + "'  ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.Complete.getValue() + "'  ")%>
                             </td>
                             <td>
                                 个
@@ -82,7 +82,7 @@
                                 退回数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.ReturnSta + "'   ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.ReturnSta.getValue() + "'   ")%>
                             </td>
                             <td>
                                 个
@@ -93,7 +93,7 @@
                                 删除数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.Delete + "' ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.Delete.getValue() + "' ")%>
                             </td>
                             <td>
                                 个
@@ -104,7 +104,7 @@
                                 其他运行数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFSta='" + BP.WF.WFSta.Etc + "' ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFSta='" + BP.WF.WFSta.Etc.getValue() + "' ")%>
                             </td>
                             <td>
                                 个
@@ -151,7 +151,7 @@
                                 正在运行数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow='" + fk_flow + "'   AND WFState!='" + BP.WF.WFState.Complete + "' AND  FK_NY='" + FK_NY + "' ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow='" + fk_flow + "'   AND WFState!='" + BP.WF.WFState.Complete.getValue() + "' AND  FK_NY='" + FK_NY + "' ")%>
                             </td>
                             <td>
                                 个
@@ -162,7 +162,7 @@
                                 完成数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow='" + fk_flow + "'   AND WFState='" + BP.WF.WFState.Complete + "' AND  FK_NY='" + FK_NY + "' ")%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow='" + fk_flow + "'   AND WFState='" + BP.WF.WFState.Complete.getValue() + "' AND  FK_NY='" + FK_NY + "' ")%>
                             </td>
                             <td>
                                 个
@@ -173,7 +173,7 @@
                                 退回数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow='" + fk_flow + "'   AND WFState='" + BP.WF.WFState.ReturnSta + "' AND  FK_NY='" + FK_NY + "'  ")%>
+                            	<%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState=" + BP.WF.WFState.ReturnSta.getValue() + " AND  FK_NY='" + FK_NY + "'  ")%>
                             </td>
                             <td>
                                 个
@@ -247,7 +247,7 @@
                                 正在运行数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState!='" + BP.WF.WFState.Complete + "' AND WeekNum=" + priWeek)%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState!='" + BP.WF.WFState.Complete.getValue() + "' AND WeekNum=" + priWeek)%>
                             </td>
                             <td>
                                 个
@@ -258,7 +258,7 @@
                                 完成数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.Complete + "' AND    WeekNum=" + priWeek)%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.Complete.getValue() + "' AND    WeekNum=" + priWeek)%>
                             </td>
                             <td>
                                 个
@@ -269,7 +269,7 @@
                                 退回数
                             </td>
                             <td>
-                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.ReturnSta + "' AND   WeekNum=" + priWeek)%>
+                                <%=BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE FK_Flow=" + fk_flow + "   AND WFState='" + BP.WF.WFState.ReturnSta.getValue() + "' AND   WeekNum=" + priWeek)%>
                             </td>
                             <td>
                                 个

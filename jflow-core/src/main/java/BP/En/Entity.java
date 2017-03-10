@@ -2,6 +2,7 @@ package BP.En;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -123,16 +124,10 @@ public abstract class Entity extends EnObj
 			{
 				if (this.GetValIntByKey(attr.getKey()) == 1)
 				{
-					dr.put(attr.getKey(), "1");
-					/*
-					 * warning dr[attr.getKey()] = "1";
-					 */
+					dr.put(attr.getKey().toLowerCase(), "1");
 				} else
 				{
-					dr.put(attr.getKey(), "0");
-					/*
-					 * warning dr[attr.getKey()] = "0";
-					 */
+					dr.put(attr.getKey().toLowerCase(), "0");
 				}
 				continue;
 			}
@@ -142,24 +137,14 @@ public abstract class Entity extends EnObj
 			if (attr.getMyFieldType() == FieldType.FK
 					|| attr.getMyFieldType() == FieldType.PKFK)
 			{
-				dr.put(attr.getKey(), this.GetValByKey(attr.getKey())
+				dr.put(attr.getKey().toLowerCase(), this.GetValByKey(attr.getKey())
 						.toString().trim());
-				/*
-				 * warning dr[attr.getKey()] =
-				 * this.GetValByKey(attr.getKey()).toString().trim();
-				 */
 			} else
 			{
-				dr.put(attr.getKey(), this.GetValByKey(attr.getKey()));
-				/*
-				 * warning dr[attr.getKey()] = this.GetValByKey(attr.getKey());
-				 */
+				dr.put(attr.getKey().toLowerCase(), this.GetValByKey(attr.getKey()));
 			}
 		}
 		dt.Rows.add(dr);
-		/*
-		 * warning dt.Rows.Add(dr);
-		 */
 		return dt;
 	}
 	
@@ -4186,5 +4171,25 @@ public abstract class Entity extends EnObj
 	public String toString()
 	{
 		return this.getClass().getName();
+	}
+	
+	/** 
+	 把一个实体转化成Json.
+	 
+	 @return 返回一个string json串.
+*/
+	public final String ToJson()
+	{
+		Hashtable ht = getRow();
+		if (ht.containsKey("AtPara") == true)
+		{
+			/*如果包含这个字段*/
+			AtPara ap = getAtPara();
+			for (String key : ap.getHisHT().keySet())
+			{
+				ht.put(key, ap.getHisHT().get(key));
+			}
+		}
+		return BP.Tools.Json.ToJson(ht,false);
 	}
 }

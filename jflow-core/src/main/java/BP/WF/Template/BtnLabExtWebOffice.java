@@ -4,6 +4,7 @@ import BP.DA.Depositary;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.UAC;
+import BP.Sys.Frm.FrmType;
 import BP.WF.CCRole;
 import BP.WF.Glo;
 import BP.WF.JumpWay;
@@ -430,6 +431,17 @@ public class BtnLabExtWebOffice extends Entity
 		this.SetValByKey(BtnAttr.WebOfficeEnable, value.getValue());
 	}
 	/** 
+	 表单工作方式.
+	*/
+	public final FrmType getWebOfficeFrmModel()
+	{
+		return FrmType.forValue(this.getWebOfficeEnable());
+	}
+	public final void setWebOfficeFrmModel(FrmType value)
+	{
+		this.SetValByKey(BtnAttr.WebOfficeFrmModel, value.getValue());
+	}
+	/** 
 	 文档按钮标签
 	*/
 	public final String getWebOfficeLab()
@@ -701,59 +713,66 @@ public class BtnLabExtWebOffice extends Entity
 
 		map.Java_SetDepositaryOfEntity(Depositary.Application);
 
-		map.AddTBIntPK(BtnAttr.NodeID, 0, "NodeID", true, false);
+		map.AddTBIntPK(BtnAttr.NodeID, 0, "节点ID", true, true);
+        map.AddTBString(BtnAttr.Name, null, "节点名称", true, true, 0, 200, 10);
 
 		///#region 公文按钮
-		map.AddTBString(BtnAttr.OfficeOpen, "打开本地", "打开本地标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeOpenEnable, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeOpen, "打开本地", "打开本地标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeOpenEnable, false, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeOpenTemplate, "打开模板", "打开模板标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeOpenTemplateEnable, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeOpenTemplate, "打开模板", "打开模板标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeOpenTemplateEnable, false, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeSave, "保存", "保存标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeSaveEnable, true, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeSave, "保存", "保存标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeSaveEnable, true, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeAccept, "接受修订", "接受修订标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeAcceptEnable, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeAccept, "接受修订", "接受修订标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeAcceptEnable, false, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeRefuse, "拒绝修订", "拒绝修订标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeRefuseEnable, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeRefuse, "拒绝修订", "拒绝修订标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeRefuseEnable, false, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeOver, "套红按钮", "套红按钮标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeOverEnable, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeOver, "套红按钮", "套红按钮标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeOverEnable, false, "是否启用", true, true);
 
-		map.AddBoolean(BtnAttr.OfficeMarks, true, "是否查看用户留痕", true, true);
-		map.AddBoolean(BtnAttr.OfficeReadOnly, false, "是否只读", true, true);
+        map.AddBoolean(BtnAttr.OfficeMarks, true, "是否查看用户留痕", true, true);
+        map.AddBoolean(BtnAttr.OfficeReadOnly, false, "是否只读", true, true);
 
-		map.AddTBString(BtnAttr.OfficePrint, "打印按钮", "打印按钮标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficePrintEnable, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficePrint, "打印按钮", "打印按钮标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficePrintEnable, false, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeSeal, "签章按钮", "签章按钮标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeSealEnabel, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeSeal, "签章按钮", "签章按钮标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeSealEnabel, false, "是否启用", true, true);
 
-		map.AddTBString(BtnAttr.OfficeInsertFlow, "插入流程", "插入流程标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeInsertFlowEnabel, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeInsertFlow, "插入流程", "插入流程标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeInsertFlowEnabel, false, "是否启用", true, true);
 
-		map.AddBoolean(BtnAttr.OfficeNodeInfo, false, "是否记录节点信息", true, true);
-		map.AddBoolean(BtnAttr.OfficeReSavePDF, false, "是否该自动保存为PDF", true, true);
+        map.AddBoolean(BtnAttr.OfficeNodeInfo, false, "是否记录节点信息", true, true);
+        map.AddBoolean(BtnAttr.OfficeReSavePDF, false, "是否该自动保存为PDF", true, true);
 
-		map.AddTBString(BtnAttr.OfficeDownLab, "下载", "下载按钮标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.OfficeIsDown, false, "是否启用", true, true);
+        map.AddTBString(BtnAttr.OfficeDownLab, "下载", "下载按钮标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeIsDown, false, "是否启用", true, true);
 
-		map.AddBoolean(BtnAttr.OfficeIsMarks, true, "是否进入留痕模式", true, true);
-		map.AddTBString(BtnAttr.OfficeTemplate, "", "指定文档模板", true, false, 0, 100, 10);
+        map.AddBoolean(BtnAttr.OfficeIsMarks, true, "是否进入留痕模式", true, true);
+        map.AddTBString(BtnAttr.OfficeTemplate, "", "指定文档模板", true, false, 0, 100, 10);
 
-		map.AddBoolean(BtnAttr.OfficeIsParent, true, "是否使用父流程的文档", true, true);
+        map.AddBoolean(BtnAttr.OfficeIsParent, true, "是否使用父流程的文档", true, true);
 
-		if (Glo.getIsEnableZhiDu())
-		{
-			map.AddTBString(BtnAttr.OfficeFengXianTemplate, "", "风险点模板", true, false, 0, 100, 10);
-			map.AddTBString(BtnAttr.OfficeInsertFengXian, "插入风险点", "插入风险点标签", true, false, 0, 50, 10);
-			map.AddBoolean(BtnAttr.OfficeInsertFengXianEnabel, false, "是否启用", true, true);
-		}
+        if (Glo.getIsEnableZhiDu())
+        {
+            map.AddTBString(BtnAttr.OfficeFengXianTemplate, "", "风险点模板", true, false, 0, 100, 10);
+            map.AddTBString(BtnAttr.OfficeInsertFengXian, "插入风险点", "插入风险点标签", true, false, 0, 50, 10);
+            map.AddBoolean(BtnAttr.OfficeInsertFengXianEnabel, false, "是否启用", true, true);
+        }
 
-		map.AddBoolean(BtnAttr.OfficeIsTrueTH, false, "是否自动套红", true, true);
-		map.AddTBString(BtnAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
+        map.AddBoolean(BtnAttr.OfficeIsTrueTH, false, "是否自动套红", true, true);
+        map.AddTBString(BtnAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
+
+        map.AddTBString(BtnAttr.WebOfficeLab, "公文", "公文标签", true, false, 0, 50, 10);
+        map.AddDDLSysEnum(BtnAttr.WebOfficeEnable, 0, "文档启用方式", true, true, BtnAttr.WebOfficeEnable,
+         "@0=不启用@1=按钮方式@2=标签页置后方式@3=标签页置前方式");  //edited by liuxc,2016-01-18,from xc.
+
+        map.AddDDLSysEnum(BtnAttr.WebOfficeFrmModel, 0, "表单工作方式", true, true, "FrmType"); 
 		///#endregion
 
 		this.set_enMap(map);

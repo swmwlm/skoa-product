@@ -680,7 +680,7 @@ public class SqlBuilder
 		Attrs fkAttrs = en.getEnMap().getHisFKAttrs();
 		for (Attr attr : fkAttrs)
 		{
-			if (attr.getMyFieldType() == FieldType.RefText)
+			if (attr == null || attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
@@ -699,7 +699,7 @@ public class SqlBuilder
 		// 开始形成 外键 where.
 		for (Attr attr : fkAttrs)
 		{
-			if (attr.getMyFieldType() == FieldType.RefText)
+			if (attr == null || attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}

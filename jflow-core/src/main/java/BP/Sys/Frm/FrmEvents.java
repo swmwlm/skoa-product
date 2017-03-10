@@ -1,5 +1,6 @@
 package BP.Sys.Frm;
 
+import java.util.Hashtable;
 import java.util.Set;
 
 import BP.DA.AtPara;
@@ -102,7 +103,9 @@ public class FrmEvents extends EntitiesOID
 		}
 		
 		String doc = nev.getDoDoc().trim();
-		if (doc == null || doc.equals(""))
+		
+		//edited by liuxc,2016-01-16,执行DLL文件不需要判断doc为空
+		if (doc == null || doc.equals("") && nev.getHisDoType() != EventDoType.SpecClass) 
 		{
 			return null;
 		}
@@ -266,18 +269,6 @@ public class FrmEvents extends EntitiesOID
 		
 		switch (nev.getHisDoType())
 		{
-		// case EventDoType.SP:
-		// try
-		// {
-		// Paras ps = new Paras();
-		// DBAccess.RunSP(doc, ps);
-		// return nev.MsgOK(en);
-		// }
-		// catch (Exception ex)
-		// {
-		// throw new Exception(nev.MsgError(en) + " Error:" + ex.Message);
-		// }
-		// break;
 			case SP:
 			case SQL:
 				try
@@ -329,11 +320,28 @@ public class FrmEvents extends EntitiesOID
 						myURL = cfgBaseUrl + myURL;
 					}
 				}
-				
+				myURL = myURL.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
+
+                if (myURL.contains("&FID=") == false && en.getRow().containsKey("FID") == true)
+                {
+                    String str = en.getRow().get("FID").toString();
+                    myURL = myURL + "&FID=" + str;
+                }
+
+                if (myURL.contains("&FK_Flow=") == false && en.getRow().containsKey("FK_Flow") == true)
+                {
+                	String str = en.getRow().get("FK_Flow").toString();
+                    myURL = myURL + "&FK_Flow=" + str;
+                }
+
+                if (myURL.contains("&WorkID=") == false && en.getRow().containsKey("WorkID") == true)
+                {
+                	String str = en.getRow().get("WorkID").toString();
+                    myURL = myURL + "&WorkID=" + str;
+                }
+
 				try
 				{
-					// Encoding encode =
-					// System.Text.Encoding.GetEncoding("gb2312");
 					String text = DataType.ReadURLContext(myURL, 600000);
 					if (text == null)
 					{
@@ -361,38 +369,6 @@ public class FrmEvents extends EntitiesOID
 					throw new RuntimeException("@" + nev.MsgError(en)
 							+ " Error:" + ex.getMessage());
 				}
-				// break;
-				// case EventDoType.URLOfSystem:
-				// string hos1t = BP.Sys.Glo.Request.Url.Host;
-				// string url = "http://" + hos1t +
-				// BP.Sys.Glo.Request.ApplicationPath +
-				// "/DataUser/AppCoder/FrmEventHandle.jsp";
-				// url += "?FK_MapData=" + en.ClassID + "&WebUseNo=" +
-				// WebUser.No + "&EventType=" + nev.FK_Event;
-				// foreach (Attr attr in attrs)
-				// {
-				// if (attr.UIIsDoc || attr.IsRefAttr || attr.UIIsReadonly)
-				// continue;
-				// url += "&" + attr.Key + "=" + en.GetValStrByKey(attr.Key);
-				// }
-				
-				// try
-				// {
-				// string text = DataType.ReadURLContext(url, 800,
-				// System.Text.Encoding.UTF8);
-				// if (text != null && text.Substring(0, 7).Contains("Err"))
-				// throw new Exception(text);
-				
-				// if (text == null || text.Trim() == "")
-				// return null; // 如果是Null 没有事件配置。
-				// return text;
-				// }
-				// catch (Exception ex)
-				// {
-				// throw new Exception("@" + nev.MsgError(en) + " Error:" +
-				// ex.Message);
-				// }
-				// break;
 			case EventBase: // 执行事件类.
 				
 				// 获取事件类.
@@ -420,53 +396,31 @@ public class FrmEvents extends EntitiesOID
 					{
 						// 系统参数.
 						r.put("FK_MapData", en.getClassID());
-						/*
-						 * warning r.Add("FK_MapData", en.getClassID());
-						 */
 					} catch (java.lang.Exception e)
 					{
 						r.put("FK_MapData", en.getClassID());
-						/*
-						 * warning r["FK_MapData"] = en.getClassID();
-						 */
 					}
 					
 					try
 					{
 						r.put("EventType", nev.getFK_Event());
-						/*
-						 * warning r.Add("EventType", nev.getFK_Event());
-						 */
 					} catch (java.lang.Exception e2)
 					{
 						r.put("EventType", nev.getFK_Event());
-						/*
-						 * warning r["EventType"] = nev.getFK_Event();
-						 */
 					}
 					
 					if (atPara != null)
 					{
 						AtPara ap = new AtPara(atPara);
-						/*
-						 * warning for (String s : ap.getHisHT().keySet())
-						 */
-						
 						Set<String> a = ap.getHisHT().keySet();
 						for (String s : a)
 						{
 							try
 							{
 								r.put(s, ap.GetValStrByKey(s));
-								/*
-								 * warning r.Add(s, ap.GetValStrByKey(s));
-								 */
 							} catch (java.lang.Exception e3)
 							{
 								r.put(s, ap.GetValStrByKey(s));
-								/*
-								 * warning r[s] = ap.GetValStrByKey(s);
-								 */
 							}
 						}
 					}
@@ -484,15 +438,9 @@ public class FrmEvents extends EntitiesOID
 							try
 							{
 								r.put(key, val);
-								/*
-								 * warning r.Add(key, val);
-								 */
 							} catch (java.lang.Exception e4)
 							{
 								r.put(key, val);
-								/*
-								 * warning r[key] = val;
-								 */
 							}
 						}
 					}
@@ -507,7 +455,50 @@ public class FrmEvents extends EntitiesOID
 					throw new RuntimeException("@执行事件(" + ev.getTitle()
 							+ ")期间出现错误:" + ex.getMessage());
 				}
-				// break;
+			case WSOfSelf: //执行webservices.. 为石油修改.
+				String[] strs = doc.split("[@]", -1);
+				String url1 = "";
+				String method = "";
+				Hashtable paras1 = new Hashtable();
+				for (String str : strs)
+				{
+					if (str.contains("=") && str.contains("Url"))
+					{
+						url = str.split("[=]", -1)[2];
+						continue;
+					}
+
+					if (str.contains("=") && str.contains("Method"))
+					{
+						method = str.split("[=]", -1)[2];
+						continue;
+					}
+
+					//处理参数.
+					String[] paraKeys = str.split("[,]", -1);
+
+					if ("Int".equals(paraKeys[3]))
+					{
+						paras1.put(paraKeys[0], Integer.parseInt(paraKeys[1]));
+					}
+
+					if (paraKeys[3].equals("String"))
+					{
+						paras1.put(paraKeys[0], paraKeys[1]);
+					}
+
+					if (paraKeys[3].equals("Float"))
+					{
+						paras1.put(paraKeys[0], Float.parseFloat(paraKeys[1]));
+					}
+
+					if (paraKeys[3].equals("Double"))
+					{
+						paras1.put(paraKeys[0], Double.parseDouble(paraKeys[1]));
+					}
+				}
+				return null;
+				//开始执行webserives.
 			default:
 				throw new RuntimeException("@no such way."
 						+ nev.getHisDoType().toString());

@@ -1,24 +1,12 @@
 package cn.jflow.common.model;
 
-import java.io.File;
-import java.io.IOException;
-
-import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBAccess;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
+import BP.Sys.Frm.*;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
-import BP.Sys.Frm.AthCtrlWay;
-import BP.Sys.Frm.AthUploadWay;
-import BP.Sys.Frm.AttachmentUploadType;
-import BP.Sys.Frm.FileShowWay;
-import BP.Sys.Frm.FrmAttachment;
-import BP.Sys.Frm.FrmAttachmentAttr;
-import BP.Sys.Frm.FrmAttachmentDB;
-import BP.Sys.Frm.FrmAttachmentDBAttr;
-import BP.Sys.Frm.FrmAttachmentDBs;
 import BP.Tools.FileAccess;
 import BP.Tools.StringHelper;
 import BP.WF.Flow;
@@ -27,6 +15,10 @@ import BP.WF.Nodes;
 import BP.WF.Template.CCList;
 import BP.WF.Template.CCListAttr;
 import BP.Web.WebUser;
+import cn.jflow.common.util.ContextHolderUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class AttachmentUploadModel {
 
@@ -686,8 +678,7 @@ public class AttachmentUploadModel {
 
 	AddFileUpload(isUpdate, athDesc);
 	this.Pub1.append(BaseModel.AddTableEnd());
-		///#endregion 生成表头表体.
-
+		//#endregion 生成表头表体.
 	}
 	
 	private void AddFileUpload(boolean isUpdate, FrmAttachment athDesc)

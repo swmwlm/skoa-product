@@ -126,7 +126,7 @@ function checkEmp(){
 				 		    <tr>
 				 		       <td colspan="3" nowrap="nowrap">
 				 		    	加签原因说明：<br>
-				 		    	<textarea name="TB_Note" rows="5" cols="70" id="TB_Note">您好：&#10;&#13;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;现把工作向您请示. &#10;&#13;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=WebUser.getName() %></textarea>
+									<textarea name="TB_Note" rows="5" cols="70" id="TB_Note">您好： 现把工作向您请示. <%=WebUser.getName() %></textarea>
 							   </td>
 				 		    </tr>
 				 		    <tr>

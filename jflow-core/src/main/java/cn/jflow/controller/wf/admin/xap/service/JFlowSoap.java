@@ -4,11 +4,10 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebParam.Mode;
 import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.xml.ws.BindingType;
 
-@WebService(targetNamespace = "http://www.observer.com/service", serviceName = "JFlowAPI")
-@BindingType(value = "http://www.w3.org/2003/05/soap/bindings/HTTP/")
+@Deprecated
+//@WebService(targetNamespace = "http://www.observer.com/service", serviceName = "JFlowAPI")
+//@BindingType(value = "http://www.w3.org/2003/05/soap/bindings/HTTP/")
 public interface JFlowSoap {
 	
 	@WebMethod(operationName = "Flow_DoPress")

@@ -97,7 +97,7 @@
                 <a class="sec" href="javascript:if (confirm('确定要删除全部吗?')) { window.location.href = 'messages.jsp?OP=delAll';}" >
                     清空所有</a>
                     &nbsp;&nbsp;&nbsp;
-                <a class="sec" target="_self" href="messagesreplay.jsp">新建消息</a>
+                <a class="sec" target="_self" href="messagesreplay.htm">新建消息</a>
                 </div>
             </th>
         </tr>

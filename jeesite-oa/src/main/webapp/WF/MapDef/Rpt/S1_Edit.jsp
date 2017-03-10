@@ -85,7 +85,7 @@
 				href="javascript:Editsave()">保存</a>
 			<a id="Btn_SaveAndNext1"
 				class="easyui-linkbutton" data-options="iconCls:&#39;icon-save&#39;"
-				href="javascript:Btn_SaveAndNext1()">保存并继续</a>
+				href="javascript:Btn_SaveAndNext1()">保存并设置显示列</a>
 			<a id="Btn_Cancel1" class="easyui-linkbutton"
 				data-options="iconCls:&#39;icon-undo&#39;"
 				href=")">取消</a>

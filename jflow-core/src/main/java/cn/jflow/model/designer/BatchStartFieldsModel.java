@@ -8,9 +8,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import BP.Sys.SysEnum;
+import BP.Sys.SysEnums;
 import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrs;
 import BP.WF.Node;
+import BP.WF.Template.NodeAttr;
 import cn.jflow.system.ui.UiFatory;
 
 public class BatchStartFieldsModel {
@@ -91,21 +94,21 @@ public class BatchStartFieldsModel {
 			this.setSrole("2");
 		}
 		List<Map<String,Object>> alist=new ArrayList<Map<String,Object>>(); 
-		/*SysEnums ses = new SysEnums(NodeAttr.BatchRole);
-		
+		SysEnums ses = new SysEnums(NodeAttr.BatchRole);
+		List<Map<String,Object>> blist=new ArrayList<Map<String,Object>>(); 
 		for(int i=0;i<ses.size();i++){
 			SysEnum item=(SysEnum) ses.get(i);
 			Map<String,Object> map=new HashMap<String,Object>();
 			map.put("optionVal", item.getIntKey());
 			map.put("optionLab", item.getLab());
-			if(this.getSrole().equals(item.getIntKey())){
-				map.put("optionSel", "selected='selected'");
+			if(nd.getHisBatchRole().getValue()==(item.getIntKey())){
+				map.put("selected", "selected='selected'");
 			}else{
-				map.put("optionSel", "");
+				map.put("selected", "");
 			}
-			alist.add(map);
+			blist.add(map);
 		}
-		this.setbRoleList(alist);*/
+		this.setbRoleList(blist);
 		
 		for(int j=0;j<attrs.size();j++){
 			MapAttr item=(MapAttr) attrs.get(j);

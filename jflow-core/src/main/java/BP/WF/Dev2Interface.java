@@ -1,42 +1,11 @@
 package BP.WF;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Hashtable;
-
-import org.apache.commons.lang.StringUtils;
-
-import BP.DA.AtPara;
-import BP.DA.DBAccess;
-import BP.DA.DataColumn;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.DA.Paras;
+import BP.DA.*;
 import BP.En.QueryObject;
 import BP.GPM.EmpAttr;
 import BP.Port.Emp;
-import BP.Sys.GEDtl;
-import BP.Sys.GEDtlAttr;
-import BP.Sys.GEDtls;
-import BP.Sys.GEEntity;
-import BP.Sys.GloVar;
-import BP.Sys.OSDBSrc;
-import BP.Sys.OSModel;
-import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
-import BP.Sys.Frm.EventListOfNode;
-import BP.Sys.Frm.FrmEleDB;
-import BP.Sys.Frm.FrmEleDBAttr;
-import BP.Sys.Frm.FrmEleDBs;
-import BP.Sys.Frm.FrmEventList;
-import BP.Sys.Frm.FrmEvents;
-import BP.Sys.Frm.MapData;
-import BP.Sys.Frm.MapDtl;
-import BP.Sys.Frm.MapDtls;
-import BP.Sys.Frm.MapExtAttr;
+import BP.Sys.Frm.*;
+import BP.Sys.*;
 import BP.Tools.DateUtils;
 import BP.Tools.StringHelper;
 import BP.WF.Data.GERpt;
@@ -44,32 +13,20 @@ import BP.WF.Data.GERptAttr;
 import BP.WF.Data.NDXRptBaseAttr;
 import BP.WF.Entity.FrmWorkCheck;
 import BP.WF.Port.WFEmp;
-import BP.WF.Template.ButtonState;
-import BP.WF.Template.CC;
-import BP.WF.Template.CCList;
-import BP.WF.Template.CCListAttr;
-import BP.WF.Template.CCLists;
-import BP.WF.Template.CCSta;
-import BP.WF.Template.Cond;
-import BP.WF.Template.CondAttr;
-import BP.WF.Template.DataStoreModel;
-import BP.WF.Template.Direction;
-import BP.WF.Template.DirectionAttr;
-import BP.WF.Template.Directions;
-import BP.WF.Template.DraftRole;
-import BP.WF.Template.FlowAttr;
-import BP.WF.Template.NodeAttr;
-import BP.WF.Template.NodeReturnAttr;
-import BP.WF.Template.NodeReturns;
-import BP.WF.Template.NodeStations;
-import BP.WF.Template.SelectAccper;
-import BP.WF.Template.SelectAccperAttr;
-import BP.WF.Template.SelectAccpers;
-import BP.WF.Template.Selector;
-import BP.WF.Template.TransferCustom;
+import BP.WF.Port.WFEmpAttr;
+import BP.WF.Port.WFEmps;
+import BP.WF.Template.*;
 import BP.Web.WebUser;
 import cn.jflow.common.util.ContextHolderUtils;
 import cn.jflow.ws.MessageClient;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
+
+import BP.WF.Entity.FrmWorkCheck;
 
 /**
  * 此接口为程序员二次开发使用,在阅读代码前请注意如下事项. 
@@ -166,7 +123,6 @@ public class Dev2Interface {
 		}
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 	}
-
 	/**
 	 * 抄送数量
 	 */
@@ -464,7 +420,6 @@ public class Dev2Interface {
 			return;
 		}
 		///#endregion 检查数据源是否正确.
-
 		///#region 处理流程发起.
 
 		String nodeTable = "ND" + Integer.parseInt(fl.getNo()) + "01";
@@ -1202,7 +1157,6 @@ public class Dev2Interface {
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
-
 	///#endregion 我关注的流程
 
 	///#region 获取当前操作员的共享工作
@@ -1304,7 +1258,104 @@ public class Dev2Interface {
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
+	/**
+	 * 重写获取当前人员待处理的工作 -----------------按日期排序
+	 * @param fk_flow 流程编号 流程编号为空表示所有的流程
+	 * @return 共享工作列表
+	 * @throws Exception
+	 */
+	public static DataTable DB_GenerEmpWorksOfAdtDesc(String userNo, String fk_flow) throws Exception {
+		//执行 todolist 调度.
+		DTS_GenerWorkFlowTodoSta();
 
+		// 转化成编号.
+		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
+
+		Paras ps = new Paras();
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String sql;
+		if (WebUser.getIsAuthorize() == false) {
+			/*不是授权状态*/
+			if (StringHelper.isNullOrEmpty(fk_flow)) {
+				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND WFState!=" + WFState.Batch.getValue()
+							+ " ORDER BY ADT DESC ";
+				} else {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp  AND WFState!=" + WFState.Batch.getValue()
+							+ " ORDER BY ADT DESC ";
+				}
+
+				ps.Add("FK_Emp", userNo);
+			} else {
+				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND FK_Flow=" + dbstr
+							+ "FK_Flow  AND WFState!=" + WFState.Batch.getValue() + " ORDER BY  ADT DESC ";
+				} else {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND FK_Flow=" + dbstr + "FK_Flow  AND WFState!="
+							+ WFState.Batch.getValue() + " ORDER BY  ADT DESC ";
+				}
+
+				ps.Add("FK_Flow", fk_flow);
+				ps.Add("FK_Emp", userNo);
+			}
+			return BP.DA.DBAccess.RunSQLReturnTable(ps);
+		}
+
+		/*如果是授权状态, 获取当前委托人的信息. */
+		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.getNo());
+		switch (emp.getHisAuthorWay()) {
+		case All:
+			if (StringHelper.isNullOrEmpty(fk_flow)) {
+				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp  AND TaskSta=0 ORDER BY ADT DESC ";
+				} else {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp  ORDER BY ADT DESC ";
+				}
+
+				ps.Add("FK_Emp", userNo);
+			} else {
+				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp AND FK_Flow" + dbstr
+							+ "FK_Flow AND TaskSta=0 ORDER BY ADT DESC ";
+				} else {
+					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp AND FK_Flow" + dbstr + "FK_Flow ORDER BY ADT DESC ";
+				}
+
+				ps.Add("FK_Emp", userNo);
+				ps.Add("FK_Flow", fk_flow);
+			}
+			break;
+		case SpecFlows:
+			if (StringHelper.isNullOrEmpty(fk_flow)) {
+				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
+					sql = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows()
+							+ " AND TaskSta=0 ORDER BY ADT DESC ";
+				} else {
+					sql = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows()
+							+ "  ORDER BY ADT DESC ";
+				}
+
+				ps.Add("FK_Emp", userNo);
+			} else {
+				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
+					sql = "SELECT * FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp  AND FK_Flow" + dbstr + "FK_Flow AND FK_Flow IN "
+							+ emp.getAuthorFlows() + " AND TaskSta=0  ORDER BY ADT DESC ";
+				} else {
+					sql = "SELECT * FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp  AND FK_Flow" + dbstr + "FK_Flow AND FK_Flow IN "
+							+ emp.getAuthorFlows() + "  ORDER BY ADT DESC ";
+				}
+
+				ps.Add("FK_Emp", userNo);
+				ps.Add("FK_Flow", fk_flow);
+			}
+			break;
+		case None:
+			throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
+		default:
+			throw new RuntimeException("no such way...");
+		}
+		return BP.DA.DBAccess.RunSQLReturnTable(ps);
+	}
 	/**
 	 * 根据状态获取当前操作员的共享工作
 	 * @param wfState 流程状态 
@@ -1601,6 +1652,61 @@ public class Dev2Interface {
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
+	/**
+	 * 获得待办(包括被授权的待办)
+	 * 区分是自己的待办，还是被授权的待办通过数据源的 FK_Emp 字段来区分。
+	 * @return
+	 */
+    public static DataTable DB_Todolist(String userNo)
+    {
+    	if (StringHelper.isNullOrEmpty(userNo))
+        {
+            userNo = BP.Web.WebUser.getNo();
+            if (WebUser.getIsAuthorize() == false)
+            {
+            	throw new RuntimeException("@授权登录的模式下不能调用此接口.");
+            }
+        }
+        Paras ps = new Paras();
+        String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();       
+        String wfSql = "WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + "  OR WFState="
+				+ WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue()
+				+ " OR WFState=" + WFState.Fix.getValue();
+        /*不是授权状态*/
+        if (BP.WF.Glo.getIsEnableTaskPool() == true)
+            ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND TaskSta!=1 ";
+        else
+            ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ";
+
+        ps.Add("FK_Emp",userNo);
+
+        //获取授权给他的人员列表.
+        WFEmps emps = new WFEmps();
+        emps.Retrieve(WFEmpAttr.Author,userNo);
+        for (WFEmp emp : emps.ToJavaList())
+        {
+            switch (emp.getHisAuthorWay())
+            {
+                case All:
+                    if (BP.WF.Glo.getIsEnableTaskPool() == true)
+                        ps.SQL += " UNION  SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND TaskSta!=1  ";
+                    else
+                        ps.SQL += " UNION  SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' ";
+                    break;
+                case SpecFlows:
+                    if (BP.WF.Glo.getIsEnableTaskPool() == true)
+                        ps.SQL += " UNION SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND  FK_Flow IN " + emp.getAuthorFlows() + " AND TaskSta!=0 ";
+                    else
+                        ps.SQL += " UNION SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND  FK_Flow IN " + emp.getAuthorFlows() + "  ";
+                    break;
+                case None: //非授权状态下.
+                    continue;
+                default:
+                	throw new RuntimeException("no such way...");
+            }
+        }
+        return BP.DA.DBAccess.RunSQLReturnTable(ps);
+    }
 	
 	/**
 	 * 获取当前操作人员的待办信息 数据内容请参考图:WF_EmpWorks
@@ -1640,7 +1746,7 @@ public class Dev2Interface {
 		}
 		
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WFEmp emp = new BP.WF.Port.WFEmp(WebUser.getNo());
+		WFEmp emp = new BP.WF.Port.WFEmp(WebUser.getNo()); 
 		switch (emp.getHisAuthorWay()) {
 		case All:
 			if (BP.WF.Glo.getIsEnableTaskPool() == true) {
@@ -2710,6 +2816,8 @@ public class Dev2Interface {
 	 */
 	public static String Port_Login(String userNo) {
 		BP.Port.Emp emp = new BP.Port.Emp(userNo);
+		//emp.No = userNo;
+         emp.RetrieveFromDBSources();
 		WebUser.SignInOfGener(emp, true);
 		WebUser.setIsWap(false);
 		return Port_GetSID(userNo);
@@ -2747,6 +2855,18 @@ public class Dev2Interface {
 		WebUser.setIsWap(false);
 		return;
 	}
+	/**
+	 * 用户登陆,此方法是在开发者校验好用户名与密码后执行
+	 */
+	 public static String Port_Login(String userNo, boolean isRememberMe)
+     {
+		 isRememberMe = true;
+         BP.Port.Emp emp = new BP.Port.Emp(userNo);
+         WebUser.SignInOfGener(emp, isRememberMe);
+         WebUser.setIsWap(false);
+         WebUser.setAuth(""); //设置授权人为空.
+         return Port_GetSID(userNo);
+     }
 
 	/**
 	 * 注销当前登录
@@ -3300,7 +3420,76 @@ public class Dev2Interface {
 		}
 		///#endregion 特殊判断.
 	}
+	//加签 写入日志方法
+	public static void WriteTrackjq(String flowNo, int nodeFrom, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo,
+			String optionMsg,String empNoTo , String empNameTo ) {
+		if (at == ActionType.CallChildenFlow) {
+			if (StringHelper.isNullOrEmpty(cFlowInfo) == true) {
+				throw new RuntimeException("@必须输入信息cFlowInfo信息,在 CallChildenFlow 模式下.");
+			}
+		}
 
+		if (StringHelper.isNullOrEmpty(optionMsg)) {
+			optionMsg = Track.GetActionTypeT(at);
+		}
+
+		Track t = new Track();
+		t.setWorkID(workid);
+		t.setFID(fid);
+		t.setRDT(DataType.getCurrentDataTime());
+		t.setHisActionType(at);
+		t.setActionTypeText(optionMsg);
+
+		Node nd = new Node(nodeFrom);
+		t.setNDFrom(nodeFrom);
+		t.setNDFromT(nd.getName());
+
+		t.setEmpFrom(WebUser.getNo());
+		t.setEmpFromT(WebUser.getName());
+		t.FK_Flow = flowNo;
+
+		t.setNDTo(nodeFrom);
+		t.setNDToT(nd.getName());
+
+		t.setEmpTo(empNoTo);
+		t.setEmpToT(empNameTo);
+		t.setMsg(msg);
+
+		if (tag != null) {
+			t.setTag(tag);
+		}
+
+		try {
+			t.Insert();
+		} catch (java.lang.Exception e) {
+			t.CheckPhysicsTable();
+			t.Insert();
+			t.DirectInsert();
+		}
+
+		///#region 特殊判断.
+		if (at == ActionType.CallChildenFlow) {
+			/* 如果是吊起子流程，就要向它父流程信息里写数据，让父流程可以看到能够发起那些流程数据。*/
+			AtPara ap = new AtPara(tag);
+			BP.WF.GenerWorkFlow gwf = new GenerWorkFlow(ap.GetValInt64ByKey(GenerWorkFlowAttr.PWorkID));
+			t.setWorkID(gwf.getWorkID());
+
+			nd = new Node(gwf.getFK_Node());
+			t.setNDFrom(gwf.getFK_Node());
+			t.setNDFromT(nd.getName());
+
+			t.setNDTo(t.getNDFrom());
+			t.setNDToT(t.getNDFromT());
+
+			t.FK_Flow = gwf.getFK_Flow();
+
+			t.setHisActionType(ActionType.StartChildenFlow);
+			t.setTag("@CWorkID=" + workid + "@CFlowNo=" + flowNo);
+			t.setMsg(cFlowInfo);
+			t.Insert();
+		}
+		///#endregion 特殊判断.
+	}
 	/**
 	 * 写入日志
 	 * @param flowNo 流程编号
@@ -3893,9 +4082,9 @@ public class Dev2Interface {
 	public static String Flow_DoUnSend(String flowNo, long workID) {
 		// 转化成编号.
 		flowNo = TurnFlowMarkToFlowNo(flowNo);
-
 		WorkUnSend unSend = new WorkUnSend(flowNo, workID);
 		return unSend.DoUnSend();
+		
 	}
 
 	/**
@@ -4560,6 +4749,95 @@ public class Dev2Interface {
 			return true;
 		}
 	}
+	
+	/**
+	 * 保存到待办
+	 */
+	 public static void Node_SaveEmpWorks(String flowNo, String title, long workid, String userNo)
+     {
+         // 转化成编号.
+         flowNo = TurnFlowMarkToFlowNo(flowNo);
+
+         Flow fl = new Flow(flowNo);
+         Node nd = new Node(fl.getStartNodeID());
+         Emp emp = new Emp(userNo);
+
+         GenerWorkFlow gwf = new GenerWorkFlow();
+         gwf.setWorkID(workid);
+         int i = gwf.RetrieveFromDBSources();
+
+         gwf.setFlowName(fl.getName());
+         gwf.setFK_Flow(flowNo);
+         gwf.setFK_FlowSort(fl.getFK_FlowSort());
+
+         gwf.setFK_Dept(emp.getFK_Dept());
+         gwf.setDeptName(emp.getFK_DeptText());
+         gwf.setFK_Node(fl.getStartNodeID());
+
+         gwf.setNodeName(nd.getName());
+         gwf.setWFSta(WFSta.Runing);
+         gwf.setWFState(WFState.Runing);
+
+         gwf.setTitle(title);
+
+         gwf.setStarter(emp.getNo());
+         gwf.setStarterName(emp.getName());
+         gwf.setRDT(DataType.getCurrentDataTime());
+
+         gwf.setPWorkID(0);
+         gwf.setPFlowNo(null);
+         gwf.setPNodeID(0);
+         if (i == 0)
+             gwf.Insert();
+         else
+             gwf.Update();
+
+         // 产生工作列表.
+         String sql = "SELECT workid FROM wf_generworkerlist WHERE workid='" + workid + "'";
+         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+         if (dt.Rows.size() == 0)
+         {
+             GenerWorkerList gwl = new GenerWorkerList();
+             gwl.setWorkID(workid);
+             if (gwl.RetrieveFromDBSources() == 0)
+             {
+                 gwl.setFK_Emp(emp.getNo());
+                 gwl.setFK_EmpText(emp.getName());
+
+                 gwl.setFK_Node(nd.getNodeID());
+                 gwl.setFK_NodeText(emp.getName());
+                 gwl.setFID(0);
+
+                 gwl.setFK_Flow(fl.getNo());
+                 gwl.setFK_Dept(emp.getFK_Dept());
+
+                 gwl.setSDT(DataType.getCurrentDataTime());
+                 gwl.setDTOfWarning(DataType.getCurrentDataTime());
+                 gwl.setRDT(DataType.getCurrentDataTime());
+                 gwl.setIsEnable(true);
+                 gwl.setIsRead(true);
+                 gwl.setIsPass(false);
+                 gwl.setSender(userNo);
+                 gwl.setPRI(gwf.getPRI());
+                 gwl.Insert();
+             }
+         }
+         // 执行对报表的数据表WFState状态的更新,让它为runing的状态. 
+         String dbstr = SystemConfig.getAppCenterDBVarStr();
+         Paras ps = new Paras();
+         ps.SQL = "UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta,Title=" + dbstr
+             + "Title,FK_Dept=" + dbstr + "FK_Dept,PFlowNo=" + dbstr + "PFlowNo,PWorkID=" + dbstr + "PWorkID WHERE OID=" + dbstr + "OID";
+         
+         ps.Add("WFState",WFState.Runing.getValue());
+         ps.Add("WFSta", WFSta.Runing.getValue());
+         ps.Add("Title", gwf.getTitle());
+         ps.Add("FK_Dept", gwf.getFK_Dept());
+         ps.Add("PFlowNo", gwf.getPFlowNo());
+         ps.Add("PWorkID", gwf.getPWorkID());
+         ps.Add("OID", workid);
+         DBAccess.RunSQL(ps);
+
+     }
 
 	/**
 	 * 调度流程 说明： 1，通常是由admin执行的调度。 2，特殊情况下，需要从一个人的待办调度到另外指定的节点，制定的人员上。
@@ -6697,7 +6975,7 @@ public class Dev2Interface {
 			}
 		}
 
-		BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(), workid, gwf.getFID(), askForNote, ActionType.AskforHelp, "", null, null);
+		BP.WF.Dev2Interface.WriteTrackjq(gwf.getFK_Flow(), gwf.getFK_Node(), workid, gwf.getFID(), askForNote, ActionType.AskforHelp, "",null,null,askForEmp,emp.getName());
 		Flow fl = new Flow(gwf.getFK_Flow());
 		BP.WF.Dev2Interface.Port_SendMsg(askForEmp, gwf.getTitle(), askForNote, "AK" + gwf.getFK_Node() + "_" + gwf.getWorkID(), SMSMsgType.AskFor,
 				gwf.getFK_Flow(), gwf.getFK_Node(), workid, gwf.getFID());
@@ -6708,7 +6986,6 @@ public class Dev2Interface {
 		BP.WF.Dev2Interface.Node_SetWorkUnRead(gwf.getFK_Node(), workid);
 
 		String msg = "您的工作已经提交给(" + askForEmp + " " + emp.getName() + ")加签了。";
-
 		//加签后事件
 		BP.WF.Node hisNode = new BP.WF.Node(gwf.getFK_Node());
 		Work currWK = hisNode.getHisWork();
@@ -6731,6 +7008,7 @@ public class Dev2Interface {
 	 * @return
 	 * @throws Exception
 	 */
+	
 	public static String Node_AskforReply(String fk_flow, int fk_node, long workid, long fid, String replyNote) {
 		// 把回复信息临时的写入 流程注册信息表以便让发送方法获取这个信息写入日志.
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
@@ -7693,6 +7971,18 @@ public class Dev2Interface {
 	 * @param FID 流程ID
 	 * @return
 	 */
+	public static DataSet WorkOpt_AccepterDB(int nodeID, long WorkID, long FID) {
+		return WorkOpt_AccepterDB(null, nodeID, WorkID, FID);
+	}
+
+	/**
+	 * 获得接收人的数据源
+	 * @param FK_Flow 流程编号
+	 * @param ToNode 到达节点ID
+	 * @param WorkID 工作ID
+	 * @param FID 流程ID
+	 * @return
+	 */
 	public static DataSet WorkOpt_AccepterDB(String FK_Flow,int nodeID, long WorkID, long FID) {
 		DataSet ds = new DataSet();
 		Selector MySelector = new Selector(nodeID);
@@ -7708,7 +7998,7 @@ public class Dev2Interface {
 			// ds.Tables.add(dt1);
 			break;
 		case SQL:
-			ds = WorkOpt_Accepter_BySQL(nodeID,WorkID);
+			ds = WorkOpt_Accepter_BySQL(nodeID);
 			break;
 		case Dept:
 			ds = WorkOpt_Accepter_ByDept(nodeID);
@@ -7770,12 +8060,25 @@ public class Dev2Interface {
 	/**
 	 * 按sql方式
 	 */
-	public static DataSet WorkOpt_Accepter_BySQL(int ToNode,long WorkID) {
+	public static DataSet WorkOpt_Accepter_BySQL(int ToNode) {
 		DataSet ds = new DataSet();
-		String alreadyHadEmps = String.format("select No, Name from Port_Emp where No in( select FK_Emp from WF_SelectAccper " + "where FK_Node=%1$s and WorkID=%2$s)", ToNode, WorkID);
-		DataTable dt = DBAccess.RunSQLReturnTable(alreadyHadEmps);
-		dt.TableName="Port_Emp";
-		ds.Tables.add(dt);
+		Selector MySelector = new Selector(ToNode);
+		String sqlGroup = MySelector.getSelectorP1();
+		sqlGroup = sqlGroup.replace("@WebUser.getNo()", WebUser.getNo());
+		sqlGroup = sqlGroup.replace("@WebUser.getName()", WebUser.getName());
+		sqlGroup = sqlGroup.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+
+		String sqlDB = MySelector.getSelectorP2();
+		sqlDB = sqlDB.replace("@WebUser.getNo()", WebUser.getNo());
+		sqlDB = sqlDB.replace("@WebUser.getName()", WebUser.getName());
+		sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+
+		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
+		dtGroup.TableName = "Port_Dept";
+		ds.Tables.add(dtGroup);
+		DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
+		dtDB.TableName = "Port_Emp";
+		ds.Tables.add(dtDB);
 
 		return ds;
 	}
@@ -7807,7 +8110,7 @@ public class Dev2Interface {
 	public static DataSet WorkOpt_Accepter_ByEmp(int ToNode) {
 		String sqlGroup = "SELECT No,Name FROM Port_Dept WHERE No IN (SELECT FK_Dept FROM Port_Emp WHERE No in(SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node='"
 				+ ToNode + "'))";
-		String sqlDB = "SELECT No,Name,FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node='" + ToNode + "')";
+		String sqlDB = "SELECT No,Name,FK_Dept FROM Port_Emp WHERE No in (SELECT FK_EMP FROM WF_NodeEmp WHERE FK_Node='" + ToNode + "') order by FK_Dept";
 
 		DataSet ds = new DataSet();
 		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
@@ -8165,4 +8468,74 @@ public class Dev2Interface {
 		}
 		return emp;
 	}
+	   public static String Flow_BBSDelete(String flowNo, String mypk,String username)
+       {
+           Paras pss = new Paras();
+           pss.SQL = "SELECT EMPFROM FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK ";
+           pss.Add("MyPK", mypk);
+           String str = BP.DA.DBAccess.RunSQLReturnString(pss);
+           if (str.equals(username) || str == username)
+           {
+               Paras ps = new Paras();
+               ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK ";
+               ps.Add("MyPK", mypk);
+               BP.DA.DBAccess.RunSQL(ps);
+               return "删除成功.";
+           }
+           else
+           {
+               return "删除失败,仅能删除自己评论!";
+           }
+       }
+	   
+	   //强制删除流程
+	   public static boolean  Flow_IsCanDeleteFlowInstance(String flowNo, long workid, String userNo) throws Exception{
+		       
+		   if(userNo.equals("admin")){
+			   return true;
+		   }
+		   Flow fl = new Flow(flowNo);
+           if (fl.getFlowDeleteRole()== FlowDeleteType.AdminOnly.getValue() )
+               return false;
+		   
+         //是否是用户管理员?
+           if (fl.getFlowDeleteRole() == FlowDeleteType.AdminAppOnly.getValue())
+           {
+               if (userNo.indexOf("admin") == 0)
+                   return true; // 这里判断不严谨,如何判断是否是一个应用管理员使用admin+部门编号来确定的. 比如： admin3701 
+               else
+                   return false;
+           }
+
+           //是否是发起人.
+           if (fl.getFlowDeleteRole() == FlowDeleteType.ByMyStarter.getValue())
+           {
+               Paras ps = new Paras();
+               ps.SQL = "SELECT WorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND Starter=" + SystemConfig.getAppCenterDBVarStr() + "Starter";
+               ps.Add("WorkID", workid);
+               ps.Add("Starter", userNo);
+               String user = BP.DA.DBAccess.RunSQLReturnStringIsNull(ps,null);
+               if (user == null)
+                   return false;
+               return true;
+           }
+           
+           
+           //按照节点是否启用删除按钮来计算. 
+           if (fl.getFlowDeleteRole() == FlowDeleteType.ByNodeSetting.getValue())
+           {
+               Paras ps = new Paras();
+               ps.SQL = "SELECT WorkID FROM WF_GenerWorkerlist A, WF_Node B  WHERE A.FK_Node=B.NodeID  AND B.DelEnable=1  AND A.WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND A.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+               ps.Add("WorkID", workid);
+               ps.Add("FK_Emp", userNo);
+               String user = BP.DA.DBAccess.RunSQLReturnStringIsNull(ps, null);
+               if (user == null)
+                   return false;
+               return true;
+           }
+           return false;
+		   
+	   }
+	   
+	      
 }

@@ -74,28 +74,14 @@ public class FlowSort extends EntityTree
 	@Override
 	protected boolean beforeDelete()
 	{
-		try
-		{
-			//删除权限管理
-			if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
-			{
-				DBAccess.RunSQL("DELETE FROM GPM_Menu WHERE Flag='FlowSort" + this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "'");
-			}
-		}
-		catch (java.lang.Exception e)
-		{
-		}
+		 
 		return super.beforeDelete();
 	}
 
 	@Override
 	protected boolean beforeUpdate()
 	{
-		//修改权限管理
-		if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
-		{
-			DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.getName() + "' WHERE Flag='FlowSort" + this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "'");
-		}
+		 
 		return super.beforeUpdate();
 	}
 		///#endregion 重写方法

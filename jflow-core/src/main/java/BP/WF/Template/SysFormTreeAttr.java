@@ -20,4 +20,8 @@ public class SysFormTreeAttr extends EntityTreeAttr
 	 是否是目录
 	*/
 	public static final String IsDir = "IsDir";
+	/** 
+	 是否包含子表单
+	*/
+	public static final String FK_FormSort = "FK_FormSort";
 }

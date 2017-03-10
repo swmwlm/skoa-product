@@ -56,7 +56,7 @@ import BP.WF.XML.Tools;
 import BP.Web.WebUser;
 
 @Deprecated
-@WebService(endpointInterface = "cn.jflow.controller.wf.admin.xap.service.JFlowSoap")
+//@WebService(endpointInterface = "cn.jflow.controller.wf.admin.xap.service.JFlowSoap")
 public class JFlowSoapImpl implements JFlowSoap {
 	
 	// /#region 流程api
@@ -1907,8 +1907,8 @@ public class JFlowSoapImpl implements JFlowSoap {
 			this.LetUserLogin(userNo, sid);
 
 			// 获取接收人DataSet
-			DataSet ds = Dev2Interface.WorkOpt_AccepterDB(fk_flow, fk_node,
-					workID, fid);
+			DataSet ds = Dev2Interface.WorkOpt_AccepterDB(//fk_flow,
+					fk_node, workID, fid);
 
 			return BP.Tools.FormatToJson.ToJson(ds);
 		} catch (RuntimeException ex) {

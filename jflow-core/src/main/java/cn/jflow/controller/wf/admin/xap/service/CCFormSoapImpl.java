@@ -21,6 +21,7 @@ import BP.En.UIContralType;
 import BP.Sys.PubClass;
 import BP.Sys.SFTable;
 import BP.Sys.SysEnum;
+import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnumMain;
 import BP.Sys.SystemConfig;
 import BP.Sys.Frm.AthUploadWay;
@@ -175,7 +176,7 @@ public class CCFormSoapImpl implements CCFormSoap{
         
         //这里使用绝对路径来索引
         FileOutputStream stream = new FileOutputStream(filePath);
-        stream.write(xml.getBytes());
+        stream.write(xml.getBytes("UTF-8"));
 		stream.flush();
 		stream.close();
 
@@ -409,14 +410,16 @@ public class CCFormSoapImpl implements CCFormSoap{
             sem.Update();
         }
 
+        //保存前先删除之前的数据
+        SysEnum se = new SysEnum();
+        se.setEnumKey(enumKey);
+        se.Delete(SysEnumAttr.EnumKey, enumKey);
         String[] Strs = cfg.split("@");
         for(String str:Strs)
         {
             if (StringHelper.isNullOrEmpty(str))
                 continue;
             String[] kvs = str.split("=");
-            SysEnum se = new SysEnum();
-            se.setEnumKey(enumKey);
             se.setLang(WebUser.getSysLang());
             se.setIntKey(Integer.parseInt(kvs[0]));
             se.setLab(kvs[1]);
@@ -1293,7 +1296,11 @@ public class CCFormSoapImpl implements CCFormSoap{
     public String SaveFrm(String fk_mapdata, String xml, String sqls, String mapAttrKeyName)
     {
         BP.Sys.FrmWorkCheck fwc = new BP.Sys.FrmWorkCheck();
-        fwc.CheckPhysicsTable();
+        try{
+        	fwc.CheckPhysicsTable();
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
     	
         DataSet ds = new DataSet();
         try

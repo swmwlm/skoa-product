@@ -26,12 +26,12 @@
 </script>
 <fieldset>
     <legend>重要性</legend>
-    <input type="radio" id="RadioButton1" value="高" GroupName="a" />高
+    <input type="radio" id="RadioButton1" value="高" name="a" />高
     <br />
-    <input type="radio" id="RadioButton2" value="中" GroupName="a" />中
+    <input type="radio" id="RadioButton2" value="中" name="a" />中
     <br />
 
-    <input type="radio" id="RadioButton3" value="低" GroupName="a" />低
+    <input type="radio" id="RadioButton3" value="低" name="a" />低
     <br />
 
     <input type="button" id="Button1" value="保存" />

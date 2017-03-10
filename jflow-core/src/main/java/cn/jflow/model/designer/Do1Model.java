@@ -155,7 +155,7 @@ public class Do1Model extends BaseModel {
 				case Enum:
 					try {
 						response.sendRedirect("EditEnum.jsp?MyPK="
-								+ mattr.getFK_MapData() + "&RefNo="
+								+ mattr.getMyPK() + "&RefNo="
 								+ mattr.getMyPK());
 					} catch (IOException e) {
 						e.printStackTrace();

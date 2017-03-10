@@ -1231,11 +1231,7 @@ public class FlowSheet extends EntityNoName
 		// fl.No = this.getNo();
 		// fl.RetrieveFromDBSources();
 		//fl.Update();
-
-		if (Glo.getOSModel() == OSModel.OneMore)
-		{
-			DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.getName() + "' WHERE Flag='Flow" + this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "'");
-		}
+ 
 	}
 	@Override
 	protected boolean beforeUpdate()

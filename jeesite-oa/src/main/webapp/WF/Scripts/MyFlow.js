@@ -23,8 +23,10 @@ function SendSelfFrom() {
 // 打开选择人接收器.
 function OpenSelectAccepter(flowNo, nodeid, workid, fid) {
     var url = "./WorkOpt/Accepter.jsp?WorkID=" + workid + "&FK_Node=" + nodeid + "&FK_Flow=" + flowNo + "&FID=" + fid + "&type=1";
-    window.showModalDialog(url, "_blank", "scrollbars=yes;resizable=yes;center=yes;dialogWidth=700px;dialogHeight=600px;");
-    Send();
+    var v = window.showModalDialog(url, "_blank", "scrollbars=yes;resizable=yes;center=yes;dialogWidth=700px;dialogHeight=600px;");
+    if(v=="true"){
+    	Send();
+    }
     return false;
 }
 

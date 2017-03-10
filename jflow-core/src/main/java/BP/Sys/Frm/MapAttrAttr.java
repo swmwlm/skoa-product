@@ -55,6 +55,11 @@ public class MapAttrAttr extends EntityMyPKAttr
 	 * 是否只读
 	 */
 	public static final String UIIsEnable = "UIIsEnable";
+	
+	/**
+	 * ids
+	 */
+	public static final String Idx = "Idx";
 	/**
 	 * 关联的表的Key
 	 */
@@ -131,6 +136,10 @@ public class MapAttrAttr extends EntityMyPKAttr
 	 * 签名字段
 	 */
 	public static final String SiganField = "SiganField";
+	/**
+	 * 操作提示
+	 */
+    public static final String Tip = "Tip";
 	/**
 	 * 是否自动签名
 	 */

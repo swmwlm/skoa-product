@@ -26,7 +26,7 @@
 		return;
 	}
 	function Press(appPath, fk_flow, workid) {
-		var url = appPath + 'WF/WorkOpt/Press.jsp?WorkID=' + workid
+		var url = appPath + 'WF/WorkOpt/press.htm?WorkID=' + workid
 				+ '&FK_Flow=' + fk_flow;
 		var v = window
 				.showModalDialog(url, 'sd',

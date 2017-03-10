@@ -24,6 +24,7 @@ import BP.WF.Entity.CCBPM_DType;
 import BP.WF.Template.Direction;
 import BP.WF.Template.DirectionAttr;
 import BP.WF.Template.LabNote;
+import BP.WF.Template.LabNoteAttr;
 import BP.WF.Template.NodeAttr;
 import cn.jflow.common.util.JsonPluginsUtil;
 import cn.jflow.controller.wf.workopt.BaseController;
@@ -168,6 +169,7 @@ public class CCBPMDesignerController extends BaseController {
 	private String Flow_LoadFlowJsonData() throws IOException {
 		String diagramId = this.getParamter("diagramId");//转换UTF-8
 		Flow fl = new Flow(diagramId);
+		System.out.println(fl.getFlowJson());
 		return fl.getFlowJson();
 	}
 
@@ -217,7 +219,7 @@ public class CCBPMDesignerController extends BaseController {
 		try{
 			//清空标签
 			LabNote labelNode = new LabNote();
-			labelNode.Delete();
+			labelNode.Delete(LabNoteAttr.FK_Flow, flowNo);
 			//流程格式转第一级map
 			Map firstMap=JsonPluginsUtil.jsonToMap(diagram);
 			//获取key等于s的map数据
@@ -271,7 +273,7 @@ public class CCBPMDesignerController extends BaseController {
 							Map fiveMap=JsonPluginsUtil.jsonToMap(primitivesArr[0]);
 							
 							//获取key等于vector的map数据
-							String vector=String.valueOf(thirdMap.get("vector"));
+							String vector=String.valueOf(fiveMap.get("vector"));
 							//把vector的数据转换成数组数据
 							String[] vectorArr=JsonPluginsUtil.jsonToStringArray(vector);
 							

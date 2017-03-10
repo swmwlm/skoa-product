@@ -16,6 +16,7 @@ import BP.WF.Glo;
 import BP.WF.TaskSta;
 import BP.WF.WFSta;
 import BP.WF.WFState;
+import BP.WF.Template.FlowAttr;
 
 /** 
  我参与的流程
@@ -502,7 +503,8 @@ public class MyFlow extends Entity
 		map.AddSearchAttr(MyFlowAttr.WFSta);
 		map.AddSearchAttr(MyFlowAttr.TSpan);
 
-
+		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
+		
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + BP.Web.WebUser.getNo() + "%", 0, true);
 		map.getAttrsOfSearch().Add(search);

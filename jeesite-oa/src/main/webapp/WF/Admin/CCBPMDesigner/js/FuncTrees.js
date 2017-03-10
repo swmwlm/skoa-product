@@ -41,7 +41,7 @@ functrees.push({
 											{ Value: "FLOWTYPE", ColDefine: "parentno",
 											    Defines: [
 															{ Value: "F0", IconCls: "icon-flowtree", MenuId: "mFlowRoot", Opened: true },
-															{ IconCls: "icon-tree_folder", MenuId: "mFlowSort" }
+															{ IconCls: "icon-tree_folder ", MenuId: "mFlowSort" }
 														]
 											},
 											{ Value: "FLOW", ColDefine: "dtype", Defines: [
@@ -124,7 +124,7 @@ functrees.push({
                 Nodes: [
 						{ Type: "Node", Id: "FlowMonitor", ParentId: "FlowFunc", Name: "流程监控", Opened: false, TType: "FLOWMONITOR", DType: "-1", IconCls: "icon-tree_folder",
 						    Nodes: [
-						            { Type: "Node", Id: "WorkPanel", ParentId: "FlowMonitor", Name: "监控面板", TType: "WORKPANEL", DType: "-1", IconCls: "icon-Monitor", Url: "../CCBPMDesigner/App/Welcome.jsp?anaTime=slMouth&flowSort=slFlow&" },
+						            { Type: "Node", Id: "WorkPanel", ParentId: "FlowMonitor", Name: "监控面板", TType: "WORKPANEL", DType: "-1", IconCls: "icon-Monitor", Url: "../CCBPMDesigner/Welcome.jsp?anaTime=slMouth&flowSort=slFlow&" },
 						            { Type: "Node", Id: "WorkPanel", ParentId: "FlowMonitor", Name: "流程列表", TType: "WORKPANEL", DType: "-1", IconCls: "icon-flows", Url: "../CCBPMDesigner/Flows.jsp" },
 						            { Type: "Node", Id: "SearchByKey", ParentId: "FlowMonitor", Name: "全文检索", TType: "SEARCHBYKEY", DType: "-1", IconCls: "icon-SearchKey", Url: "../../KeySearch.jsp" },
 						            { Type: "Node", Id: "SynthSearch", ParentId: "FlowMonitor", Name: "综合查询", TType: "SYNTHSEARCH", DType: "-1", IconCls: "icon-Search", Url: "../../Comm/Search.jsp?EnsName=BP.WF.Data.GenerWorkFlowViews" },
@@ -242,7 +242,7 @@ functrees.push({
     AttrCols: ["ttype"],
     ServiceCount: 1,
     Nodes: [
-			/* { Type: "Node", Id: "OneOne", ParentId: null, Name: "基础设置", Opened: true, TType: "BASICROOT", IconCls: "icon-tree_folder", OSModel: "OneOne",
+			 { Type: "Node", Id: "OneOne", ParentId: null, Name: "基础设置", Opened: true, TType: "BASICROOT", IconCls: "icon-tree_folder", OSModel: "OneOne",
 			    Nodes: [
 						{ Type: "Node", Id: "OneOneDeptTypies", ParentId: "OneOne", Name: "岗位类型", TType: "DEPTTYPIES", IconCls: "icon-table", Url: "../../Comm/Ens.jsp?EnsName=BP.GPM.StationTypes" },
 						{ Type: "Node", Id: "OneOneStations", ParentId: "OneOne", Name: "岗位维护", TType: "STATIONS", IconCls: "icon-table", Url: "../../Comm/Ens.jsp?EnsName=BP.WF.Port.Stations" }
@@ -255,7 +255,7 @@ functrees.push({
 						{ Type: "Node", Id: "DeptTypies", ParentId: "OneMore", Name: "岗位类型", TType: "DEPTTYPIES", IconCls: "icon-table", Url: "../../Comm/Ens.jsp?EnsName=BP.WF.Port.StationTypes" },
 						{ Type: "Node", Id: "Stations", ParentId: "OneMore", Name: "岗位维护", TType: "STATIONS", IconCls: "icon-table", Url: "../../Comm/Ens.jsp?EnsName=BP.WF.Port.Stations" }
 					  ]
-            			},*/
+            			},
 			{ Type: "Service", ServiceMethod: "GetStructureTree", ColId: "no", ColParentId: "parentno", ColName: "name", RootParentId: "0",
 			    ColDefine: "ttype", Defines: [
 											{ Value: "DEPT", ColDefine: "parentno",
@@ -277,6 +277,15 @@ functrees.push({
 			}
 		  ]
 });
+
+/*functrees.push({
+    Id: "OrgTree",
+    Name: "组织结构",
+    AttrCols: ["ttype"],
+    ServiceCount: 1,
+    Nodes: [{ Type: "Function", ServiceMethod: "GenerStructureTree", MethodParams: [{name:"parentrootid", value:"0"}], OnExpandFunction: "ShowSubDepts"}]
+});*/
+
 //4.系统维护
 functrees.push({
     Id: "sysTree",
@@ -409,7 +418,7 @@ function LoadServiceNode(oNode, oParentNode, oFuncTree) {
                             i = 0;
                         }
                         continue;
-                    }
+                    }		
 
                     i++;
                     if (i == oParentNode.Nodes.length) {
@@ -644,8 +653,9 @@ function OnDbClick(oFuncTree) {
                 if (children && children.length >= 1) {
                     if (children[0].text == "加载中...") {
                         $("#" + oFuncTree.Id).tree("remove", children[0].target);
+                    }else {
+                        return;
                     }
-
                     if (node.attributes.Inherits) {
                         $.each(node.attributes.Inherits, function () {
                             oFuncTree.Inherits[this] = node.attributes[this];
@@ -969,7 +979,12 @@ function LoadTreeNode(oNode, oParentNode, oFuncTree) {
     });
 
     //设置可以继承的属性值
+    /* jsp页面需加上单引号 */
     var node = $("#" + oFuncTree.Id).tree("find", '\'' + oNode.Id + '\'');
+    
+    /* htm 直接取值  */
+    //var node = $("#" + oFuncTree.Id).tree("find", oNode.Id );
+    
     if (node.attributes.InheritForChild) {
         $.each(node.attributes.InheritForChild, function () {
             node.attributes[this.To] = ReplaceParams(this.From, node, oFuncTree);
@@ -1116,8 +1131,8 @@ function ReplaceJS(sStr, sFindStr) {
 }
 
 function CalculateJS(sCode) {
-    /// <summary>动态运行JS表达式，返回运行结果</summary>
-    /// <param name="sCode" type="String">JS表达式字符串</param>
+    // <summary>动态运行JS表达式，返回运行结果</summary>
+    // <param name="sCode" type="String">JS表达式字符串</param>
     if (!sCode || sCode.length == 0) {
         return "";
     }

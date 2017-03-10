@@ -36,7 +36,11 @@ public enum FrmEnableRole
 	 按SQL表达式
 	 
 	*/
-	BySQL;
+	BySQL,
+	 /**
+	  * 不启用
+	  */
+    Disable;
 
 	public int getValue()
 	{

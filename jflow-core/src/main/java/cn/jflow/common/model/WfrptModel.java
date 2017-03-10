@@ -307,7 +307,7 @@ public class WfrptModel {
         
         String urlExt = "&PFlowNo=" + ndrpt.Rows.get(0).getValue("PFlowNo") + "&PWorkID=" + ndrpt.Rows.get(0).getValue("PWorkID") + "&IsToobar=0&IsHidden=true";
         
-        if (nd.getHisFormType() == NodeFormType.SDKForm){
+        if (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType()==NodeFormType.SelfForm){
         	try{
 		    	if (nd.getFormUrl().contains("?")){
 		    		this._response.sendRedirect(nd.getFormUrl() + "&WorkID=" + tk.getWorkID() + "&FK_Node=" + nd.getNodeID() + "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt);
@@ -315,14 +315,14 @@ public class WfrptModel {
 //		    	else{
 //		    		this._response.sendRedirect(nd.getFormUrl() + "?WorkID=" + tk.getWorkID() + "&FK_Node=" + nd.getNodeID() + "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt); 
 //		    	}
-		    	if (nd.getHisFormType() == NodeFormType.SDKForm){
+		    	/*if (nd.getHisFormType() == NodeFormType.SDKForm){
 		    		if (nd.getFormUrl().contains("?"))
                         this._response.sendRedirect(nd.getFormUrl() + "&WorkID=" + tk.getWorkID() + "&FK_Node=" + nd.getNodeID() + "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt);
                     else
                         this._response.sendRedirect(nd.getFormUrl() + "?WorkID=" + tk.getWorkID() + "&FK_Node=" + nd.getNodeID() + "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt);
                     return;
 		    	}
-		    	
+		    	*/
 		    	this._response.sendRedirect(nd.getFormUrl() + "&WorkID=" + tk.getWorkID() + "&FK_Node=" + nd.getNodeID() + "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt);
 	            return;
 	        }catch(IOException e){
@@ -337,6 +337,7 @@ public class WfrptModel {
         	this.ui.append(BaseModel.AddH1("当前的节点数据已经被删除！！！<br> 造成此问题出现的原因如下。"));
         	this.ui.append(BaseModel.AddBR("1、当前节点数据被非法删除。"));
         	this.ui.append(BaseModel.AddBR("2、节点数据是退回人与被退回人中间的节点，这部分节点数据查看不支持。"));
+        	this.ui.append(BaseModel.AddBR("技术信息:表" + wk.getEnMap().getPhysicsTable() + " WorkID=" + this.getWorkID()));
         	this.ui.append(BaseModel.AddFieldSetEnd());
             return;
         }
@@ -607,7 +608,10 @@ public class WfrptModel {
      	// 输出报表
         this.printFrmRpts();
         // 输出审核组件
-     	this.printFrmWorkCheck();
+		FrmWorkCheck fwc = new FrmWorkCheck(this.EnName);
+     	this.printFrmWorkCheck(fwc);
+     	// 父子流程组件
+     	this.printSubFLow(fwc);
      	// 输出多对多的关系
      	this.printMapM2Ms();
      	// 输出附件
@@ -2105,8 +2109,7 @@ public class WfrptModel {
 	/**
 	 * 输出审核组件
 	 */
-	private void printFrmWorkCheck(){
-		FrmWorkCheck fwc = new FrmWorkCheck(this.EnName);
+	private void printFrmWorkCheck(FrmWorkCheck fwc){
 		if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Disable){
 			this.x = fwc.getFWC_X() + wtX;
 			this.ui.append("<DIV id='FWC" + fwc.getNo() + "' style='position:absolute; left:" + x + "px; top:" + fwc.getFWC_Y() + "px; width:" + fwc.getFWC_W() + "px; height:" + fwc.getFWC_H() + "px;text-align: left;' >");
@@ -2130,6 +2133,41 @@ public class WfrptModel {
 			this.ui.append("</span>");
 			this.ui.append("</DIV>");
 		}
+	}
+	
+	/**
+	 * 父子流程组件
+	 */
+	private void printSubFLow(FrmWorkCheck fwc){
+		Entity en = this.HisEn;
+        FrmSubFlow subFlow = new FrmSubFlow(this.EnName);
+        if (subFlow.getHisFrmSubFlowSta() != FrmSubFlowSta.Disable)
+        {
+            x = subFlow.getSF_X() + wtX;
+            this.ui.append("<DIV id='DIVWC" + fwc.getNo() + "' style='position:absolute; left:" + x + "px; top:" 
+            + subFlow.getSF_Y() + "px; width:" + subFlow.getSF_W() + "px; height:" + subFlow.getSF_H() + "px;text-align: left;' >");
+            this.ui.append("<span>");
+            
+            String src = basePath + "WF/WorkOpt/SubFlow.jsp?s=2";
+            String fwcOnload = "";
+            String paras = paramsStr;
+                if (paras.contains("FID=") == false && en.getEnMap().getAttrs().Contains("FID")==true )
+                    paras += "&FID=" + en.GetValStrByKey("FID");
+
+            if (paras.contains("OID=") == false)
+                paras += "&OID=" + en.GetValStrByKey("OID");
+            if (subFlow.getHisFrmSubFlowSta() == FrmSubFlowSta.Readonly)
+            {
+                src += "&DoType=View";
+            }
+            src += "&r=q" + paras;
+            this.ui.append("<iframe ID='FWC" + subFlow.getNo() + "' " + fwcOnload 
+            		+ "  src='" + src + "' frameborder=0 style='padding:0px;border:0px;'  leftMargin='0'  topMargin='0' width='" 
+            		+ subFlow.getSF_W() + "' height='" + subFlow.getSF_H() + "'   scrolling=auto/></iframe>");
+
+            this.ui.append("</span>");
+            this.ui.append("</DIV>");
+        }
 	}
 	
 	/**

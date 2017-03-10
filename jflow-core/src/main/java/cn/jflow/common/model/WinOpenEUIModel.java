@@ -1,20 +1,18 @@
 package cn.jflow.common.model;
 
-import java.io.File;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import BP.DA.DBAccess;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Flow;
-import BP.WF.Glo;
 import BP.WF.Node;
-import BP.WF.WFState;
-import BP.WF.WorkFlow;
 import BP.WF.Template.BtnLab;
 import BP.WF.Template.WebOfficeWorkModel;
+import BP.WF.WFState;
+import BP.WF.WorkFlow;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 public class WinOpenEUIModel extends BaseModel {
 

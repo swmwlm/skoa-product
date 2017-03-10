@@ -1301,7 +1301,7 @@ public class WorkNode
 				skipWork.ResetDefaultVal();
 
 				// 把里面的默认值也copy报表里面去.
-				rptGe.Copy(skipWork);
+				//rptGe.Copy(skipWork);
 
 				//如果存在就修改
 				if (skipWork.IsExit(skipWork.getPK(), this.getWorkID()) == true)
@@ -2419,7 +2419,12 @@ public class WorkNode
 				}
 				else
 				{
-					toWK.DirectInsert();
+					if(toWK.Retrieve()==0)
+					{
+						toWK.DirectInsert();
+					}else{
+						toWK.Update();
+					}
 				}
 			}
 			catch (RuntimeException ex)
@@ -5954,7 +5959,7 @@ public class WorkNode
 					gwl.Delete(GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Emp, this.getExecer());
 
 					//执行时效考核.
-					Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(), this.rptGe.getTitle());
+					//Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(), this.rptGe.getTitle());
 
 					//返回发送对象.
 					return this.HisMsgObjs;

@@ -646,19 +646,21 @@ try {
 						isInfo = true;
 					}
 						break;
+						/**
+						修改为form显示。此加签暂时注释
 					case Askfor: //加签.
 						%><h2>加签信息:</h2><%
 						String sql = "SELECT * FROM ND"
 								+ Integer.valueOf(node.getFK_Flow())
 								+ "Track WHERE WorkID=" + workID + " AND "
 								+ TrackAttr.ActionType + "="
-								+ ActionType.AskforHelp.ordinal();
+								+ ActionType.AskforHelp.getValue();
 						DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 						for (DataRow dr : dt.Rows) {
-							String msgAskFor = dr.getValue(TrackAttr.Msg).toString();
-							String worker = dr.getValue(TrackAttr.EmpFrom).toString();
-							String workerName = dr.getValue(TrackAttr.EmpFromT).toString();
-							String rdt = dr.getValue(TrackAttr.RDT).toString();
+							String msgAskFor = dr.getValue(TrackAttr.Msg.toLowerCase()).toString();
+							String worker = dr.getValue(TrackAttr.EmpFrom.toLowerCase()).toString();
+							String workerName = dr.getValue(TrackAttr.EmpFromT.toLowerCase()).toString();
+							String rdt = dr.getValue(TrackAttr.RDT.toLowerCase()).toString();
 							%>
 							<div>
 							--------------<%=workerName %>在<%=rdt %>加签--------------<hr/> 
@@ -669,6 +671,7 @@ try {
 							isInfo = true;
 						 }
 						break;
+						*/
 					case ReturnSta:
 						%>
 						<h2>退回信息:</h2>

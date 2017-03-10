@@ -30,6 +30,12 @@ public class Track extends BP.En.Entity
 	{
 		return "MyPK";
 	}
+	
+       public String MyPK(){   
+        return this.GetValStrByKey(TrackAttr.MyPK);      
+       }
+	
+	
 
 		///#region attrs
 
@@ -219,6 +225,8 @@ public class Track extends BP.En.Entity
 				return "逻辑删除";
 			case Order:
 				return "队列发送";
+		   case FlowBBS:
+                return "评论";
 			default:
 				return "未知";
 		}

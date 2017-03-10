@@ -22,7 +22,7 @@
 		 var FK_MapData="<%=s.getFK_MapData()%>";
 		 var FK_Flow='<%=s.getFK_Flow()%>';
 		 $("#FormHtml").val($("#form11").html());
-		 $("#form11").attr("action","<%=basePath%>/mapdef/S2ColsChose_Btn_Save_Click.do?RptNo="+RptNo+"&FK_MapData="+FK_MapData+"&FK_Flow="+FK_Flow);
+		 $("#form11").attr("action","<%=basePath%>mapdef/S2ColsChose_Btn_Save_Click.do?RptNo="+RptNo+"&FK_MapData="+FK_MapData+"&FK_Flow="+FK_Flow);
 		 $("#form11").submit();
 	 }
 	 function Btn_SaveAndNext1()
@@ -31,7 +31,7 @@
 		 var FK_MapData="<%=s.getFK_MapData()%>";
 		 var FK_Flow='<%=s.getFK_Flow()%>';
 		 $("#FormHtml").val($("#form11").html());
-		 $("#form11").attr("action","<%=basePath%>/mapdef/S2ColsChose_Btn_SaveAndNext1_Click.do?RptNo="
+		 $("#form11").attr("action","<%=basePath%>mapdef/S2ColsChose_Btn_SaveAndNext1_Click.do?RptNo="
 							+ RptNo + "&FK_MapData=" + FK_MapData + "&FK_Flow="
 							+ FK_Flow);
 			$("#form11").submit();
@@ -43,7 +43,7 @@
 		 var FK_MapData="<%=s.getFK_MapData()%>";
 		 var FK_Flow='<%=s.getFK_Flow()%>';
 		 $("#FormHtml").val($("#form11").html());
-		 $("#form11").attr("action","<%=basePath%>/mapdef/do_post_back.do?RptNo="
+		 $("#form11").attr("action","<%=basePath%>mapdef/do_post_back.do?RptNo="
 							+ RptNo + "&FK_MapData=" + FK_MapData + "&FK_Flow="
 							+ FK_Flow);
 			$("#form11").submit();

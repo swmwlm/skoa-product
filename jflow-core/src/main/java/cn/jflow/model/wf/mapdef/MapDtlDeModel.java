@@ -24,6 +24,7 @@ import BP.En.EditType;
 import BP.En.EntitiesNoName;
 import BP.En.FieldTypeS;
 import BP.Sys.Frm.GroupField;
+import BP.Sys.Frm.GroupFieldAttr;
 import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrs;
 import BP.Sys.Frm.MapData;
@@ -94,9 +95,12 @@ public class MapDtlDeModel extends BaseModel{
 		if (DBAccess.RunSQLReturnValInt(sqlGroup) != 1)
 		{
 			GroupField gf = new GroupField();
-			gf.setEnName(this.getFK_MapDtl());
-			gf.setLab(dtl.getName());
-			gf.Insert();
+			if(!gf.RetrieveByAttrAnd(GroupFieldAttr.EnName, this.getFK_MapDtl(), GroupFieldAttr.Lab, dtl.getName()))
+			{
+				gf.setEnName(this.getFK_MapDtl());
+				gf.setLab(dtl.getName());
+				gf.Insert();
+			}
 			sqlGroup = "UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getFK_MapDtl() + "'";
 			DBAccess.RunSQL(sqlGroup);
 		}

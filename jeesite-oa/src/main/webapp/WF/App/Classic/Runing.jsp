@@ -42,7 +42,7 @@
             return;
         }
         function Press(appPath, fid, workid, fk_flow) {
-            var url = appPath + 'WF/WorkOpt/Press.jsp?FID=' + fid + '&WorkID=' + workid + '&FK_Flow=' + fk_flow;
+            var url = appPath + 'WF/WorkOpt/press.htm?FID=' + fid + '&WorkID=' + workid + '&FK_Flow=' + fk_flow;
             var v = window.showModalDialog(url, 'sd', 'dialogHeight: 200px; dialogWidth: 350px;center: yes; help: no');
         }
 
@@ -100,15 +100,15 @@
         String appPath = Glo.getCCFlowAppPath();
 
         int colspan = 6;
-        sBuilder.append("<table border=1px align=left width='100%'>");
+        sBuilder.append("<table border=1px align=center width='100%'>");
 
         if (WebUser.getIsWap())
         {
-            sBuilder.append("<caption class=\"CaptionMsgLong\"><a href='Home.jsp' >Home</a>-<img src='"+appPath+"WF/Img/EmpWorks.gif'>在途工作</caption>");
+            sBuilder.append("<Caption ><div class='CaptionMsg' >" + "<a href='Home.jsp' >Home</a>-<img src='"+appPath+"WF/Img/EmpWorks.gif' >在途工作" + "</div></Caption>");
         }
         else
         {
-            sBuilder.append("<caption class=\"CaptionMsgLong\">在途工作</caption>");
+            sBuilder.append("<Caption ><div class='CaptionMsg' >在途工作</div></Caption>");
         }
 
         sBuilder.append("<tr class='centerTitle'>");
@@ -182,6 +182,8 @@
 
                 workid =dr.getValue("WorkID").toString();
                 fk_flow =dr.getValue("FK_Flow").toString();
+
+                //sBuilder.append("<td class=TTD><a href=\"javascript:WinOpen('"+appPath+"WF/WFRpt.jsp?WorkID=" + workid + "&FK_Flow=" + fk_flow + "&FID=" +dr.getValue("FID") + "')\" >" + title + "</a></td>");
                 if (BP.WF.Glo.getIsWinOpenEmpWorks()) {
                     sBuilder.append("<td class=TTD><a href=\"javascript:WinOpen('" + appPath + "WF/WFRpt.jsp?WorkID=" + workid + "&FK_Flow=" + fk_flow + "&FID=" + dr.getValue("FID") + "')\" >" + title + "</a></td>");
                 } else {

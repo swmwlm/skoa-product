@@ -51,7 +51,7 @@
 									src="./Img/NewFlow.png" border="0" />&nbsp;新建流程
 							</a></li>
 							<li><a
-								href="javascript:OpenTab('TempleteFlowSearch','关键字查询流程模版','../CCBPMDesigner/SearchFlow.jsp','icon-search');">
+								href="javascript:OpenTab('TempleteFlowSearch','关键字查询流程模版','../CCBPMDesigner/SearchFlow.htm','icon-search');">
 									<img src="./Img/SearchKey.png" alt="" border="0" />&nbsp;关键字查询流程模版
 							</a></li>
 
@@ -82,7 +82,7 @@
 						<ul style="list-style: none">
 							<li><a href=""> <img src="./Img/NewFlow.png" />新建表单
 							</a></li>
-							<li><a href="../CCBPMDesigner/SearchFlow.jsp"> <img
+							<li><a href="../CCBPMDesigner/SearchFlow.htm"> <img
 									src="./Img/NewFlow.png" border="0" />关键字查询表单模版
 							</a></li>
 							<li><a href=""> <img src="./Img/NewFlow.png" />新建数据源
@@ -180,7 +180,7 @@ input {
         $("#" + Application.common.getArgsFromHref("flowSort")).attr("checked", true);
     });
 </script>
-						<table style="margin: 0 auto; width: 100%;">
+						<%-- <table style="margin: 0 auto; width: 100%;">
 							<tr>
 								<td valign="top" colspan="3"
 									style="padding-left: 10px; padding-right: 40px; border-bottom: 1px solid white;">
@@ -449,7 +449,7 @@ var chart_Line_3D = new FusionCharts({"dataFormat" : "xml", "renderAt" : "Line_3
 					</fieldset>
 				</td>
 			</tr>
-		</table>
+		</table> --%>
 		<div></div>
 	</form>
 

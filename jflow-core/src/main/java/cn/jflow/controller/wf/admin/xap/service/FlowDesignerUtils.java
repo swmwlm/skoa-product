@@ -425,7 +425,7 @@ public class FlowDesignerUtils {
 		try
 		{
 			//文件存放路径
-			String filepath = BP.Sys.SystemConfig.getPathOfTemp() + "\\" + fileName;
+			String filepath = BP.Sys.SystemConfig.getPathOfTemp() + "/" + fileName;
 			File fileps = new File(filepath);
 			//如果文件已经存在则删除
 			if (fileps.exists())
@@ -720,7 +720,7 @@ public class FlowDesignerUtils {
 	{
 		// XAP/Admin/WF
 		String path = ContextHolderUtils.getSession().getServletContext().getRealPath("../../../");
-		path += "ClientBin\\NodeIcon";
+		path += "ClientBin/NodeIcon";
 
 		File file = new File(path);
 		//FilenameFilter fileFilter = new FilenameFilter();
@@ -731,7 +731,7 @@ public class FlowDesignerUtils {
 		{
 			String item = files[i];
 			item = item.substring(path.length(), item.length());
-			item = item.substring(item.lastIndexOf('\\')+1, item.lastIndexOf('\\')+1 + item.indexOf('.')-1);
+			item = item.substring(item.lastIndexOf('/')+1, item.lastIndexOf('/')+1 + item.indexOf('.')-1);
 			files[i] = item;
 		}
 

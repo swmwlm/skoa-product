@@ -5,6 +5,7 @@
 <%
 	BatchStartFieldsModel bsfmodel = new BatchStartFieldsModel(request,response);
 	bsfmodel.Page_Load();
+	String ss=bsfmodel.srole;
 %>
 <script type="text/javascript">
 
@@ -54,10 +55,15 @@ function load() {
 					<caption>批量发起规则设置</caption>
 					<tr>
 						<td colspan="1">规则设置：</td>
+						
 						<td colspan="2">
 							<select name="DDL_BRole" id="DDL_BRole">
+							<c:forEach items="<%=bsfmodel.getbRoleList() %>" var="r" varStatus="i">
+							<option value="${r.optionVal}"  ${r.selected}>${r.optionLab}</option>
+							</c:forEach>
 							</select>
 						</td>
+						
 						<td><a href="http://ccbpm.mydoc.io/?v=5404&t=17920" target="_blank">帮助</a></td>
 					</tr>
 					<tr>

@@ -12,10 +12,11 @@ import BP.Sys.SystemConfig;
  * @date 2016-71-15
  */
 public class MessageClient {
-	private static Client client = null;
+	
+	private Client client = null;
 
 	@BeforeClass
-	public static void init() {
+	public void init() {
 		// 不依赖服务器端接口来完成调用的，也就是不仅仅能调用Java的接口
 		JaxWsDynamicClientFactory clientFactory = JaxWsDynamicClientFactory.newInstance();
 		client = clientFactory.createClient(String.valueOf(SystemConfig.getAppSettings().get("OtherSysMsgUrl")));

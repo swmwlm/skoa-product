@@ -98,7 +98,7 @@ public class NewFrmGuideController extends BaseController {
 				//BP.Sys.PubClass.Alert("上传的Word文件格式错误.");
 				return "上传的Word文件格式错误.";
 			}
-			savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate\\";
+			savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/";
 			// 创建文件
 			File dirPath = new File(savePath);
 			if (!dirPath.exists()) {
@@ -129,15 +129,16 @@ public class NewFrmGuideController extends BaseController {
 		}
 
 		if (md.getHisFrmType().getValue() == FrmType.FreeFrm.getValue() && request.getParameter("RB_FrmGenerMode_2") == "RB_FrmGenerMode") {////
-			this.getResponse().sendRedirect("../FoolFormDesigner/ImpTableField.jsp?DoType=New&FK_MapData=" + md.getNo());
+			this.getResponse().sendRedirect("../MapDef/ImpTableField.jsp?DoType=New&FK_MapData=" + md.getNo());
 		}
 
-		if (md.getHisFrmType().getValue() == FrmType.FreeFrm.getValue()) {
-			this.getResponse().sendRedirect("FormDesigner.jsp?FK_MapData=" + md.getNo());
-		}
+//		if (md.getHisFrmType().getValue() == FrmType.FreeFrm.getValue()) {//此页面为H5表单，未翻译。暂时注释
+//			this.getResponse().sendRedirect("FormDesigner.jsp?FK_MapData=" + md.getNo());
+//		}
+
 
 		if (md.getHisFrmType().getValue() == FrmType.Column4Frm.getValue()) {
-			this.getResponse().sendRedirect("/WF/Admin/FoolFormDesigner/Designer.jsp?IsFirst=1&FK_MapData=" + md.getNo());
+			this.getResponse().	sendRedirect("/WF/Admin/FoolFormDesigner/Designer.jsp?IsFirst=1&FK_MapData=" + md.getNo());
 		}
 		return "操作成功";
 	}

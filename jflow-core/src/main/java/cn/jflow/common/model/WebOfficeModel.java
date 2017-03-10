@@ -4,11 +4,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -98,12 +102,12 @@ public class WebOfficeModel {
 	public UiFatory ui = null;
 	public StringBuffer divMenu;
     private boolean IsPostBack = false;
-	public void init() {
+	public boolean init() {
 		this.ui = new UiFatory();
 		this.divMenu = new StringBuffer();
 		 if ("-1".equals(String.valueOf(this.FK_Node)) || "0".equals(String.valueOf(this.WorkID))){
              divMenu.append("<h1 style='color:red'>传入参数错误!<h1>");
-             return;
+             return true;
          }
 		 
 		 if (!IsPostBack){
@@ -116,108 +120,153 @@ public class WebOfficeModel {
                  ReadFile();
              } else {
                  LoadMenu(false);
-                 if ("LoadFile".equals(type))
+                 if ("LoadFile".equals(type)){
                      LoadFile();
-                 else if ("SaveFile".equals(type))
+                     return false;
+                 }else if ("SaveFile".equals(type)){
                      SaveFile(this._request,this._response);
-                 else
+                     return false;
+                 }else if (type.equals("LoadOver")){
+                     GetFileBytes();
+                     return false;
+                 }else if (type.equals("SaveBak")){
+                     SaveBak();
+                     return false;
+                 }else if (type.equals("Download")){
+                     DownloadFile();
+                     return false;
+                 }else{
                      throw new RuntimeException("传入的参数不正确!");
-             }
-         }
-	}
-	
-	
-	private void LoadMenu(boolean isMenu){
-		
-		 BtnLab btnLab = new BtnLab(this.FK_Node);
-		 boolean isCompleate = false;
-         Node node = new Node(this.FK_Node);
-         try{
-        	 WorkFlow workFlow = new WorkFlow(node.getFK_Flow(), this.WorkID);
-             isCompleate = workFlow.getIsComplete();
-         } catch(Exception e){
-        	 try{
-                 Flow fl = new Flow(node.getFK_Flow());
-                 GERpt rpt = fl.getHisGERpt();
-                 rpt.setOID(this.WorkID);
-                 rpt.Retrieve();
-
-                 if (rpt != null){
-                     if (rpt.getWFState() == WFState.Complete)
-                         isCompleate = true;
                  }
-             }catch (Exception ex){
-            	 ex.printStackTrace();
              }
          }
-         if (!isCompleate){
-        	 try{
-                 isCompleate = !Dev2Interface.Flow_IsCanDoCurrentWork(node.getFK_Flow(), this.FK_Node, this.WorkID, WebUser.getNo());
-                 //WorkFlow workFlow = new WorkFlow(node.FK_Flow, WorkID);
-                 //isCompleate = !workFlow.IsCanDoCurrentWork(WebUser.No);
-             }catch (Exception e){
-            	 e.printStackTrace();
-             }
-         }
-         if (isMenu && !isCompleate){
-        	 if (btnLab.getOfficeMarksEnable()){
-        		 divMenu.append("查看留痕:<select id='marks' onchange='ShowUserName()'  style='width: 100px'><option value='1'>显示留痕</option><option value='2'>隐藏留痕</option><select>");
-            
-        	 }
-        	 if (btnLab.getOfficeOpenEnable()){
-                 this.AddBtn("openFile", btnLab.getOfficeOpenLab(), "OpenFile");
-             }
-        	 if (btnLab.getOfficeOpenTemplateEnable()){
-        		 this.AddBtn("openTempLate", btnLab.getOfficeOpenTemplateLab(), "OpenTempLate");
-             }
-        	 if (btnLab.getOfficeSaveEnable()){
-        		 this.AddBtn("saveFile", btnLab.getOfficeSaveLab(), "saveOffice");
-             }
-        	 if (btnLab.getOfficeAcceptEnable()){
-        		 this.AddBtn("accept", btnLab.getOfficeAcceptLab(), "acceptOffice");
-             }
-        	 if (btnLab.getOfficeRefuseEnable()){
-        		 this.AddBtn("refuse", btnLab.getOfficeRefuseLab(), "refuseOffice");
-        	 }
-        	 if (btnLab.getOfficeOverEnable()){
-        		 this.AddBtn("over", btnLab.getOfficeOVerLab(), "overOffice");
-             }
-        	/* if (btnLab.getOfficePrintEnable()){
-        		 this.AddBtn("print", btnLab.getOfficePrintLab(), "printOffice");
-             }*/
-        	 if (btnLab.getOfficeSealEnable()){
-        		 this.AddBtn("seal", btnLab.getOfficeSealLab(), "sealOffice");
-             }
-        	 if (btnLab.getOfficeInsertFlowEnable()){
-        		 this.AddBtn("flow", btnLab.getOfficeInsertFlowLab(), "InsertFlow");
-             }
-        	 if (btnLab.getOfficeDownEnable()){
-        		 this.AddBtn("download", btnLab.getOfficeDownLab(), "DownLoad");
-             }
-        	 if (btnLab.getOfficeIsMarks())
-                 IsMarks = true;
-             if (btnLab.getOfficeNodeInfo())
-                 IsCheckInfo = true;
-         }
-         IsSavePDF = btnLab.getOfficeReSavePDF();
-
-         if (!StringHelper.isNullOrEmpty(getMarkName())){
-        	 AddBtn("ViewMarks", "文档痕迹", "ViewMark");
-        	 }
-             
-         if (isMenu){
-             LoadAttachment();
-         }
-         
+		 return true;
 	}
 	
+	private void SaveBak()
+	{
+		String result = "true";
+		try
+		{
+//			HttpFileCollection files = HttpContext.Current.Request.Files;
+			DiskFileItemFactory dfif = new DiskFileItemFactory();
+            ServletFileUpload servletFileUpload = new ServletFileUpload(dfif);
+			List<FileItem> files = servletFileUpload.parseRequest(_request); //获取上传的文件
+
+			BP.WF.Node node = new BP.WF.Node(FK_Node);
+
+			String fileStart = WorkID + "Mark";
+			if (node.getHisNodeWorkType() == NodeWorkType.SubThreadWork)
+			{
+				fileStart = String.valueOf(FID);
+			}
+
+			//string file = Request["Path"];
+			//file = HttpUtility.UrlDecode(file, Encoding.UTF8);
+
+//			String path = Server.MapPath("~/DataUser/OfficeFile/" + FK_Flow + "/");
+			String path = this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeFile/"+this.FK_Flow);
+			String[] haveFiles = new File(path).list();
+			String fileName = "", fileExtension = "";
+
+			boolean isHave = false;
+			for (String file : haveFiles)
+			{
+				java.io.File fileInfo = new java.io.File(file);
+				if (fileInfo.getName().startsWith(fileStart + "."))
+				{
+					isHave = true;
+				}
+
+			}
+			if (isHave)
+			{
+				fileStart += "." + UUID.randomUUID().toString().replaceAll("-", "");
+			}
+
+			if (files.size() > 0)
+			{
+				/**'检查文件扩展名字
+				*/
+//				HttpPostedFile postedFile = files.getItem(0);
+				FileItem postedFile = files.get(0);
+				fileName = postedFile.getName();
+
+				if (!fileName.equals(""))
+				{
+					// if (!isHave)
+					fileExtension = FileAccess.getExtensionName(fileName);
+
+					String realSaveTo = path + "\\" + fileStart + fileExtension;
+					FileUtils.copyInputStreamToFile(postedFile.getInputStream(), new File(realSaveTo));
+					this.setMarkName(fileStart + fileExtension);
+				}
+			}
+
+		}
+		catch (java.lang.Exception e)
+		{
+			result = "false";
+		}
+		try {
+			_response.reset();
+			_response.getWriter().print(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** 
+	 获取套红文件的记录
+	*/
+	private void GetFileBytes()
+	{
+		int name = Integer.parseInt(_request.getParameter("fileName"));
+
+		String type = _request.getParameter("type");
+		String realFileName = "";
+//		String path = Server.MapPath("~/DataUser/OfficeOverTemplate/");
+		String path = this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeOverTemplate/");
+		if (type.equals("1"))
+		{
+			String[] files = new File(path).list();
+			if (files != null){
+				int i = 0;
+				for (String fileName : files)
+				{
+					if (i == name)
+					{
+						realFileName = path + File.separator + fileName;
+					}
+					i++;
+				}
+			}
+		}
+		else
+		{
+//			realFileName = Server.MapPath("~/DataUser/OfficeOverTemplate/" + IsTrueTHTemplate);
+			realFileName = this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeOverTemplate/" + IsTrueTHTemplate);
+		}
+        try {
+        	this._response.reset();
+        	File file = new File(realFileName);
+        	if (file.exists()){
+        		this._response.getOutputStream().write(FileUtils.readFileToByteArray(file));
+        	}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private String fileName;
 	private String fileType;
 	private String sealName;
 	private String sealType;
 	private String sealIndex;
+	
 	private void ReadFile(){
-		 String path =  this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeFile/"+this.FK_Flow);
+		 String path =  this._request.getSession().getServletContext()
+				 .getRealPath("/DataUser/OfficeFile/"+this.FK_Flow);
 		 File fileDir = new File(path);
          if (!fileDir.exists()) {
             fileDir.mkdirs();
@@ -308,34 +357,206 @@ public class WebOfficeModel {
              String loadType = this._request.getParameter("LoadType")==null?"":this._request.getParameter("LoadType");
              //String type = this.getFileType();
              String name = this._request.getParameter("fileName")==null?"":this._request.getParameter("fileName");;
-            name=java.net.URLDecoder.decode(name,"UTF-8");
+             name = java.net.URLDecoder.decode(name,"UTF-8");
              String path = null;
              if("1".equals(loadType)){
             	 path = this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeFile/"+this.FK_Flow+"/"+name);
              }else{
             	 path = this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeTemplate/"+name); 
              }
+             File file = new File(path);
              this._response.reset();
-             this._response.getOutputStream().write(FileUtils.readFileToByteArray(new File(path)));
+             if (file.exists()){
+            	 this._response.getOutputStream().write(FileUtils.readFileToByteArray(file));
+             }
          }catch (Exception e){
              e.printStackTrace();;
          }
 	}
-	 
+	 private void DownloadFile()
+	 {
+		if (StringUtils.isBlank(FK_Flow) || this.WorkID == 0)
+		{
+			try {
+				_response.getWriter().print("参数不完整，必须具备FK_Flow和WorkID参数。");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+
+//		String docPath = Server.MapPath("~/DataUser/OfficeFile/" + FK_Flow + "/");
+		String docPath = this._request.getSession().getServletContext().getRealPath("/DataUser/OfficeFile/"+this.FK_Flow);
+		java.io.File docFile = null;
+//		java.io.File[] docFiles = (new java.io.File(docPath)).GetFiles(this.WorkID + ".doc*");
+		java.io.File[] docFiles = (new java.io.File(docPath)).listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.contains(WorkID + ".doc");
+			}
+		});
+		if (docFiles.length > 0)
+		{
+			docFile = docFiles[0];
+		}
+
+		if (docFile == null)
+		{
+			try {
+				_response.getWriter().print("未找到公文！");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+
+		try {
+			BP.Sys.PubClass.DownloadFile(docFile.getPath(), docFile.getName());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			_response.getWriter().print("<script language='JavaScript'> window.close();</script>");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	 }
+ 
 	 private void LoadAttachment(){
          String EnName = "ND" + this.FK_Node;
          MapData mapdata = new MapData(EnName);
 
          FrmAttachments attachments = new FrmAttachments();
          attachments = mapdata.getFrmAttachments();
+         
+        boolean isCompleate = false;
+		BP.WF.Node node = new BP.WF.Node(FK_Node);
+		try
+		{
+			WorkFlow workFlow = new WorkFlow(node.getFK_Flow(), WorkID);
+			isCompleate = workFlow.getIsComplete();
 
+		}
+		catch (RuntimeException e)
+		{
+			try
+			{
+				Flow fl = new Flow(node.getFK_Flow());
+				GERpt rpt = fl.getHisGERpt();
+				rpt.setOID(WorkID);
+				rpt.Retrieve();
+
+				if (rpt != null)
+				{
+					if (rpt.getWFState() == WFState.Complete)
+					{
+						isCompleate = true;
+					}
+				}
+			}
+			catch (java.lang.Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		
          for (FrmAttachment ath : attachments.ToJavaList()){
-             String src = this.basePath + "WF/CCForm/AttachmentUpload.jsp?PKVal=" + this.WorkID + "&Ath=" + ath.getNoOfObj() + "&FK_MapData=" + EnName + "&FK_FrmAttachment=" + ath.getMyPK() + "&FK_Node=" + this.FK_Node;
-             this.ui.append("<iframe ID='F" + ath.getMyPK() + "'    src='" + src + "' frameborder=0  style='position:absolute;width:" + ath.getW() + "px; height:" + ath.getH() + "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
+        	 String src = null;
+        	 if (!isCompleate){
+        		 src = this.basePath + "WF/CCForm/AttachmentUpload.jsp?PKVal=" + this.WorkID + "&Ath=" + ath.getNoOfObj() + "&FK_MapData=" + EnName + "&FK_FrmAttachment=" + ath.getMyPK() + "&FK_Node=" + this.FK_Node;
+        	 }else{
+        		 src = this.basePath + "WF/CCForm/AttachmentUpload.jsp?PKVal=" + this.WorkID + "&Ath=" + ath.getNoOfObj() + "&FK_MapData=" + EnName + "&FK_FrmAttachment=" + ath.getMyPK() + "&FK_Node=" + this.FK_Node + "&IsReadonly=1";
+        	 }
+//        	 this.ui.append("<iframe ID='F" + ath.getMyPK() + "'    src='" + src + "' frameborder=0  style='position:absolute;width:" + ath.getW() + "px; height:" + ath.getH() + "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
+             this.ui.append("<iframe ID='F" + ath.getMyPK() + "'    src='" + src + "' frameborder=0  style='position:absolute;width:100%;text-align: left;' leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
          }
      }
 	 
-	  private void SaveFile( HttpServletRequest _request, HttpServletResponse _response){
+	  private void LoadMenu(boolean isMenu){
+		
+		 BtnLab btnLab = new BtnLab(this.FK_Node);
+		 boolean isCompleate = false;
+	     Node node = new Node(this.FK_Node);
+	     try{
+	    	 WorkFlow workFlow = new WorkFlow(node.getFK_Flow(), this.WorkID);
+	         isCompleate = workFlow.getIsComplete();
+	     } catch(Exception e){
+	    	 try{
+	             Flow fl = new Flow(node.getFK_Flow());
+	             GERpt rpt = fl.getHisGERpt();
+	             rpt.setOID(this.WorkID);
+	             rpt.Retrieve();
+	
+	             if (rpt != null){
+	                 if (rpt.getWFState() == WFState.Complete)
+	                     isCompleate = true;
+	             }
+	         }catch (Exception ex){
+	        	 ex.printStackTrace();
+	         }
+	     }
+//	     if (!isCompleate){
+//	    	 try{
+//	             isCompleate = !Dev2Interface.Flow_IsCanDoCurrentWork(node.getFK_Flow(), this.FK_Node, this.WorkID, WebUser.getNo());
+//	             //WorkFlow workFlow = new WorkFlow(node.FK_Flow, WorkID);
+//	             //isCompleate = !workFlow.IsCanDoCurrentWork(WebUser.No);
+//	         }catch (Exception e){
+//	        	 e.printStackTrace();
+//	         }
+//	     }
+	     if (isMenu && !isCompleate){
+	    	 if (btnLab.getOfficeMarksEnable()){
+	    		 divMenu.append("查看留痕:<select id='marks' onchange='ShowUserName()'  style='width: 100px'><option value='1'>显示留痕</option><option value='2'>隐藏留痕</option><select> ");
+	        
+	    	 }
+	    	 if (btnLab.getOfficeSaveEnable()){
+	    		 this.AddBtn("saveFile", btnLab.getOfficeSaveLab(), "saveOffice");
+	         }
+	    	 if (btnLab.getOfficeOpenEnable()){
+	             this.AddBtn("openFile", btnLab.getOfficeOpenLab(), "OpenFile");
+	         }
+	    	 if (btnLab.getOfficeOpenTemplateEnable()){
+	    		 this.AddBtn("openTempLate", btnLab.getOfficeOpenTemplateLab(), "OpenTempLate");
+	         }
+	    	 if (btnLab.getOfficeAcceptEnable()){
+	    		 this.AddBtn("accept", btnLab.getOfficeAcceptLab(), "acceptOffice");
+	         }
+	    	 if (btnLab.getOfficeRefuseEnable()){
+	    		 this.AddBtn("refuse", btnLab.getOfficeRefuseLab(), "refuseOffice");
+	    	 }
+	    	 if (btnLab.getOfficeOverEnable()){
+	    		 this.AddBtn("over", btnLab.getOfficeOVerLab(), "overOffice");
+	         }
+	    	/* if (btnLab.getOfficePrintEnable()){
+	    		 this.AddBtn("print", btnLab.getOfficePrintLab(), "printOffice");
+	         }*/
+	    	 if (btnLab.getOfficeSealEnable()){
+	    		 this.AddBtn("seal", btnLab.getOfficeSealLab(), "sealOffice");
+	         }
+	    	 if (btnLab.getOfficeInsertFlowEnable()){
+	    		 this.AddBtn("flow", btnLab.getOfficeInsertFlowLab(), "InsertFlow");
+	         }
+	    	 if (btnLab.getOfficeDownEnable()){
+	    		 this.AddBtn("download", btnLab.getOfficeDownLab(), "DownLoad");
+	         }
+	    	 if (btnLab.getOfficeIsMarks())
+	             IsMarks = true;
+	         if (btnLab.getOfficeNodeInfo())
+	             IsCheckInfo = true;
+	     }
+	     IsSavePDF = btnLab.getOfficeReSavePDF();
+	
+	     if (!StringHelper.isNullOrEmpty(getMarkName())){
+	    	 AddBtn("ViewMarks", "文档痕迹", "ViewMark");
+	     }
+	         
+	     if (isMenu){
+	         LoadAttachment();
+	     }
+	     
+	}
+	private void SaveFile( HttpServletRequest _request, HttpServletResponse _response){
 		  try{
               Node node = new Node(FK_Node);
 
@@ -421,7 +642,7 @@ public class WebOfficeModel {
 			 }
               }
 		  }catch (Exception e){
-              e.printStackTrace();;
+              e.printStackTrace();
           }
 	  }
 	 

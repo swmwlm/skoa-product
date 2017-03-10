@@ -427,7 +427,7 @@ jQuery(function($){
 		<%
 			} else if ("Siganture".equals(RefNo)) {
 				String path1 = BP.Sys.SystemConfig.getPathOfDataUser()
-						+ File.separator+"Siganture"+File.separator+"T.jpg";
+						+ "\\Siganture\\T.jpg";
 				File file = new File(path1);
 				if (DoType != null || !file.exists()) {
 					String pathMe = BP.Sys.SystemConfig.getPathOfDataUser()
@@ -543,9 +543,7 @@ jQuery(function($){
 									+ WebUser.getNo() + "' AND AuthorWay >= 1";
 							break;
 						default:
-							/*sql = "SELECT a.No + a.Name as Empstr,AuthorDate, a.No ,AuthorToDate FROM WF_Emp a WHERE Author='"
-									+ WebUser.getNo() + "' AND AuthorWay >= 1";*/
-							sql = "SELECT concat_ws(',',a.`No`,a.`Name`) as Empstr,AuthorDate, a.No ,AuthorToDate FROM WF_Emp a WHERE Author='"
+							sql = "SELECT a.No + a.Name as Empstr,AuthorDate, a.No ,AuthorToDate FROM WF_Emp a WHERE Author='"
 									+ WebUser.getNo() + "' AND AuthorWay >= 1";
 							break;
 						}
@@ -596,7 +594,7 @@ jQuery(function($){
 						<%
 							for (DataRow dr : dt.Rows) {
 						%>
-						<li><a href="javascript:LogAs('<%=dr.getValue(2)%>')">授权人:<%=dr.getValue("Empstr")%></a>
+						<li><a href="javascript:LogAs('<%=dr.getValue(2)%>')">授权人:<%=dr.getValue("No")%></a>
 							- 授权日期:<%=dr.getValue("AuthorDate")%>，有效日期：<%=dr.getValue("AuthorToDate")%></li>
 						<%
 							}
@@ -1166,7 +1164,7 @@ jQuery(function($){
 											<ul>
 												<li><a
 													href="javascript:ExitAuth('<%=WebUser.getAuth()%>')">退出授权模式</a></li>
-												<%--<li><a href="<%=PageID%>.jsp">设置</a></li>--%>
+												<li><a href="Tools.jsp">设置</a></li>
 												<%
 													if (WebUser.getIsWap()) {
 												%>
@@ -1210,13 +1208,13 @@ jQuery(function($){
 														<br>用户名:&nbsp;&nbsp;<font color="green"><%=WebUser.getName()%></font>&nbsp;&nbsp;
 
 													
-													<%--<hr>
+													<hr>
 													<b>电子签字:<img
 														src='<%=basePath%>/DataUser/Siganture/<%=WebUser.getNo()%>.jpg'
 														border="1"
 														onerror="this.src='<%=basePath%>/DataUser/Siganture/UnName.jpg'" />
 														，<a href='<%=PageID%>.jsp?RefNo=Siganture'>设置/修改</a>。
-													</b> <br>--%>
+													</b> <br>
 													<hr>
 													主部门 : <font color="green"><%=WebUser.getFK_DeptName()%></font>
 													<br> <br>
@@ -1243,11 +1241,11 @@ jQuery(function($){
 													<%
 														}
 													%>
-													<%--&nbsp;我要:<a href='<%=PageID%>.jsp?RefNo=Password'>修改密码</a> <br>
+													&nbsp;我要:<a href='<%=PageID%>.jsp?RefNo=Password'>修改密码</a> <br>
 													<hr>
 													<b>信息提示：</b><a href='<%=PageID%>.jsp?RefNo=Profile'>设置/修改</a>
 													<br> <br>接受短消息提醒手机号 : <font color="green"><%=au.getTelHtml()%></font>
-													<br> <br>接受E-mail提醒 : <font color="green"><%=au.getEmailHtml()%></font>--%>
+													<br> <br>接受E-mail提醒 : <font color="green"><%=au.getEmailHtml()%></font>
 													<hr>
 													<%
 														Stations sts = WebUser.getHisStations();

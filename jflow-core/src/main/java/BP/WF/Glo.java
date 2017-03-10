@@ -40,6 +40,7 @@ import BP.Sys.SystemConfig;
 import BP.Sys.ToolbarExcel;
 import BP.Sys.Frm.FrmAttachment;
 import BP.Sys.Frm.FrmImg;
+import BP.Sys.Frm.FrmRB;
 import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrs;
 import BP.Sys.Frm.MapData;
@@ -120,7 +121,7 @@ public class Glo {
 	 */
 	public static String UpdataCCFlowVer() throws Exception {
 		// /#region 检查是否需要升级，并更新升级的业务逻辑.
-		String val = "20160810";
+		String val = "20161120";
 		 
 
 		/*
@@ -128,17 +129,18 @@ public class Glo {
 		 * 执行一次Sender发送人的升级，原来由GenerWorkerList 转入WF_GenerWorkFlow. 0,
 		 * 静默升级启用日期.2014-12
 		 */
-		
+		FrmRB rb = new FrmRB();
+		rb.CheckPhysicsTable();
 		// 序列号.
 		BP.Sys.Serial se=new  BP.Sys.Serial();
 		se.CheckPhysicsTable();
 	    
 		String sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey='Ver'";
 		String currVer = DBAccess.RunSQLReturnStringIsNull(sql, "");
-		 if (val.equals(currVer))
-		 {
-		     return null; //不需要升级.
-		 }
+		if (val.equals(currVer))
+		{
+			return null; //不需要升级.
+		}
 		// /#endregion 检查是否需要升级，并更新升级的业务逻辑.
 
 		String msg = "";
@@ -793,7 +795,7 @@ public class Glo {
 		if (Glo.getOSModel() == BP.Sys.OSModel.OneMore) {
 			/* 如果是BPM模式 */
 			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath()
-					+ "GPM/SQLScript/Port_Inc_CH_BPM.sql";
+					+ "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
 		}
 		// /#endregion 修复
@@ -2149,6 +2151,7 @@ public class Glo {
 	 *            消息
 	 * @param tag
 	 *            参数用@分开
+	 * @return 
 	 */
 	public static void AddToTrack(ActionType at, String flowNo, long workID,
 			long fid, int fromNodeID, String fromNodeName, String fromEmpID,
@@ -3583,22 +3586,22 @@ public class Glo {
 			if (isAM == true) {
 				/* 如果是中午, 中午到中午休息之间的时间. */
 
-				Date ts = new Date(DataType.ParseSysDateTime2DateTime(
+				long ts = DataType.ParseSysDateTime2DateTime(
 						DateUtils.format(dt, "yyyy-MM-dd") + " "
 								+ Glo.getAMTo()).getTime()
-						- dt.getTime());
-				if (ts.getMinutes() >= minutes) {
+						- dt.getTime();
+				if (ts / (60 * 1000) >= minutes) {
 					/* 如果剩余的分钟大于 要增加的分钟数，就是说+上分钟后，仍然在中午，就直接增加上这个分钟，让其返回。 */
 					return DateUtils.addMinutes(dt, minutes);
 				} else {
 					// 求出到下班时间的分钟数。
-					Date myts = new Date(DataType.ParseSysDateTime2DateTime(
+					long myts = DataType.ParseSysDateTime2DateTime(
 							DateUtils.format(dt, "yyyy-MM-dd") + " "
 									+ Glo.getAMTo()).getTime()
-							- dt.getTime());
+							- dt.getTime();
 
 					// 扣除午休的时间.
-					int leftMuit = (int) (myts.getMinutes() - Glo
+					int leftMuit = (int) (myts /(60 * 1000) - Glo
 							.getAMPMTimeSpan() * 60);
 					if (leftMuit - minutes >= 0) {
 						/* 说明还是在当天的时间内. */
@@ -3638,32 +3641,35 @@ public class Glo {
 					/* 如果落入了E区间. */
 
 					// 求出来时间点到，下班之间的分钟数.
-					Date tsE = new Date(dt.getTime()
-							- DataType.ParseSysDate2DateTime(
-									DateUtils.format(dt, "yyyy-MM-dd") + " "
-											+ Glo.getPMTo()).getTime());
+					long tsE = dt.getTime()- DataType.ParseSysDate2DateTime(DateUtils.format(dt, "yyyy-MM-dd") + " "
++ Glo.getPMTo()).getTime();
 
 					// 从次日的上班时间计算+ 这个时间差.
 					dt = DataType.ParseSysDate2DateTime(DateUtils.format(dt,
 							"yyyy-MM-dd") + " " + Glo.getPMTo());
-					return DateUtils.addMinutes(dt, tsE.getMinutes());
+					return DateUtils.addMinutes(dt, (int)tsE / (60 * 1000));
 				} else {
 					/* 过了第2天的情况很少，就不考虑了. */
 					return dt;
 				}
 			} else {
 				/* 如果是下午, 计算出来到下午下班还需多少分钟，与增加的分钟数据相比较. */
-				Date ts = new Date(DataType.ParseSysDateTime2DateTime(
-						DateUtils.format(dt, "yyyy-MM-dd") + " "
-								+ Glo.getPMTo()).getTime()
-						- dt.getTime());
-				if (ts.getMinutes() >= minutes) {
+				
+				long ts = DataType.ParseSysDateTime2DateTime(DateUtils.format(dt, "yyyy-MM-dd") + " "+ Glo.getPMTo()).getTime()- dt.getTime();
+				
+				if( ts / (60 * 1000) >= minutes){
 					/* 如果剩余的分钟大于 要增加的分钟数，就直接增加上这个分钟，让其返回。 */
 					return DateUtils.addMinutes(dt, minutes);
-				} else {
+				}
+				/*if (ts.getMinutes() >= minutes) {
+					
+					 如果剩余的分钟大于 要增加的分钟数，就直接增加上这个分钟，让其返回。 
+					return DateUtils.addMinutes(dt, minutes);
+				} */
+				else {
 
 					// 剩余的分钟数 = 总分钟数 - 今天下午剩余的分钟数.
-					int leftMin = minutes - (int) ts.getMinutes();
+					int leftMin = minutes - (int) ts / (60 * 1000);
 
 					/* 否则要计算到第2天上去了， 计算时间要从下一个有效的工作日上班时间开始. */
 					dt = DataType.AddDays(DataType
@@ -3862,6 +3868,11 @@ public class Glo {
 		// mypk.
 		ch.setMyPK(nd.getNodeID() + "_" + workid + "_" + fid + "_"
 				+ WebUser.getNo());
+		// 如果已存在，则先删除，否则多人的时候报主键重复错误
+		CH oldCH = new CH(ch.getMyPK());
+		if (oldCH.getRow().size() > 0){
+			oldCH.Delete();
+		}
 		// /#endregion 初始化基础数据.
 
 		// 求出结算时间点 dtFrom.
@@ -3977,9 +3988,13 @@ public class Glo {
 
 			// /#endregion 计算出来可以识别的分钟数.
 
-			// 执行保存.
-
-			ch.DirectInsert();
+			// 执行保存.  检查是否存在，存在更新，不存在插入
+			if(ch.RetrieveFromDBSources()>0){
+				ch.DirectUpdate();
+			}else
+			{
+				ch.DirectInsert	();
+			}
 
 		}
 	}

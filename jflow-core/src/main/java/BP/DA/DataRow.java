@@ -19,7 +19,18 @@ public class DataRow extends LinkedHashMap<String, Object>
 	 * 在getValue()和setValue()時候，程式碼須透過此成員的欄位名稱來找出Map字典裡的物件
 	 */
 	public DataColumnCollection columns;
+
+	public Object ItemArray;
 	
+	
+	public Object getItemArray() {
+		return ItemArray;
+	}
+
+	public void setItemArray(Object itemArray) {
+		ItemArray = itemArray;
+	}
+
 	/**
 	 * DataRow被建立時，必須指定所屬的DataTable
 	 * 

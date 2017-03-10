@@ -145,7 +145,7 @@ function checkDB(){
      </fieldset>
      <BR>
      <fieldset width='100%' >
-     <legend>&nbsp;当前数据库安装类型(如果要修改数据库类型请修改 \resources\jflow.properties设置).&nbsp;</legend>
+     <legend>&nbsp;当前数据库安装类型(只做参考,数据库类型请在 \resources\jflow.properties配置文件中配置).&nbsp;</legend>
      <span class="aspNetDisabled">
      <input id="ContentPlaceHolder1_Pub1_RB_SQL" type="radio" name="ctl00$ContentPlaceHolder1$Pub1$sd" value="RB_SQL" checked="checked" disabled="disabled"/>
      <label for="ContentPlaceHolder1_Pub1_RB_SQL">SQLServer2000,2005,2008系列版本</label>
@@ -165,7 +165,7 @@ function checkDB(){
      <BR>
      </fieldset>
      <fieldset width='100%' >
-     <legend>&nbsp;JFlow的运行模式,(如果请修改 \resources\jflow.properties设置) 中的 OSModel 进行配置. &nbsp;</legend>
+     <legend>&nbsp;JFlow的运行模式(只做参考,请在 \resources\jflow.properties配置文件中配置OSModel) &nbsp;</legend>
      <span class="aspNetDisabled"><input id="ContentPlaceHolder1_Pub1_RB_WorkFlow" type="radio" name="ctl00$ContentPlaceHolder1$Pub1$model" value="RB_WorkFlow" checked="checked" disabled="disabled" />
      <label for="ContentPlaceHolder1_Pub1_RB_WorkFlow">集成模式</label>
      </span>

@@ -150,16 +150,22 @@ public class Dot2DotModel {
              if (len > 20)
                 this.setIsLine(true);
              else
-                this.setIsLine(false);
-
-             // 默认是“无”
-             this.getDDL_Group().Items.add(new ListItem("无", "None"));
+                this.setIsLine(false);           
+             
+             if("BP.WF.Template.NodeEmps".equals(getAttrKey())){
+            	// 默认是“部门”
+                 this.getDDL_Group().Items.add(new ListItem("部门", "FK_Dept"));
+             }else{
+            	// 默认是“无”
+                 this.getDDL_Group().Items.add(new ListItem("无", "None"));
+             }
              // 先加入enum 类型。
              for (Attr attr : map.getAttrs()){
             	 /* map */
                  if (!attr.getIsFKorEnum())
                      continue;
-                 this.getDDL_Group().Items.add(new ListItem(attr.getDesc(), attr.getKey()));
+                 //this.getDDL_Group().Items.add(new ListItem(attr.getDesc(), attr.getKey()));
+                 this.getDDL_Group().Items.add(new ListItem("无", "None"));
              }
              for (ListItem li : ddl.Items){
                  if (li.getValue().equals(this.getShowWay()))
@@ -276,7 +282,7 @@ public class Dot2DotModel {
               CheckBox cb = this.ui.creatCheckBox("CB_" + en.GetValStringByKey(showVal));
               cb.setText(en.GetValStringByKey(showText));
               
-              this.UCSys.append("\n<TD nowrap = 'nowrap'>");
+              this.UCSys.append("\n<TD>");
               this.UCSys.append(cb);
               this.UCSys.append("</TD>");
               if (i == 3)this.UCSys.append(BaseModel.AddTREnd());

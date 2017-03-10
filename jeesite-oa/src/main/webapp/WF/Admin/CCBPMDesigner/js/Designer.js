@@ -404,15 +404,12 @@ function NodeProperty_Funs(item) {
                 WinOpen(url);
             }
             break;
-        case "DesignerNodeFormFix": //设计表单
+        case "DesignerNodeFormFix": //设计傻瓜表单
         	
         	alert('测试中...');
-            url = "../../MapDef/MapDef.aspx?FK_MapData=ND"+FK_Node+"&FK_Flow=" + CCBPM_Data_FK_Flow + "&FK_Node=" + FK_Node;
-
-        	// url = "../../MapDef/CCForm/Frm.jsp?FK_Flow=" + CCBPM_Data_FK_Flow + "&FK_MapData=ND" + FK_Node + "&UserNo=" + window.parent.WebUser.No + "&SID=" + window.parent.WebUser.SID;
-             
+            url = "../FoolFormDesigner/Designer.jsp?IsFirst=1&FK_MapData=ND" + FK_Node + "&FK_Flow=" + CCBPM_Data_FK_Flow + "&FK_Node=" + FK_Node;
              if (window.parent && 1==3) {
-                 window.parent.addTab(FK_Node + "ND", "设计表单" + FK_Node, url, item.iconCls);
+                 window.parent.addTab(CCBPM_Data_FK_Flow + FK_Node + "ND", "设计表单" + FK_Node, url, item.iconCls);
              } else {
                  WinOpen(url);
              }

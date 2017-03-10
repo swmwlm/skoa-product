@@ -1382,7 +1382,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public int RetrieveAll()
 	{
-		return this.RetrieveAll(0);
+		return this.RetrieveAll(null);
 	}
 	
 	public int RetrieveAllOrderByRandom()

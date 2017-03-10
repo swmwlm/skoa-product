@@ -30,6 +30,56 @@ public class FrmEvent extends EntityMyPK
 		return uac;
 	}
 	
+	/** 
+	 *名称
+	 */
+	public final String getMonthedDLL()
+	{
+		return this.GetParaString(FrmEventAttr.MonthedDLL);
+
+	}
+	public final void setMonthedDLL(String value)
+	{
+		this.SetPara(FrmEventAttr.MonthedDLL, value);
+	}
+
+	/** 
+	 类名
+	*/
+	public final String getMonthedClass()
+	{
+		return this.GetParaString(FrmEventAttr.MonthedClass);
+
+	}
+	public final void setMonthedClass(String value)
+	{
+		this.SetPara(FrmEventAttr.MonthedClass, value);
+	}
+	/** 
+	 方法名
+	*/
+	public final String getMonthedName()
+	{
+		return this.GetParaString(FrmEventAttr.MonthedClass);
+
+	}
+	public final void setMonthedName(String value)
+	{
+		this.SetPara(FrmEventAttr.MonthedClass, value);
+	}
+	/** 
+	 方法参数.
+	*/
+	public final String getMonthedParas()
+	{
+		return this.GetParaString(FrmEventAttr.MonthedParas);
+
+	}
+	public final void setMonthedParas(String value)
+	{
+		this.SetPara(FrmEventAttr.MonthedParas, value);
+	}
+
 	/**
 	 * 节点
 	 */

@@ -87,7 +87,7 @@ function ReturnVal(ctrl, url, winName) {
 		try{
 			var btnDis=document.getElementById('Btn_Send');
 			btnDis.disabled = true;
-			//setTimeout("btnDis.disabled=false",3000);
+			setTimeout(function(){btnDis.disabled=false},5000);
 		}catch(e){}
 	}
 	function Send(){
@@ -189,8 +189,8 @@ function ReturnVal(ctrl, url, winName) {
 	$(function () {
         $("#Btn_Save").click(function () {
         	//$("#Btn_Save").append($("#dv"));
-        	var left = $("#Btn_Save").position().left;
-			var top = $("#Btn_Save").position().top+35;
+        	var left = $("#Btn_Save").position().left-100;
+			var top = $("#Btn_Save").position().top+9;
 			$("#dv").css({ position:'absolute',  top:top,left:left});   
         	//$("#dv").css();
             $("#dv").slideToggle(200);
@@ -243,80 +243,97 @@ function ReturnVal(ctrl, url, winName) {
 </script>
 </head>
 <body class="easyui-layout body" topmargin="0" leftmargin="0" onkeypress="NoSubmit(event);" >
-	 <div id="mainPanel" region="center" border="false" class="mainPanel">
+	<div id="mainPanel" region="center" border="false" class="mainPanel" style="border:0">
 	 	<%if(wEui.getIsTab()) {%>
-	 		<div id="tabPanle" class="easyui-tabs" fit="true">
-				<%if(wEui.getIsWordTab() && wEui.getIsOfficeTabFront()){ %>
-					<div title="<%=wEui.getOfficeTabName() %>" data-options="tools:'#p-tools'">
-		                <iframe scrolling="auto" frameborder="0" id="officeIfream"></iframe>
-		            </div>
-	            <%}%>
-				<div title="表单" id="freeForm">
-                <% } %>
-	                <div id="dv" class="shade">
-				         <div style="font-weight: bold; font-size:14px; ">
-				                                    操作成功!
-				         </div>
-				    </div>
-					<div style='height:<%=myFlow.getFromH()%>px;width:1000px;margin:0 auto;'>
-					    <!-- 按钮工具栏 -->
-						<div id='toolBar' class="topBar" align="left" >
-								<jsp:include page="./SDKComponents/Toolbar.jsp">
-									<jsp:param value="<%=myFlow.workId%>" name="WorkID" />
-									<jsp:param value="<%=myFlow.fk_flow%>" name="FK_Flow" />
-									<jsp:param value="<%=myFlow.fk_node%>" name="FK_Node" />
-									<jsp:param value="<%=myFlow.fid%>" name="FID" />
-									<jsp:param value="<%=myFlow.getHisFormType()%>" name="FormType" />
-								</jsp:include>
-							</div>
-						<div class="Message" id="Message" style="word-break:break-all;padding-left:30px;width:900px;"></div>
-						<form id="mainFrom" method="post">
-							<input type="hidden" name="WorkID" value="<%=myFlow.workId%>" /> <input
-								type="hidden" name="FK_Flow" value="<%=myFlow.fk_flow%>" /> <input
-								type="hidden" name="FK_Node" value="<%=myFlow.fk_node%>" /> <input
-								type="hidden" name="FID" value="<%=myFlow.fid%>" />
-								<div id="divCCForm1" style=" position: relative !important; width: <%=width%>px; height: <%=height%>px;background-color: white;margin: 0 auto;">
-								<%
-								if(myFlow.getHisFormType()){
-									%>
-									<%=myFlow.selfFromPub %>
-									<%
-									
-								}else{
-									%>
-									<jsp:include page="./SDKComponents/En.jsp">
-										<jsp:param value="<%=myFlow.workId%>" name="WorkID" />
-										<jsp:param value="<%=myFlow.fk_flow%>" name="FK_Flow" />
-										<jsp:param value="<%=myFlow.fk_node%>" name="FK_Node" />
-										<jsp:param value="<%=myFlow.fid%>" name="FID" />
-										<jsp:param value="<%=myFlow.getHisFormType()%>" name="FormType"/>
-									</jsp:include>
-									<%
-								}
-								%>
-							</div>
-						</form>
+ 		<div id="tabPanle" class="easyui-tabs" fit="true" data-options="border:false">
+			<%if(wEui.getIsWordTab() && wEui.getIsOfficeTabFront()){ %>
+				<div title="<%=wEui.getOfficeTabName() %>" data-options="tools:'#p-tools'">
+	                <iframe scrolling="auto" frameborder="0" id="officeIfream"></iframe>
+	            </div>
+            <%}%>
+			<div title="表单" id="freeForm">
+        <% } %>
+				<div style='height:<%=myFlow.getFromH()%>px;width:1000px;margin:0 auto;'>
+					<!-- 按钮工具栏    jflow.properties配置ToolBar控制显示位置-->
+				    <% if ("0".equals(SystemConfig.getAppSettings().get("ToolBar"))) { %>
+					<div id='toolBar' class="topBar" align="left" >
+					<div id="dv" class="shade"><div style="font-weight: bold; font-size:14px; ">操作成功!</div></div>
+						<jsp:include page="./SDKComponents/Toolbar.jsp">
+							<jsp:param value="<%=myFlow.workId%>" name="WorkID" />
+							<jsp:param value="<%=myFlow.fk_flow%>" name="FK_Flow" />
+							<jsp:param value="<%=myFlow.fk_node%>" name="FK_Node" />
+							<jsp:param value="<%=myFlow.fid%>" name="FID" />
+							<jsp:param value="<%=myFlow.getHisFormType()%>" name="FormType" />
+						</jsp:include>
 					</div>
-                <% if (wEui.getIsTab()){ %>
-            	</div>
-	
-		       <%if(wEui.getIsWordTab() && !wEui.getIsOfficeTabFront()){ %>
-			       <div title="<%=wEui.getOfficeTabName() %>" data-options="tools:'#p-tools'">
-		               <iframe scrolling="auto" frameborder="0" id="officeIfream" ></iframe>
-		           </div>
-		        <%}if (wEui.getDoType()!= "View"){%>
-		            <div title="轨迹">
-		                <iframe scrolling="auto" frameborder="0" id="trackIframe" style="width: 100%;height: 100%;" ></iframe>
-		            </div>
-	            <%}%>
-		      </div>
-	        <% } %>
-	    </div>
-	    <% if (wEui.getIsTab()) { %>
-	    <div id="p-tools">
-	        <a href="javascript:void(0)" class="icon-mini-refresh" onclick="chageURL()"></a>
-	    </div>
-	    <% } %>
-	
+					<% } %>
+					
+					<div class="Message" id="Message" style="word-break:break-all;padding-left:30px;width:900px;"></div>
+					<form id="mainFrom" method="post">
+					<div class="Message" id="Askfor" style="word-break:break-all;width:100%;">
+						<%=myFlow.pub2.toString() %>
+					</div>
+					<input type="hidden" name="WorkID" value="<%=myFlow.workId%>" /> <input
+						type="hidden" name="FK_Flow" value="<%=myFlow.fk_flow%>" /> <input
+						type="hidden" name="FK_Node" value="<%=myFlow.fk_node%>" /> <input
+						type="hidden" name="FID" value="<%=myFlow.fid%>" />
+						<div id="divCCForm1" style=" position: relative !important; width: <%=width%>px; height: <%=height%>px;background-color: white;margin: 0 auto;">
+						<%
+						if(myFlow.getHisFormType()){
+							%>
+							<%=myFlow.selfFromPub %>
+							<%
+							
+						}else{
+							%>
+							<jsp:include page="./SDKComponents/En.jsp">
+								<jsp:param value="<%=myFlow.workId%>" name="WorkID" />
+								<jsp:param value="<%=myFlow.fk_flow%>" name="FK_Flow" />
+								<jsp:param value="<%=myFlow.fk_node%>" name="FK_Node" />
+								<jsp:param value="<%=myFlow.fid%>" name="FID" />
+								<jsp:param value="<%=myFlow.getHisFormType()%>" name="FormType"/>
+							</jsp:include>
+							<%
+						}
+						%>
+					</div>
+				</form>
+			</div>
+        <% if (wEui.getIsTab()){ %>
+        </div>
+        <%if(wEui.getIsWordTab() && !wEui.getIsOfficeTabFront()){ %>
+	    <div title="<%=wEui.getOfficeTabName() %>" data-options="tools:'#p-tools'">
+            <iframe scrolling="auto" frameborder="0" id="officeIfream" ></iframe>
+        </div>
+        <%}if (wEui.getDoType()!= "View"){%>
+            <div title="轨迹">
+                <iframe scrolling="auto" frameborder="0" id="trackIframe" style="width: 100%;height: 100%;" ></iframe>
+            </div>
+        <%}%>
+        </div>
+        <%}%>
+	</div>
+	<% if (wEui.getIsTab()) { %>
+    <div id="p-tools">
+        <a href="javascript:void(0)" class="icon-mini-refresh" onclick="chageURL()"></a>
+    </div>
+    <% } %>
+    <!-- 按钮工具栏    jflow.properties配置ToolBar控制显示位置-->
+    <% if ("1".equals(SystemConfig.getAppSettings().get("ToolBar"))) { %>
+    <style>input[type="button"], input[type="submit"]{font-size:13px;padding:6px 12px;}</style>
+	<div id='toolBar' class="topBar" align="left" data-options="region:'south',border:false"
+			style="height:50px;text-align:center;background-color:#efefef;">
+		<div id="dv" class="shade"><div style="font-weight: bold; font-size:14px; ">操作成功!</div></div>
+		<div style="padding-top:5px;padding-right:50px;">
+			<jsp:include page="./SDKComponents/Toolbar.jsp">
+				<jsp:param value="<%=myFlow.workId%>" name="WorkID" />
+				<jsp:param value="<%=myFlow.fk_flow%>" name="FK_Flow" />
+				<jsp:param value="<%=myFlow.fk_node%>" name="FK_Node" />
+				<jsp:param value="<%=myFlow.fid%>" name="FID" />
+				<jsp:param value="<%=myFlow.getHisFormType()%>" name="FormType" />
+			</jsp:include>
+		</div>
+	</div>
+	<% } %>
 </body>
 </html>

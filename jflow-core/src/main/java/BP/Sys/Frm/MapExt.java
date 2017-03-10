@@ -1,9 +1,13 @@
 package BP.Sys.Frm;
 
+import java.util.Hashtable;
+
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
 import BP.En.Map;
+import BP.Sys.PercentModel;
+import BP.Sys.RptTemplateAttr;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
 
@@ -11,13 +15,13 @@ import BP.Web.WebUser;
  * 扩展
  */
 public class MapExt extends EntityMyPK
-{
+{	    
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	// 关于 at 参数
+
 	/**
 	 * Pop参数.
 	 */
@@ -29,6 +33,11 @@ public class MapExt extends EntityMyPK
 	public final void setPopValFormat(int value)
 	{
 		this.SetPara("PopValFormat", value);
+	}
+	
+	public final void setPopValFormatNew(PopValFormat value)
+	{
+		this.SetPara("PopValFormat", value.getValue());
 	}
 	
 	/**
@@ -44,18 +53,49 @@ public class MapExt extends EntityMyPK
 		this.SetPara("PopValSelectModel", value);
 	}
 	
+	public PopValSelectModel getPopValSelectModelNew()
+    {
+        return PopValSelectModel.forValue(this.GetParaInt("PopValSelectModel"));
+    }
+	public  final void setPopValSelectModelNew(PopValSelectModel value)
+    {
+        this.SetPara("PopValSelectModel", value.getValue());
+    }
+	
 	/**
 	 * 工作模式 0=url, 1=内置.
 	 */
-	public final int getPopValWorkModel()
+	public final PopValWorkModel getPopValWorkModelNew()
 	{
-		return this.GetParaInt("PopValWorkModel");
+		 return PopValWorkModel.forValue(this.GetParaInt("PopValWorkModel"));
 	}
 	
-	public final void setPopValWorkModel(int value)
+	public final void setPopValWorkModelNew(PopValWorkModel value)
 	{
-		this.SetPara("PopValWorkModel", value);
+		this.SetPara("PopValWorkModel", value.getValue());
 	}
+	
+	public int getPopValWorkModel()
+	{
+		 return this.GetParaInt("PopValWorkModel");
+	}
+	public void setPopValWorkModel(int value)
+	{
+		 this.SetPara("PopValWorkModel",value);
+	}
+	
+	
+	/**
+	 * 开窗的列中文名称.
+	 */
+    public String getPopValColNames()
+    {
+    	return  this.getTag3();
+    }
+    public void setPopValColNames(String value)
+    {
+    	this.setTag3(value);
+    }
 	
 	/**
 	 * pop 呈现方式 0,表格,1=目录.
@@ -107,7 +147,30 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey(MapExtAttr.IsAutoSize, value);
 	}
-	
+	 /**
+	  * 查询条件
+	  */
+    public String getPopValSearchCond()
+    {
+    	return  this.getTag4();
+    }
+    public void setPopValSearchCond(String value)
+    {
+    	this.setTag4(value);
+    }
+        
+	/**
+	 * 搜索提示关键字
+	 */
+    public String getPopValSearchTip()
+    {
+    	return this.GetParaString("PopValSearchTip", "请输入关键字");
+    }
+    public void setPopValSearchTip(String value)
+    {
+    	 this.SetPara("PopValSearchTip", value);
+    }
+        
 	/**
 	 * 数据源
 	 */
@@ -284,6 +347,16 @@ public class MapExt extends EntityMyPK
 		this.SetValByKey("Tag3", value);
 	}
 	
+	public final String getTag4()
+	{
+		return this.GetValStrByKey("Tag4").replace("~", "'");
+	}
+	
+	public final void setTag4(String value)
+	{
+		this.SetValByKey("Tag4", value);
+	}
+	
 	public final int getH()
 	{
 		return this.GetValIntByKey(MapExtAttr.H);
@@ -320,18 +393,177 @@ public class MapExt extends EntityMyPK
 	 */
 	public MapExt()
 	{
+		
 	}
-	
 	/**
-	 * 扩展
-	 * 
-	 * @param no
+	 * 转化JSON
+	 * @return
 	 */
+    public String PopValToJson()
+    {
+        return BP.Tools.Json.ToJson(this.PopValToHashtable(),false);
+    }
+    @SuppressWarnings("unchecked")
+	public Hashtable PopValToHashtable()
+    {
+
+        //创建一个ht, 然后把他转化成json返回出去。
+        Hashtable ht = new Hashtable();
+        
+        switch (this.getPopValWorkModelNew())
+        {
+            case SelfUrl:
+                ht.put("URL", this.getPopValUrl());
+                break;
+            case TableOnly:
+                ht.put("EntitySQL", this.getPopValEntitySQL());
+                break;
+            case TablePage:
+                ht.put("PopValTablePageSQL", this.getPopValTablePageSQL());
+                ht.put("PopValTablePageSQLCount", this.getPopValTablePageSQLCount());
+                break;
+            case Group:
+                ht.put("GroupSQL", this.getTag1());
+                ht.put("EntitySQL", this.getPopValEntitySQL());
+                break;
+            case Tree:
+                ht.put("TreeSQL", this.getPopValTreeSQL());
+                ht.put("TreeParentNo", this.getPopValTreeParentNo());
+                break;
+            case TreeDouble:
+                ht.put("DoubleTreeSQL", this.getPopValTreeSQL());
+                ht.put("DoubleTreeParentNo", this.getPopValTreeParentNo());
+                ht.put("DoubleTreeEntitySQL", this.getPopValDoubleTreeEntitySQL());
+                break;
+            default:
+                break;
+        }
+
+        ht.put(MapExtAttr.W, this.getW());
+        ht.put(MapExtAttr.H, this.getH());
+
+        ht.put("PopValWorkModel", this.getPopValWorkModelNew()); //工作模式.
+        ht.put("PopValSelectModel", this.getPopValSelectModelNew()); //单选，多选.
+            
+        ht.put("PopValFormat", this.getPopValFormat()); //返回值格式.
+        ht.put("PopValTitle", this.getPopValTitle()); //窗口标题.
+        ht.put("PopValColNames", this.getPopValColNames()); //列名 @No=编号@Name=名称@Addr=地址.
+        ht.put("PopValSearchTip", this.getPopValSearchTip()); //搜索提示..
+
+        //查询条件.
+        ht.put("PopValSearchCond", this.getPopValSearchCond()); //查询条件..
+
+
+        //转化为Json.
+        return ht;
+    }
+	
+    /**
+     * 链接
+     */
+    public String getPopValUrl()
+    {
+            return this.getDoc();
+    }
+    public void setPopValUrl(String value)
+    {
+    	this.setDoc(value);
+    }
+	  /**
+	   * 实体SQL
+	   */
+    public String getPopValEntitySQL()
+    {
+          return this.getTag2();
+    }
+    public void setPopValEntitySQL(String value)
+    {
+        this.setTag2(value);
+    }
+    /**
+     * 分组SQL
+     */
+    public String getPopValGroupSQL()
+    {
+        return this.getTag1();
+    }
+    public void setPopValGroupSQL(String value)
+    {
+    	this.setTag1(value);
+    }
+  /**
+   * 分页SQL带有关键字
+   */
+    public String getPopValTablePageSQL()
+    {
+        return this.getTag();
+    }
+    public void setPopValTablePageSQL(String value)
+    {
+       this.setTag(value);
+    }
+	 /**
+	  * 分页SQL获取总行数
+	  */
+    public String getPopValTablePageSQLCount()
+    {
+    	return this.getTag1();
+    }
+    public void setPopValTablePageSQLCount(String value)
+    {
+        this.setTag1(value);
+    }
+    /**
+     * 标题
+     */
+    public String getPopValTitle()
+    {
+       return this.GetParaString("PopValTitle");
+    }
+    public void setPopValTitle(String value)
+    {
+    	this.SetPara("PopValTitle", value);
+    }
+        
+    
+    public String getPopValTreeSQL()
+    {
+    	return this.getPopValEntitySQL();
+    }
+    public void setPopValTreeSQL(String value)
+    {
+        this.setPopValEntitySQL(value);
+    }
+    
+  /**
+   * 根目录
+   */
+    public String getPopValTreeParentNo()
+    {
+    	return this.GetParaString("PopValTreeParentNo");
+    }
+    public void setPopValTreeParentNo(String value)
+    {
+    	 this.SetPara("PopValTreeParentNo", value);
+    }
+    /**
+     * 双实体树的实体
+     */
+    public String getPopValDoubleTreeEntitySQL()
+    {
+    	return this.getTag1();
+    }
+    public void setPopValDoubleTreeEntitySQL(String value)
+	{
+    	this.setTag1(value);
+    }
+    
 	public MapExt(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
+	
 	
 	/**
 	 * EnMap
@@ -349,14 +581,11 @@ public class MapExt extends EntityMyPK
 		map.setDepositaryOfMap(Depositary.Application);
 		map.setEnDesc("扩展");
 		map.setEnType(EnType.Sys);
-		
 		map.AddMyPK();
-		
 		map.AddTBString(MapExtAttr.FK_MapData, null, "主表", true, false, 0, 30,
 				20);
 		map.AddTBString(MapExtAttr.ExtType, null, "类型", true, false, 0, 30, 20);
 		map.AddTBInt(MapExtAttr.DoWay, 0, "执行方式", true, false);
-		
 		map.AddTBString(MapExtAttr.AttrOfOper, null, "操作的Attr", true, false, 0,
 				30, 20);
 		map.AddTBString(MapExtAttr.AttrsOfActive, null, "激活的字段", true, false,

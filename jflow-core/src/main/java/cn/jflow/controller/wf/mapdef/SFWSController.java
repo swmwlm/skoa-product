@@ -20,7 +20,7 @@ import cn.jflow.system.ui.core.HtmlUtils;
 import BP.En.FieldTypeS;
 import BP.En.QueryObject;
 import BP.Sys.SFTable;
-import BP.Sys.SFTable.SrcType;
+import BP.Sys.SrcType;
 import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrAttr;
 import BP.Sys.Frm.MapAttrs;

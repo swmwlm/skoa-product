@@ -8,6 +8,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
+
 import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
@@ -465,6 +467,16 @@ public class Flow extends BP.En.EntityNoName
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsResetData);
 	}
+	
+	
+	
+	  /// 流程删除规则
+    /// </summary>
+    public final int getFlowDeleteRole()
+    {
+         return this.GetValIntByKey(FlowAttr.FlowDeleteRole);
+    }
+	
 	/** 
 	 是否启用导入历史数据按钮?
 	*/
@@ -818,7 +830,7 @@ public class Flow extends BP.En.EntityNoName
 
 
 					rpt.setFK_NY(DataType.getCurrentYearMonth());
-					rpt.setFK_Dept(emp.getName());
+					rpt.setFK_Dept(emp.getFK_Dept());
 					rpt.setFlowEnder(emp.getNo());
 					rpt.InsertAsOID(wk.getOID());
 				}
@@ -4392,8 +4404,6 @@ public class Flow extends BP.En.EntityNoName
 		return DoFlowEventEntity(doType, currNode, en, atPara, objs, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public string DoFlowEventEntity(string doType, Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode=null, string jumpToEmps=null)
 	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps)
 	{
 		if (currNode == null)
@@ -4426,12 +4436,6 @@ public class Flow extends BP.En.EntityNoName
 			return str;
 		}
 
-		//获取设置的消息.
-		if (currNode.getHisPushMsgs().size() == 0 && (!doType.equals(EventListOfNode.SendSuccess) || !doType.equals(EventListOfNode.ReturnAfter)))
-		{
-			return str;
-		}
-
 		//执行消息的发送.
 		PushMsgs pms = currNode.getHisPushMsgs();
 
@@ -4450,24 +4454,8 @@ public class Flow extends BP.En.EntityNoName
 
 			//执行发送消息.
 			msgAlert += item.DoSendMessage(currNode, en, atPara, objs, jumpToNode, jumpToEmps);
-			isHave = true;
 		}
-
-		///#region 处理默认值 SendSuccess . ReturnAfter
-		if (isHave == false && (doType.equals(EventListOfNode.SendSuccess) || doType.equals(EventListOfNode.ReturnAfter)))
-		{
-			/*如果没有执行到，并且是发送成功后的信息，就执行默认的消息发送。*/
-			PushMsg pm = new PushMsg();
-			pm.setFK_Event(doType);
-
-			pm.setMailPushWay(1); //默认: 让其使用消息提醒.
-			pm.setSMSPushWay(0); //默认:不让其使用短信提醒.
-
-			msgAlert += pm.DoSendMessage(currNode, en, atPara, objs, jumpToNode, jumpToEmps);
-		}
-		///#endregion 处理默认值 SendSuccess. ReturnAfter
-
-
+		
 		///#endregion 处理消息推送.
 
 		if (1 == 1)
@@ -5183,7 +5171,7 @@ public class Flow extends BP.En.EntityNoName
 		map.AddTBString(FlowAttr.Ver, null, "版本号", true, true, 0, 20, 10);
 			//设计类型 .
 		map.AddTBInt(FlowAttr.DType, 0, "设计类型0=ccbpm,1=bpmn", true, false);
-
+		 map.AddTBInt(FlowAttr.FlowDeleteRole, 0, "流程实例删除规则", true, false);
 			//参数.
 		map.AddTBAtParas(1000);
 		///#region 数据同步方案
@@ -5432,7 +5420,7 @@ public class Flow extends BP.En.EntityNoName
 		switch (model)
 		{
 			case AsNewFlow: //做为一个新流程.
-				SpecialFlowNo = -1; // 如果不加会提示，编码已存在的bug
+				SpecialFlowNo = 0; // 如果不加会提示，编码已存在的bug
 				fl.setNo(fl.getGenerNewNo());
 				fl.DoDelData();
 				fl.DoDelete(); //删除可能存在的垃圾.
@@ -5460,14 +5448,14 @@ public class Flow extends BP.En.EntityNoName
 				{
 					throw new RuntimeException("@您是按照指定的流程编号导入的，但是您没有传入正确的流程编号。");
 				}
-				fl.setNo(String.valueOf(SpecialFlowNo));
+				String newFlowNo = StringUtils.leftPad(String.valueOf(SpecialFlowNo),3,'0');
+				fl.setNo(newFlowNo);
 				fl.DoDelData();
 				fl.DoDelete(); //删除可能存在的垃圾.
 				break;
 			default:
 				throw new RuntimeException("@没有判断");
 		}
-
 		// string timeKey = fl.No;
 		int idx = 0;
 		String infoErr = "";
@@ -5483,7 +5471,24 @@ public class Flow extends BP.En.EntityNoName
 			String columnName = dc.ColumnName.toLowerCase();
 			if (columnName.equals("no")) {
 				if (SpecialFlowNo >= 0){
-					fjson=new Flow(val);
+					try{
+						fjson=new Flow(val);
+					}catch(Exception ex){
+						if (ex.getMessage().contains("中没有找到")){
+							switch(model)
+							{
+							case AsNewFlow: //做为一个新流程.
+								fjson.setNo(fl.getNo());
+								break;
+							case AsSpecFlowNo: //指定流程编号导入
+								fjson.setNo(fl.getNo());
+								break;
+							default:
+								fjson.setNo(val);
+							}
+							
+						}
+					}
 				}
 				continue;
 			}else if ( columnName.equals("fk_flowsort")) {
@@ -7293,36 +7298,11 @@ public class Flow extends BP.En.EntityNoName
 		///#region 写入权限管理
 		if (Glo.getOSModel() == OSModel.OneMore)
 		{
-			String sql = "";
+			   
 
-			try
-			{
-				sql = "DELETE FROM GPM_Menu WHERE FK_App='" + SystemConfig.getSysNo() + "' AND Flag='Flow" + this.getNo() + "'";
-				DBAccess.RunSQL(sql);
-			}
-			catch (java.lang.Exception e)
-			{
-			}
-
-			// 开始组织发起流程的数据.
-			// 取得该流程的目录编号.
-			sql = "SELECT No FROM GPM_Menu WHERE Flag='FlowSort" + flowSort + "' AND FK_App='" + BP.Sys.SystemConfig.getSysNo() + "'";
-			String parentNoOfMenu = DBAccess.RunSQLReturnStringIsNull(sql, null);
-			if (parentNoOfMenu == null)
-			{
-				throw new RuntimeException("@没有找到该流程的(" + BP.Sys.SystemConfig.getSysNo() + ")目录在GPM系统中,请重新新建此目录。");
-			}
-
-			// 取得该功能的主键编号.
-			String treeNo = String.valueOf(DBAccess.GenerOID("BP.GPM.Menu"));
-
-			// 插入流程名称.
-			String url = SystemConfig.getCCFlowWebPath() + "WF/MyFlow.aspx?FK_Flow=" + this.getNo() + "&FK_Node=" + Integer.parseInt(this.getNo()) + "01";
-
-			sql = "INSERT INTO GPM_Menu(No,Name,ParentNo,IsDir,MenuType,FK_App,IsEnable,Flag,Url)";
-			sql += " VALUES('{0}','{1}','{2}',{3},{4},'{5}',{6},'{7}','{8}')";
-			sql = String.format(sql, treeNo, this.getName(), parentNoOfMenu, 0, 4, SystemConfig.getSysNo(), 1, "Flow" + this.getNo(), url);
-			DBAccess.RunSQL(sql);
+		 
+ 
+ 
 		}
 		///#endregion
 	}
@@ -7450,17 +7430,7 @@ public class Flow extends BP.En.EntityNoName
 
 		// Flow.RepareV_FlowData_View();
 
-		//删除权限管理
-		if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
-		{
-			try
-			{
-				DBAccess.RunSQL("DELETE FROM GPM_Menu WHERE Flag='Flow" + this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "'");
-			}
-			catch (java.lang.Exception e)
-			{
-			}
-		}
+	 
 	}
 		
 }

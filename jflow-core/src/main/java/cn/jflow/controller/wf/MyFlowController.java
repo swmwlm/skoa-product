@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.jflow.common.model.BaseModel;
-import cn.jflow.common.util.ConvertTools;
 import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Paras;
@@ -29,24 +27,27 @@ import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrs;
 import BP.Tools.StringHelper;
 import BP.WF.Dev2Interface;
+import BP.WF.Flow;
+import BP.WF.FlowAppType;
+import BP.WF.GenerWorkFlow;
 import BP.WF.Glo;
+import BP.WF.Node;
+import BP.WF.Nodes;
+import BP.WF.SMSMsgType;
+import BP.WF.SaveModel;
+import BP.WF.StartWorkAttr;
+import BP.WF.WFState;
+import BP.WF.Work;
 import BP.WF.WorkNode;
 import BP.WF.Data.GERpt;
 import BP.WF.Data.GERptAttr;
 import BP.WF.Template.CondModel;
-import BP.WF.Node;
 import BP.WF.Template.DraftRole;
 import BP.WF.Template.TurnTo;
 import BP.WF.Template.TurnTos;
-import BP.WF.Flow;
-import BP.WF.FlowAppType;
-import BP.WF.GenerWorkFlow;
-import BP.WF.SMSMsgType;
-import BP.WF.SaveModel;
-import BP.WF.WFState;
-import BP.WF.StartWorkAttr;
-import BP.WF.Work;
 import BP.Web.WebUser;
+import cn.jflow.common.model.BaseModel;
+import cn.jflow.common.util.ConvertTools;
 
 @Controller
 @RequestMapping("/WF/MyFlow")
@@ -163,6 +164,7 @@ public class MyFlowController{
                     break;
                 case FixForm:
                 case FreeForm:
+                case WebOffice:
             		// 绑定数据
             		PubClass.copyFromRequest(currWK, _request);
                     // 设置默认值....
@@ -262,6 +264,8 @@ public class MyFlowController{
 					String title = WorkNode.GenerTitle(currFlow, currWK);
 					String wfState=String.valueOf(WFState.Draft.getValue());//设置草稿的状态，重载接口
 					BP.WF.Dev2Interface.Flow_SetFlowTitle(fk_flow,Long.parseLong(workID), title,wfState);
+					if (currFlow.getDraftRole() == DraftRole.SaveToTodolist && isSave == true) //如果是开始节点并且是保存事件
+                        BP.WF.Dev2Interface.Node_SaveEmpWorks(fk_flow, title, Long.parseLong(workID), WebUser.getNo());
 				}
 			}
 
@@ -376,7 +380,7 @@ public class MyFlowController{
         }
         else
         {
-            if (currND.getCondModel().equals(CondModel.ByUserSelected) && currND.getHisToNDNum() > 1)
+        	if (currND.getCondModel().equals(CondModel.ByUserSelected) && currND.getHisToNDNum() > 1)
             {
                 //如果是用户选择的方向条件.
                 printResult(toJson("url", Glo.getCCFlowAppPath()+"WF/WorkOpt/ToNodes.jsp?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workID + "&FID=" + fid));
@@ -415,6 +419,9 @@ public class MyFlowController{
         	StringBuffer errorMsg = new StringBuffer();
             errorMsg.append(BaseModel.AddFieldSetGreen("错误"));
             errorMsg.append(msge.replace("@@", "@").replace("@", "<BR>@"));
+            if (currND.getCondModel().equals(CondModel.ByUserSelected)){
+            	errorMsg.append("<BR>友情提示：发送前请在该节点属性 设置 '接受人按钮标签' 方式为 '发送前打开'");
+            }
             errorMsg.append(BaseModel.AddFieldSetEnd());
             
             printResult(toJson("flowMsg", errorMsg.toString()));
@@ -512,7 +519,7 @@ public class MyFlowController{
 	 * @param msg
 	 * @throws IOException
 	 */
-	private static void printResult(String result){
+	public static void printResult(String result){
 		_response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = null;
 		try {
@@ -578,7 +585,7 @@ public class MyFlowController{
 	 * @param en
 	 * @return
 	 */
-	private static String toJson(Entity en){
+	public static String toJson(Entity en){
 		// 控件id:控件值
 		HashMap<String, String> map = new HashMap<String, String>();
 		// 获取数据

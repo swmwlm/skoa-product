@@ -1,6 +1,7 @@
 package cn.jflow.common.model;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -2285,6 +2286,7 @@ public class DtlControlModel extends BaseModel {
 			String leftTbId = "TB_" + ext.getAttrOfOperToLowerCase() + "_" + pk;
 			String left = "\n  document.forms[0]." + leftTbId + ".value = ";
 			String right = ext.getDoc();
+			
 			for (MapAttr mattr : attrs.ToJavaList()) {
 				if (!mattr.getUIVisible()) {
 					continue;
@@ -2302,18 +2304,12 @@ public class DtlControlModel extends BaseModel {
 				// right = right.Replace("@" + mattr.KeyOfEn,
 				// " parseFloat( document.forms[0]." + tb.ClientID +
 				// ".value.replace( ',' ,  '' ) ) ");
-
-				right = right.replace("@" + mattr.getName(),
-						" parseFloat(replaceAll(document.forms[0]." + tbID
-								+ ".value,',' ,  '' ) ) ");
-				right = right.replace("@" + mattr.getKeyOfEn(),
-						" parseFloat( replaceAll(document.forms[0]." + tbID
-								+ ".value, ',' ,  '' ) ) ");
+				right = right.replace("@" + mattr.getName(),"parseFloat(replaceAll(document.forms[0]." + tbID+ ".value,',' ,  ''))");			
+				right = right.replace("@" + mattr.getKeyOfEn()," parseFloat( replaceAll(document.forms[0]." + tbID+ ".value, ',' ,  '' ) ) ");
 			}
-			String s = left + right;
-			s += "\t\n  document.forms[0]." + leftTbId
-					+ ".value= VirtyMoney(document.forms[0]." + leftTbId
-					+ ".value ) ;";
+			right = "(" + right + ").toFixed(2);";
+			String s = left + right ;
+			s += "\t\n  document.forms[0]." + leftTbId+ ".value=VirtyMoney(document.forms[0]." + leftTbId+ ".value) ;";
 			return s += " C" + ext.getAttrOfOper() + "();";
 		} catch (RuntimeException ex) {
 			return null;

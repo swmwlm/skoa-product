@@ -14,6 +14,15 @@ li {
     display: list-item;
     text-align: -webkit-match-parent;
 }
+a {
+     color:#0066CC;
+     text-decoration:none;
+   }
+a:hover
+   {
+     color:#0084C5;
+     text-decoration:underline;
+   }
 </style>
 <link href="<%=Glo.getCCFlowAppPath() %>DataUser/Style/Table0.css" rel="stylesheet" type="text/css" />
 <script language=javascript>
@@ -97,7 +106,7 @@ li {
 				<form class="am-form" method="post" action="Tools.jsp" id="form1"
 					onkeypress="NoSubmit(event);">
 					<table width='100%' align='left'>
-						<caption class="CaptionMsgLong">工作流相关设置</caption>
+						<caption class="CaptionMsg">系统设置</caption>
 						<tr>
 							<td valign=top width='20%' align='center' style="font-size:14px;height:100%;color:#026ac1;border-width: 1px; border-color: #C2D5E3;border-right-style:solid !important">
 								<%

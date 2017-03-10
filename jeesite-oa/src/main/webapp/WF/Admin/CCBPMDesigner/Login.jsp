@@ -432,7 +432,7 @@
 		<section id="content">
 			<form method="post" action="Login.jsp?DoType=Login" id="form1">
 				<h1>
-					流程设计器
+					驰骋<span style="color: Red;">CC</span><span style="color: Blue;">BPM</span>流程设计器
 				</h1>
 				<div>
 					<input name="TB_UserName" type="text" id="TB_UserName" 
@@ -440,7 +440,7 @@
 				</div>
 				<div>
 					<input name="TB_Password" type="password" id="TB_Password"
-						placeholder="密码" required="" class="password" />
+						placeholder="密码默认为 pub" required="" class="password" />
 				</div>
 				<div>
 					<input type="button" onclick="onCheck();" value="H5版(Beta)" />

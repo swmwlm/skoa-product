@@ -197,7 +197,8 @@
                                  [<a href="javascript:WinOpen('<%=basePath %>WF/MapDef/CCForm/Frm.jsp?FK_Flow=<%=nd.getFK_Flow() %>&FK_MapData=ND<%=nodeIDstr %>&UserNo=<%=BP.Web.WebUser.getNo() %>&SID=<%=BP.Web.WebUser.getSID()%>');">
                                 设计自由表单(Silverlight)</a>]
 
-                                  [手机表单] - [设计傻瓜表单]
+                                  [<a href="javascript:WinOpen('../AttrNode/SortingMapAttrs.jsp?FK_Flow=<%=nd.getFK_Flow() %>&FK_MapData=ND<%=nodeIDstr %>&UserNo=<%=BP.Web.WebUser.getNo() %>&SID=<%=BP.Web.WebUser.getSID()%>');">
+                                手机表单</a>] - [设计傻瓜表单]
                         </td>
                     </tr>
                     <tr>
@@ -354,7 +355,7 @@
                 <ul>
                 <li> <a href="javascript:WinOpen('<%=basePath %>WF/Admin/BindFrms.jsp?FK_Node=<%=nd.getNodeID()%>&FK_Flow=<%=nd.getFK_Flow()%>&DoType=SelectedFrm')">
                     设置附件权限</a>  - 
-                    <a href="javascript:WinOpen('')" ><!-- <%=basePath %>WF/Comm/UIEn.jsp?EnName=BP.WF.Template.BtnLabExtWebOffice&PK=<%=nd.getNodeID()%>&FK_Flow=<%=nd.getFK_Flow()%> -->
+                    <a href="javascript:WinOpen('<%=basePath %>WF/Comm/RefFunc/UIEn.jsp?EnName=BP.WF.Template.BtnLabExtWebOffice&PK=<%=nd.getNodeID()%>&FK_Flow=<%=nd.getFK_Flow()%>')" >
                         设置公文按钮权限</a>
                         </li>
                 <li>

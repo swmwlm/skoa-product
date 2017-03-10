@@ -5,7 +5,7 @@
 <%@page import="BP.WF.Node"%>
 <%@page import="cn.jflow.common.model.WorkCheckM"%>
 <%@ page language="java" isELIgnored="false" import="java.util.*"
-		 pageEncoding="utf-8"%>
+	pageEncoding="utf-8"%>
 <%@page import="BP.DA.*"%>
 <%@page import="BP.WF.Glo"%>
 <%@page import="BP.Tools.StringHelper"%>
@@ -15,47 +15,47 @@
 <%@page import="BP.Tools.StringHelper"%>
 <%@page import="BP.Sys.FrmWorkShowkz"%>
 <%
-
+	
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 
 	int FK_Node=Integer.valueOf(request.getParameter("FK_Node"));
-	long FID=Long.valueOf(StringHelper.isEmpty(request.getParameter("FID"), "0"));
-	String FK_Flow=request.getParameter("FK_Flow");
-	String s = request.getParameter("Paras");
-
-
-	long WorkID=0;
-	String workid = request.getParameter("OID");
-	if (workid == null)
-		workid = request.getParameter("WorkID");
-	WorkID = Long.valueOf(workid);
-
+ 	long FID=Long.valueOf(StringHelper.isEmpty(request.getParameter("FID"), "0"));
+ 	String FK_Flow=request.getParameter("FK_Flow");
+ 	String s = request.getParameter("Paras");
+ 	 
+    
+ 	long WorkID=0;
+    String workid = request.getParameter("OID");
+    if (workid == null)
+        workid = request.getParameter("WorkID");
+    WorkID = Long.valueOf(workid);
+    
 %>
 <!DOCTYPE>
 <html>
 <head>
 	<script type="text/javascript">
-		function Del(fk_flow, workid) {
-			if (window.confirm('您确定要删除吗？') == false)
-				return;
-		}
-		function OpenIt(url) {
-			debugger;
-			var newWindow = window.open(url, 'card', 'width=950,top=50,left=50,height=600,scrollbars=yes,resizable=yes,toolbar=false,location=false');
-			newWindow.focus();
-			return;
-		}
+	    function Del(fk_flow, workid) {
+	        if (window.confirm('您确定要删除吗？') == false)
+	            return;
+	    }
+	    function OpenIt(url) {
+	    	debugger;
+	        var newWindow = window.open(url, 'card', 'width=950,top=50,left=50,height=600,scrollbars=yes,resizable=yes,toolbar=false,location=false');
+	        newWindow.focus();
+	        return;
+	    }
 	</script>
 	<link href="<%=basePath%>WF/Comm/Style/Table.css" rel="stylesheet" type="text/css" /><link href="../Comm/Style/Table0.css" rel="stylesheet" type="text/css" />
 	<script src="<%=basePath%>WF/Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
 </head>
 <body leftMargin=0 topMargin=0 >
-<%
-
-	BP.DA.SB sb=new BP.DA.SB();  //没有找到sb这个类，  后面还调用了N多的sb，所以，有可能是sb这个类没有生成，或者..是残留的垃圾.?
-
-	//查询出来所有子流程的数据.
+   <%
+   
+    BP.DA.SB sb=new BP.DA.SB();  //没有找到sb这个类，  后面还调用了N多的sb，所以，有可能是sb这个类没有生成，或者..是残留的垃圾.?
+    
+    //查询出来所有子流程的数据.
 	BP.Sys.FrmSubFlow sf = new BP.Sys.FrmSubFlow(FK_Node);
 
 	Node nd = new Node(FK_Node);
@@ -105,21 +105,21 @@
 		//该流程的子流程信息.
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		if (sf.getSFShowCtrl() == FrmWorkShowkz.All.getValue())
-		{
-			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workid, GenerWorkFlowAttr.FK_Flow, str); //流程.
-		}
-		else
-		{
-			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workid,
-					GenerWorkFlowAttr.FK_Flow, str, GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo()); //流程.
-		}
+        {
+            gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, WorkID, GenerWorkFlowAttr.FK_Flow, str); //流程.
+        }
+        else
+        {
+            gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, WorkID,
+                GenerWorkFlowAttr.FK_Flow, str, GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo()); //流程.
+        }
 
 		for (GenerWorkFlow item : GenerWorkFlows.convertGenerWorkFlows(gwfs))
 		{
 
-			if (item.getWFState() == WFState.Blank)
-				continue;
-
+            if (item.getWFState() == WFState.Blank)
+                continue;
+            
 			sb.AddTR();
 			sb.AddTD("style='word-break:break-all;'", "<a href=\"javascript:OpenIt('../WFRpt.jsp?WorkID=" + item.getWorkID() + "&FK_Flow=" + item.getFK_Flow() + "')\" ><img src='../Img/dot.png' width='9px' />&nbsp;" + item.getTitle() + "</a>");
 
@@ -136,7 +136,7 @@
 
 			sb.AddTD(item.getTodoEmps()); //到达人员.
 			//sb.AddTD(BP.DA.DataType.ParseSysDate2DateTimeFriendly(item.getRDT())); //日期.
-			sb.AddTD(item.getRDT());
+			sb.AddTD(item.getRDT()); 
 			sb.AddTD(item.getFlowNote()); //流程备注.
 			sb.AddTREnd();
 
@@ -145,15 +145,15 @@
 		}
 	}
 	sb.AddTableEnd();
-%>
-<%= sb.toStr() %>
+   %>
+   <%= sb.toStr() %>
 
 <div id="DelMsg"></div>
 </body>
 </html>
 
-<%!
-	public final void InsertSubFlows(String flowNo, int fid, long workid, int layer, BP.DA.SB sb)
+   <%!
+   public final void InsertSubFlows(String flowNo, int fid, long workid, int layer, BP.DA.SB sb)
 	{
 		//该流程的子流程信息, 并按照流程排序.
 		GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -167,9 +167,9 @@
 		String myFlowNo = "";
 		for (GenerWorkFlow item : GenerWorkFlows.convertGenerWorkFlows(gwfs))
 		{
-			if (item.getWFState() == WFState.Blank)
-				continue;
-
+            if (item.getWFState() == WFState.Blank)
+                continue;
+            
 			if (myFlowNo.contains(item.getFK_Flow())==false)
 			{
 				myFlowNo = myFlowNo + "," + item.getFK_Flow();
@@ -202,5 +202,5 @@
 			//加载他下面的子流程.
 			InsertSubFlows(item.getFK_Flow(), item.getFK_Node(), item.getWorkID(), layer + 1, sb);
 		}
-	}
-%>
+	} 
+   %>

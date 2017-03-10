@@ -48,28 +48,28 @@
 						<legend>流程引擎常用功能</legend>
 						<ul style="list-style: none">
 							<li><a href="javascript:OpenNewFlowPanel()"> <img
-									src="./Img/NewFlow.png" border="0" />&nbsp;新建流程
+									src="../../Img/NewFlow.png" border="0" />&nbsp;新建流程
 							</a></li>
 							<li><a
 								href="javascript:OpenTab('TempleteFlowSearch','关键字查询流程模版','../CCBPMDesigner/SearchFlow.jsp','icon-search');">
-									<img src="./Img/SearchKey.png" alt="" border="0" />&nbsp;关键字查询流程模版
+									<img src="../../Img/SearchKey.png" alt="" border="0" />&nbsp;关键字查询流程模版
 							</a></li>
 
 							<li><a
 								href="javascript:OpenTab('TempleteFlowList','流程列表','../CCBPMDesigner/Flows.jsp','icon-flows');">
-									<img src="./Img/flows.png" border="0" />&nbsp;流程列表
+									<img src="../../Img/flows.png" border="0" />&nbsp;流程列表
 							</a></li>
 							<li><a
 								href="javascript:OpenTab('TempleteFlowControl','流程监控','../CCBPMDesigner/App/Welcome.jsp','icon-Monitor');">
-									<img src="./Img/Monitor.png" border="0" />&nbsp;流程监控
+									<img src="../../Img/Monitor.png" border="0" />&nbsp;流程监控
 							</a></li>
 							<li><a
 								href="javascript:OpenTab('TempleteFlowGloKeys','全文检索运行流程实例','<%=basePath%>WF/KeySearch.jsp','icon-SearchKey');">
-									<img src="./Img/SearchKey.png" border="0" />&nbsp;全文检索运行流程实例
+									<img src="../../Img/SearchKey.png" border="0" />&nbsp;全文检索运行流程实例
 							</a></li>
 							<li><a
 								href="javascript:OpenTab('TempleteGeneralSearch','综合查询','../../Comm/Search.jsp?EnsName=BP.WF.Data.GenerWorkFlowViews','icon-Search');">
-									<img src="./Img/Group.png" border="0" />&nbsp;综合查询
+									<img src="../../Img/Group.png" border="0" />&nbsp;综合查询
 							</a> -<a
 								href="javascript:OpenTab('TempleteGeneralAnal','综合分析','../../Comm/Group.jsp?EnsName=BP.WF.Data.GenerWorkFlowViews','icon-Group');">分析</a>
 							</li>
@@ -80,18 +80,18 @@
 					<fieldset>
 						<legend>表单引擎常用功能</legend>
 						<ul style="list-style: none">
-							<li><a href=""> <img src="./Img/NewFlow.png" />新建表单
+							<li><a href=""> <img src="../../Img/NewFlow.png" />新建表单
 							</a></li>
 							<li><a href="../CCBPMDesigner/SearchFlow.jsp"> <img
-									src="./Img/NewFlow.png" border="0" />关键字查询表单模版
+									src="../../Img/NewFlow.png" border="0" />关键字查询表单模版
 							</a></li>
-							<li><a href=""> <img src="./Img/NewFlow.png" />新建数据源
+							<li><a href=""> <img src="../../Img/NewFlow.png" />新建数据源
 							</a></li>
-							<li><a href=""> <img src="./Img/NewFlow.png" />管理数据源
+							<li><a href=""> <img src="../../Img/NewFlow.png" />管理数据源
 							</a></li>
-							<li><a href="../../Comm/Sys/EnumList.jsp?t=0.6900089763006457"> <img src="./Img/NewFlow.png" />枚举列表
+							<li><a href="../../Comm/Sys/EnumList.jsp?t=0.6900089763006457"> <img src="../../Img/NewFlow.png" />枚举列表
 							</a></li>
-							<li><a href=""> <img src="./Img/NewFlow.png" />字典表列表
+							<li><a href=""> <img src="../../Img/NewFlow.png" />字典表列表
 							</a></li>
 						</ul>
 					</fieldset>

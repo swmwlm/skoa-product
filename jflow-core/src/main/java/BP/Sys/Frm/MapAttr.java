@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 
 import cn.jflow.common.util.PingYinUtil;
 import BP.DA.DBAccess;
+import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Depositary;
 import BP.DA.Log;
@@ -661,6 +662,10 @@ public class MapAttr extends EntityMyPK
 	{
 		return this.GetValIntByKey(MapAttrAttr.UIHeight);
 	}
+	public final void setUIHeightInt(int value)
+	{
+		this.SetValByKey(MapAttrAttr.UIHeight, value);
+	}
 	
 	/**
 	 * 高度
@@ -681,6 +686,10 @@ public class MapAttr extends EntityMyPK
 	public final int getUIWidthInt()
 	{
 		return this.GetValIntByKey(MapAttrAttr.UIWidth);
+	}
+	public final void setUIWidthInt(int value)
+	{
+		this.SetValByKey(MapAttrAttr.UIWidth, value);
 	}
 	
 	/**
@@ -781,8 +790,7 @@ public class MapAttr extends EntityMyPK
 	public final void setIsSigan(boolean value)
 	{
 		this.SetValByKey(MapAttrAttr.IsSigan, value);
-	}
-	
+	}	
 	/**
 	 * 签名类型
 	 */
@@ -800,6 +808,31 @@ public class MapAttr extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.IsSigan, value.getValue());
 	}
 	
+	/**
+	 * radiobutton的展现方式
+	 */
+    public final int getRBShowModel()
+    {
+        return this.GetValIntByKey("RBShowModel");
+    
+    }
+    public final void setRBShowModel(int value)
+    {
+            this.SetValByKey("RBShowModel", value);
+    }
+	 /**
+	  * 操作提示
+	  */
+    public String getPara_Tip()
+    {
+       return this.GetParaString(MapAttrAttr.Tip);
+    }
+    public void setPara_Tip(String value)
+    {
+       this.SetPara(MapAttrAttr.Tip, value);
+    }
+    
+    
 	/**
 	 * 是否数字签名
 	 */
@@ -1375,6 +1408,31 @@ public class MapAttr extends EntityMyPK
 	 {
 		 this.SetPara(MapAttrAttr.FontSize, value);
 	 }
+	 
+	 /**
+	  * 是否是超大文本？
+	  */
+     public boolean getIsSupperText()
+     {
+        return this.GetParaBoolen("IsSupperText",false);
+     }
+     public void setIsSupperText(boolean value)
+     {
+    	 this.SetPara("IsSupperText", value);
+     }
+    /**
+     * 是否是富文本
+     */
+     public boolean getIsRichText()
+     {
+       return this.GetParaBoolen("IsRichText",false);
+     }
+     public void setIsRichText(boolean value)
+     {
+       this.SetPara("IsRichText", value);
+     }
+
+
 	 /** 是否必填字段
 	 
 	 */
@@ -1386,4 +1444,35 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetPara(MapAttrAttr.UIIsInput, value);
 	}
+	/**
+	 * 是否启用高级JS设置
+	 */
+	 public final boolean getIsEnableJS()
+     {
+         return this.GetParaBoolen("IsEnableJS",false);
+     }
+	 public final void setIsEnableJS(boolean value)
+	 {
+		 this.SetPara("IsEnableJS", value);
+	 }
+	 
+	 private DataTable _dt = null;
+	 /** 
+	  *外部数据表
+	  */
+	public final DataTable getHisDT()
+	{
+		if (_dt == null)
+		{
+			if (StringHelper.isNullOrEmpty(this.getUIBindKey()))
+			{
+				throw new RuntimeException("@属性：" + this.getMyPK() + " 丢失属性 UIBindKey 字段。");
+			}
+
+			SFTable sf = new SFTable(this.getUIBindKey());
+			_dt = sf.getGenerHisDataTable();
+		}
+		return _dt;
+	}
+ 
 }

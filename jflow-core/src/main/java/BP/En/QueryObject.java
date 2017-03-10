@@ -177,6 +177,7 @@ public class QueryObject
 		this.getMyParas().clear();
 		this._en = en;
 		this.HisDBType = this._en.getEnMap().getEnDBUrl().getDBType();
+		
 	}
 	
 	public QueryObject(Entities ens)
@@ -184,8 +185,9 @@ public class QueryObject
 		this.getMyParas().clear();
 		ens.clear();
 		this._ens = ens;
-		this.HisDBType = this._ens.getGetNewEntity().getEnMap().getEnDBUrl()
-				.getDBType();
+		Entity en = this._ens.getGetNewEntity();
+		this.HisDBType = en.getEnMap().getEnDBUrl().getDBType();
+		//this.HisDBType = this.en.getGetNewEntity().getEnMap().getEnDBUrl().getDBType();
 	}
 	
 	public BP.DA.DBType HisDBType = DBType.MSSQL;

@@ -1,421 +1,112 @@
-//package cn.jflow.controller.wf.admin.AttrFlow;
-//
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//
-//import org.springframework.context.annotation.Scope;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import org.springframework.web.bind.annotation.ResponseBody;
-//
-//import BP.WF.Flow;
-//import BP.WF.StartLimitRole;
-//import BP.WF.Template.TruckViewPower;
-//import BP.WF.Template.TruckViewPowerAttr;
-//import cn.jflow.common.model.AjaxJson;
-//import cn.jflow.controller.wf.workopt.BaseController;
-//
-//@Controller
-//@RequestMapping("/WF/LimitController")
-//@Scope("request")
-//public class TruckViewPowerController extends BaseController {
-//	/*
-//	 * public String getFK_Flow() { return
-//	 * ContextHolderUtils.getRequest().getParameter("FK_Flow"); }
-//	 */
-//	HttpServletRequest request = null;
-//	HttpServletResponse response = null;
-//	TruckViewPowerAttr tpa = null;
-//	
-//	@ResponseBody
-//			@RequestMapping(value = "/BtnSaveClick", method = RequestMethod.POST)
-//			public String Btn_Save_Click(HttpServletRequest request,
-//					HttpServletResponse response,String FK_Flow,
-//					String gjck,boolean CB_FQR,boolean CB_CYR,boolean CB_CSR,boolean CB_BBM,boolean CB_ZSSJ,boolean CB_SJ,boolean CB_PJ,
-//					String TB_ZDGW,String TB_ZDQXZ,boolean QY_ZDQXZ,boolean QY_ZDRY,String TB_ZDBM,String TB_ZDRY, boolean QY_ZDGW,boolean QY_ZDBM) {
-//			
-//				
-//				}
-//	
-//			public String FK_Flow()
-//		        {
-//		                return request.getQueryString()("FK_Flow");
-//		            
-//		        }
-//
-//		            if (!IsPostBack)
-//		            {
-//		                if (String.getIsNullOrEmpty(FK_Flow()))
-//		                {
-//		                    throw new Exception("流程编号为空");
-//		                }
-//		                else
-//		                {
-//
-//		                    TruckViewPower en = new TruckViewPower(FK_Flow());
-//		                    
-//		                 
-//		                    if (en.getPStarter()==true)
-//		                    {
-//		                      
-//		                        tpa.CB_FQR.Checked=true;
-//		                    }
-//		                    if (en.PWorker==true)
-//		                    {
-//		                        this.CB_CYR.Checked = true;
-//		                    }
-//		                    if (en.PCCer==true)
-//		                    {
-//		                        this.CB_CSR.Checked = true;
-//		                    }
-//
-//		                    if (en.PMyDept==true)
-//		                    {
-//		                        this.CB_BBM.Checked = true;
-//		                    }
-//		                    if (en.PPMyDept==true)
-//		                    {
-//		                        this.CB_ZSSJ.Checked = true;
-//		                    }
-//		                    if (en.PPDept==true)
-//		                    {
-//		                        this.CB_SJ.Checked = true; 
-//		                    }
-//
-//		                    if (en.PSameDept==true)
-//		                    {
-//		                        this.CB_PJ.Checked = true;
-//		                    }
-//		                    if ( en.PSpecDept==true)
-//		                    {
-//		                        
-//		                        this.QY_ZDBM.Checked = true;
-//		                    }
-//		                    if (string.IsNullOrEmpty(en.PSpecDeptExt))
-//		                    {
-//		                        this.TB_ZDBM.Text = en.PSpecDeptExt;
-//		                    }
-//		                    if (en.PSpecSta == true)
-//		                    {
-//		                     
-//		                        this.QY_ZDGW.Checked = true;
-//		                    }
-//		                    if (string.IsNullOrEmpty(en.PSpecStaExt))
-//		                    {
-//		                        this.TB_ZDGW.Text = en.PSpecStaExt;
-//		                    }
-//		                    if (en.PSpecGroup == true)
-//		                    {
-//		                        
-//		                        this.QY_ZDQXZ.Checked = true;
-//
-//		                    }
-//		                    if (string.IsNullOrEmpty(en.PSpecGroupExt))
-//		                    {
-//		                        this.TB_ZDQXZ.Text = en.PSpecGroupExt;
-//		                    }
-//		                    if (en.PSpecEmp == true)
-//		                    {
-//		                       
-//		                        this.QY_ZDRY.Checked = true;
-//		                    }
-//
-//		                    if (string.IsNullOrEmpty(en.PSpecEmpExt))
-//		                    {
-//		                        this.TB_ZDRY.Text = en.PSpecEmpExt;
-//		                    }
-//		                }
-//		            }
-//
-//		        }
-//
-//
-//
-//		        protected void Btn_SaveAndClose_Click(Object sender)
-//		        {
-//		          TruckViewPower en = new TruckViewPower(getFK_Flow());
-//
-//		            if (String.IsNullOrEmpty(FK_Flow))
-//		            {
-//		                throw new Exception("@流程编号为空");
-//		            }
-//
-//		            else
-//		            {
-//		                if (this.CB_FQR.Checked)
-//		                {
-//		                    en.PStarter = true;
-//
-//		                }
-//		                else
-//		                {
-//		                    en.setPStarter() = false;
-//		                }
-//		                 if (this.CB_CYR.Checked)
-//		                {
-//		                    en.PWorker = true;
-//		                }
-//		                 else
-//		                 {
-//		                     en.PWorker = false;
-//		                 }
-//		                 if (this.CB_CSR.Checked)
-//		                {
-//		                    en.PCCer = true;
-//		                }
-//		                 else
-//		                 {
-//		                     en.PCCer = false;
-//		                 }
-//
-//		                 if (this.CB_BBM.Checked)
-//		                {
-//		                    en.PMyDept = true;
-//		                }
-//		                 else
-//		                 {
-//		                     en.PMyDept = false; 
-//		                 }
-//		                if (this.CB_ZSSJ.Checked)
-//		                {
-//		                    en.PPMyDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PPMyDept = false;
-//		                }
-//
-//		                if (this.CB_SJ.Checked)
-//		                {
-//		                    en.PPDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PPDept = false;
-//		                }
-//		               if (this.CB_PJ.Checked)
-//		                {
-//		                    en.PSameDept = true;
-//		                }
-//		               else
-//		               {
-//		                   en.PSameDept = false;
-//		               }
-//		               if (this.QY_ZDBM.Checked)
-//		               {
-//		                   en.PSpecDept = true;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecDept = false;
-//		               }
-//		               if (string.IsNullOrEmpty(this.TB_ZDBM.Text))
-//		               {
-//		                   en.PSpecDeptExt = this.TB_ZDBM.Text;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecDeptExt = "";
-//		               }
-//
-//		               if (this.QY_ZDGW.Checked)
-//		               {
-//		                   en.PSpecSta = true;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecSta = false;
-//		               }
-//		               if (string.IsNullOrEmpty(this.TB_ZDGW.Text))
-//		               {
-//		                   en.PSpecStaExt = this.TB_ZDGW.Text;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecStaExt = "";
-//		               }
-//		               if (this.QY_ZDQXZ.Checked)
-//		               {
-//		                   en.PSpecGroup = true;
-//
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecGroup = false;
-//		               }
-//		               if (string.IsNullOrEmpty(this.TB_ZDQXZ.Text))
-//		               {
-//		                   en.PSpecGroupExt = this.TB_ZDQXZ.Text;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecGroupExt = "";
-//		               }
-//		               if (this.QY_ZDRY.Checked)
-//		               {
-//		                   en.PSpecEmp = true;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecEmp = false;
-//		               }
-//
-//		               if (string.IsNullOrEmpty(this.TB_ZDRY.Text))
-//		               {
-//		                   en.PSpecEmpExt = this.TB_ZDRY.Text;
-//		               }
-//		               else
-//		               {
-//		                   en.PSpecEmpExt = "";
-//		               }
-//		                en.Update();
-//
-//		            }
-//
-//		            //this.Save();
-//		            BP.Sys.PubClass.WinClose();
-//
-//		        }
-//
-//		        protected void Btn_Save_Click(Object sender)
-//		        {
-//
-//		            BP.WF.Template.TruckViewPower en = new BP.WF.Template.TruckViewPower(FK_Flow());
-//
-//		            if (String.IsNullOrEmpty(FK_Flow()))
-//		            {
-//		                throw new Exception("@流程编号为空");
-//		            }
-//
-//		            else
-//		            {
-//		                if (this.CB_FQR.Checked)
-//		                {
-//		                    en.PStarter = true;
-//
-//		                }
-//		                else
-//		                {
-//		                    en.PStarter = false;
-//		                }
-//		                if (this.CB_CYR.Checked)
-//		                {
-//		                    en.PWorker = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PWorker = false;
-//		                }
-//		                if (this.CB_CSR.Checked)
-//		                {
-//		                    en.PCCer = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PCCer = false;
-//		                }
-//
-//		                if (this.CB_BBM.Checked)
-//		                {
-//		                    en.PMyDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PMyDept = false;
-//		                }
-//		                if (this.CB_ZSSJ.Checked)
-//		                {
-//		                    en.PPMyDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PPMyDept = false;
-//		                }
-//
-//		                if (this.CB_SJ.Checked)
-//		                {
-//		                    en.PPDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PPDept = false;
-//		                }
-//		                if (this.CB_PJ.Checked)
-//		                {
-//		                    en.PSameDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PSameDept = false;
-//		                }
-//		                if (this.QY_ZDBM.Checked)
-//		                {
-//		                    en.PSpecDept = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecDept = false;
-//		                }
-//		                if (string.IsNullOrEmpty(this.TB_ZDBM.Text))
-//		                {
-//		                    en.PSpecDeptExt = this.TB_ZDBM.Text;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecDeptExt = "";
-//		                }
-//
-//		                if (this.QY_ZDGW.Checked)
-//		                {
-//		                    en.PSpecSta = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecSta = false;
-//		                }
-//		                if (string.IsNullOrEmpty(this.TB_ZDGW.Text))
-//		                {
-//		                    en.PSpecStaExt = this.TB_ZDGW.Text;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecStaExt = "";
-//		                }
-//		                if (this.QY_ZDQXZ.Checked)
-//		                {
-//		                    en.PSpecGroup = true;
-//
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecGroup = false;
-//		                }
-//		                if (string.IsNullOrEmpty(this.TB_ZDQXZ.Text))
-//		                {
-//		                    en.PSpecGroupExt = this.TB_ZDQXZ.Text;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecGroupExt = "";
-//		                }
-//		                if (this.QY_ZDRY.Checked)
-//		                {
-//		                    en.PSpecEmp = true;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecEmp = false;
-//		                }
-//
-//		                if (string.IsNullOrEmpty(this.TB_ZDRY.Text))
-//		                {
-//		                    en.PSpecEmpExt = this.TB_ZDRY.Text;
-//		                }
-//		                else
-//		                {
-//		                    en.PSpecEmpExt = "";
-//		                }
-//		                en.Update();
-//
-//}
+package cn.jflow.controller.wf.admin.AttrFlow;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import BP.DA.Paras;
+import BP.Tools.StringHelper;
+import BP.WF.Template.TruckViewPower;
+import cn.jflow.controller.wf.workopt.BaseController;
+
+@Controller
+@RequestMapping("/WF/TruckViewPower")
+@Scope("request")
+public class TruckViewPowerController extends BaseController {
+	@ResponseBody
+	@RequestMapping(value = "/BtnSaveClick", method = RequestMethod.POST)
+	protected void Btn_Save_Click(String BBM,String ZSSJ,String SJ,String PJ,
+			String ZDBM,String ZDGW,String ZDQXZ,String ZDRY,
+			String PSpecDeptExt,String PSpecStaExt,String PSpecGroupExt,String PSpecEmpExt)
+			throws Exception {
+		TruckViewPower en = new TruckViewPower(getFK_Flow());
+		if (StringHelper.isNullOrEmpty(getFK_Flow())) {
+			throw new Exception("@流程编号为空");
+		} else {
+				if (StringHelper.isNullOrEmpty(BBM)==false) {
+					en.setPMyDept(true);
+				} else {
+					en.setPMyDept(false);
+				}
+
+				if (StringHelper.isNullOrEmpty(ZSSJ)==false) {
+					en.setPPMyDept(true);
+				} else {
+					en.setPPMyDept(false);
+				}
+				if (StringHelper.isNullOrEmpty(SJ)==false) {
+					en.setPPDept(true);
+				} else {
+					en.setPPDept(false);
+				}
+				if (StringHelper.isNullOrEmpty(PJ)==false) {
+					en.setPSameDept(true);
+				} else {
+					en.setPSameDept(false);
+				}
+				if (StringHelper.isNullOrEmpty(ZDBM)==false) {
+					en.setPSpecDept(true);
+				} else {
+					en.setPSpecDept(false);
+				}
+				if (StringHelper.isNullOrEmpty(PSpecDeptExt)==false) {
+					en.setPSpecDeptExt(PSpecDeptExt);
+				} else {
+					en.setPSpecDeptExt("");
+				}
+				if (StringHelper.isNullOrEmpty(ZDGW)==false) {
+					en.setPSpecSta(true);
+				} else {
+					en.setPSpecSta(false);
+				}
+				if (StringHelper.isNullOrEmpty(PSpecStaExt)==false) {
+					en.setPSpecStaExt(PSpecStaExt);
+				} else {
+					en.setPSpecStaExt("");
+				}
+				if (StringHelper.isNullOrEmpty(ZDQXZ)==false) {
+					en.setPSpecGroup(true);
+
+				} else {
+					en.setPSpecGroup(false);
+				}
+				if (StringHelper.isNullOrEmpty(PSpecGroupExt)==false) {
+					en.setPSpecGroupExt(PSpecGroupExt);
+				} else {
+					en.setPSpecGroupExt("");
+				}
+				if (StringHelper.isNullOrEmpty(ZDRY)==false) {
+					en.setPSpecEmp(true);
+				} else {
+					en.setPSpecEmp(false);
+				}
+
+				if (StringHelper.isNullOrEmpty(PSpecEmpExt)==false) {
+					en.setPSpecEmpExt(PSpecEmpExt);
+				} else {
+					en.setPSpecEmpExt("");
+				}
+				en.Update();
+			}
+		}
+	@RequestMapping(value = "/Init", method = RequestMethod.POST)
+	@ResponseBody
+    public ModelAndView Init() throws IOException
+    {
+		ModelAndView mv=new ModelAndView();
+		Paras ps = new Paras();
+		ps.SQL = "SELECT PMyDept,PPMyDept,PPDept,PSameDept,PSpecDept,PSpecSta,PSpecGroup,PSpecEmp,PSpecDeptExt,PSpecStaExt,PSpecGroupExt,PSpecEmpExt"
+				+ " FROM  WF_Flow WHERE NO="+ Integer.parseInt(getFK_Flow());
+		   PrintWriter out = getResponse().getWriter();
+			String message = BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
+			out.write(message);
+            mv.setViewName("Admin/AttrFlow/TruckViewPower"); 
+            out.flush();
+            out.close(); 
+            return mv;              
+    }		
+}

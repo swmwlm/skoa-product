@@ -53,7 +53,7 @@ public class DtlOptController extends BaseController{
 			CommonsMultipartFile fileT = (CommonsMultipartFile)multipartRequest.getFile("fup");
 			String fileName = fileT.getOriginalFilename(); // 获取文件名
 			
-			String tempPath = this.getRequest().getSession().getServletContext().getRealPath("/") + "\\Temp\\";
+			String tempPath = this.getRequest().getSession().getServletContext().getRealPath("/") + "/Temp/";
 			File uploadFile = new File(tempPath + WebUser.getNo()+"_"+fileName);
 			if(fileName!=null&&!"".equals(fileName)){
 				fileName.replace("\\\\", "\\");
@@ -73,17 +73,17 @@ public class DtlOptController extends BaseController{
 			GEDtls dtls = new GEDtls(this.getFK_MapDtl());
 			DataTable dt = BP.DA.DBLoad.GetTableByExt(tempPath + WebUser.getNo()+"_"+fileName);
 
-			String file1 = this.getRequest().getSession().getServletContext().getRealPath("/") + "\\DataUser\\DtlTemplete\\" + this.getFK_MapDtl() + ext;
+			String file1 = this.getRequest().getSession().getServletContext().getRealPath("/") + "/DataUser/DtlTemplete/" + this.getFK_MapDtl() + ext;
 			File f = new File(file1);
 			if (!f.exists())
 			{
 				if (ext.equals(".xlsx"))
 				{
-					file1 = this.getRequest().getSession().getServletContext().getRealPath("/") + "\\DataUser\\DtlTemplete\\" + this.getFK_MapDtl() + ".xls";
+					file1 = this.getRequest().getSession().getServletContext().getRealPath("/") + "/DataUser/DtlTemplete/" + this.getFK_MapDtl() + ".xls";
 				}
 				else
 				{
-					file1 = this.getRequest().getSession().getServletContext().getRealPath("/") + "\\DataUser\\DtlTemplete\\" + this.getFK_MapDtl() + ".xls";
+					file1 = this.getRequest().getSession().getServletContext().getRealPath("/") + "/DataUser/DtlTemplete/" + this.getFK_MapDtl() + ".xls";
 				}
 			}
 

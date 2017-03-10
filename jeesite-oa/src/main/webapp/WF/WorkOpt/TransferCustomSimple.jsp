@@ -99,7 +99,7 @@
         <tbody>
             <%
                 String flowNo = request.getParameter("flowNo");
-                if (StringHelper.isNullOrEmpty(flowNo)) flowNo = "001";
+                if (StringHelper.isNullOrEmpty(flowNo)) flowNo = "002";
                 long workid = Dev2Interface.Node_CreateBlankWork(flowNo);
                 GenerWorkFlow gwf = new GenerWorkFlow(workid);
                 TransferCustoms tcs = new TransferCustoms(workid);

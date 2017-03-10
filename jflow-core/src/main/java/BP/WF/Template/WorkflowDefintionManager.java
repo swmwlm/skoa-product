@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
+import BP.Sys.Frm.MapData;
 import BP.Tools.StringHelper;
 import BP.WF.Flow;
 
@@ -153,4 +154,18 @@ public class WorkflowDefintionManager
 			return ex.getMessage();
 		}
 	}
+	public static String DeleteFrmTemplate(String v1){
+		
+		MapData md4 = new MapData();
+		try{
+		md4.setNo(v1);
+		md4.Delete();
+		return null;
+		}catch(RuntimeException e){
+			BP.DA.Log.DefaultLogWriteLineError("Do Method DelFrm Branch has a error , para:\t" + v1 + e.getMessage());
+			return e.getMessage();
+		}
+		
+	}
+	
 }

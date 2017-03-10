@@ -2267,11 +2267,11 @@ public class MExtModel extends BaseModel{
     }
     private void rb_CheckedChanged()
     {
-        String path = BP.Sys.SystemConfig.getPathOfData() + "JSLib\\";
+        String path = BP.Sys.SystemConfig.getPathOfData() + "JSLib/";
         
        RadioButton rb = (RadioButton) uf.GetUIByID("RB_0"); // sender as System.Web.UI.WebControls.RadioButton;
         if (rb.getChecked() == false)
-            path = BP.Sys.SystemConfig.getPathOfDataUser() + "\\JSLib\\";
+            path = BP.Sys.SystemConfig.getPathOfDataUser() + "JSLib/";
 
         ListBox lb = (ListBox)uf.GetUIByID("LB1");
         lb.Items.clear();
@@ -2282,7 +2282,7 @@ public class MExtModel extends BaseModel{
         String file = temFile;
         if (!StringHelper.isNullOrEmpty(temFile))
         {
-            file = file.substring(file.lastIndexOf('\\') + 4);
+            file = file.substring(file.lastIndexOf('/') + 4);
             file = file.replace(".js", "");
         }
         else

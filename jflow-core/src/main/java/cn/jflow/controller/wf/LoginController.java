@@ -58,7 +58,7 @@ public class LoginController {
 			
 			//退出登录.
 			BP.WF.Dev2Interface.Port_SigOut();
-			mv.setViewName("redirect:" + "/WF/Login.jsp");
+			mv.setViewName("redirect:" + "/WF/login.htm");
 		}catch(Exception e){
 			e.printStackTrace();
 		}

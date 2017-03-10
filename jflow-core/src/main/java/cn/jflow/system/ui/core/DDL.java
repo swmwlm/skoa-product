@@ -834,6 +834,42 @@ public class DDL extends BaseWebControl
 		}
 	}
 	
+	/**
+	 * 绑定一个table,并设置选择的值.
+	 * @param dt 数据源
+	 * @param val 值列
+	 * @param text 标签列
+	 * @param selectVal 选中的值
+	 * @return 返回是否选择成功
+	 */
+	public final boolean Bind(DataTable dt, String val, String text, String selectVal)
+	{
+		this.Items.clear();
+		if (dt.Rows.size() == 0)
+		{
+			ListItem li = new ListItem("无", "无");
+			this.Items.add(li);
+			return false;
+		}
+
+		boolean isHave = false;
+		for (DataRow dr : dt.Rows)
+		{
+			if (dr.getValue(val).toString().equals(selectVal))
+			{
+				ListItem li = new ListItem(dr.getValue(text).toString(), dr.getValue(val).toString());
+				li.setSelected(true);
+				isHave = true;
+				this.Items.add(li);
+			}
+			else
+			{
+				this.Items.add(new ListItem(dr.getValue(text).toString(), dr.getValue(val).toString()));
+			}
+		}
+		return isHave;
+	}
+
 	public ListItem FindByValue(String all)
 	{
 		for(ListItem item : this.Items)
@@ -1391,7 +1427,7 @@ public class DDL extends BaseWebControl
 			if(item.getSelected())
 				return item;
 		}
-		return this.Items.get(0);
+		return this.Items.size() > 0 ? this.Items.get(0) : null;
 	}
 	public final int getSelectedItemIntVal()
 	{
@@ -1877,7 +1913,8 @@ public class DDL extends BaseWebControl
 		if(this.getReadOnly())
 			str.append(" disabled = \"disabled\"");
 		str.append(" class = \""+this.getCssClass()+"\"");
-		str.append(" style = \"border-style:None;\"");
+		//str.append(" style = \"border-style:None;\"");
+		str.append(" style = \"min-width:90px;\"");
 		str.append(this.buildAttributes()).append(">");
 		str.append(this.buildOption()).append("</select>");
 		return str.toString();

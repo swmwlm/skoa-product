@@ -160,7 +160,7 @@ public class SendByGUIDDept
 		BP.DA.DBAccess.RunSQLs(sqls);
 
 		String sqlscript = "";
-		sqlscript = BP.Sys.SystemConfig.getPathOfData() + "\\Install\\SQLScript\\Port_Inc_CH.sql";
+		sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install/SQLScript/Port_Inc_CH.sql";
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
 		BP.Sys.SystemConfig.DoClearCash_del();
 	}

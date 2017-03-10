@@ -2,6 +2,7 @@ package cn.jflow.controller.wf.admin.CCBPMDesigner;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.http.protocol.HttpContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +34,7 @@ import BP.GPM.DeptEmpStation;
 import BP.GPM.DeptStation;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
+import BP.Sys.Frm.MapData;
 import BP.Tools.StringHelper;
 import BP.WF.Port.Dept;
 import BP.WF.Port.Emp;
@@ -45,10 +48,12 @@ import BP.WF.Template.WorkflowDefintionManager;
 import BP.Web.WebUser;
 import cn.jflow.common.model.AjaxJson;
 import cn.jflow.common.util.JsonPluginsUtil;
+import cn.jflow.controller.wf.admin.xap.service.FlowDesignerUtils;
 import cn.jflow.controller.wf.workopt.BaseController;
 
 @Controller
 @RequestMapping("/WF/Admin/CCBPMDesigner")
+@Scope("request")
 public class CCBPMDesignerBase extends BaseController {
 
 	/**
@@ -91,6 +96,11 @@ public class CCBPMDesignerBase extends BaseController {
 	public final String getFK_Flow() {
 		return getUTF8ToString("FK_Flow");
 	}
+	
+	public final String getNo(){
+		return getUTF8ToString("No");
+	}
+	
 
 	@RequestMapping(value = "/ProcessRequest", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -118,6 +128,19 @@ public class CCBPMDesignerBase extends BaseController {
 		else if("GetStructureTree".equals(method)){
 			s_responsetext = GetStructureTreeTable();
 		}
+		//获取组织结构根结点数据
+		else if ("GetStructureTreeRoot".equals(method)){
+			s_responsetext = GetStructureTreeRootTable();
+		}
+		//获取指定部门下一级子部门及岗位列表
+		else if ("GetSubDepts".equals(method)){
+			s_responsetext = GetSubDeptsTable();
+		}
+		//根据部门、岗位获取人员列表
+		else if ("GetEmpsByStation".equals(method)){
+			s_responsetext = GetEmpsByStationTable();
+		}
+	
 		// 获取流程绑定表单列表
 		else if("GetBindingForms".equals(method)){
 			s_responsetext =  GetBindingFormsTable();
@@ -130,12 +153,277 @@ public class CCBPMDesignerBase extends BaseController {
 		else if("Do".equals(method)){
 			s_responsetext = Do();
 		}
+		
+		else if("DelFrm".equals(method)){
+			s_responsetext = DelFrm();
+		}
+		
+		
 		// 使管理员登录
 		else if("LetLogin".equals(method)){
 			s_responsetext = "admin".equals(WebUser.getNo()) ? "": LetAdminLogin("CH", true);
 		}
 		return s_responsetext;
 	}
+
+	 /// <summary>
+	 /// 根据部门、岗位获取人员列表
+     /// </summary> 
+     /// <returns></returns>
+       private String GetEmpsByStationTable()
+ 
+       {
+           ///String deptid = context.Request.QueryString["deptid"];
+    	   //string stid = context.Request.QueryString["stationid"];
+    	   String deptid = this.getRequest().getParameter("deptid");
+    	   String stid = this.getRequest().getParameter("stationid");
+
+           if (StringHelper.isNullOrEmpty(deptid)==false || StringHelper.isNullOrEmpty(stid))
+               return "[]";
+ 
+
+ 	
+            DataTable dt = new DataTable();
+            dt.Columns.Add("NO",String.class);	
+            dt.Columns.Add("PARENTNO", String.class);
+            dt.Columns.Add("NAME", String.class);
+            dt.Columns.Add("TTYPE", String.class);
+ 	        if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
+            {
+                BP.GPM.DeptEmp de = null;	
+                BP.Port.Emp emp = null; 	
+                BP.WF.Port.EmpStations ess = new BP.WF.Port.EmpStations(stid); 	
+                
+                BP.GPM.DeptEmps des = new BP.GPM.DeptEmps();	
+                des.Retrieve(BP.GPM.DeptEmpAttr.FK_Dept, deptid); 
+                
+                BP.Port.Emps emps = new BP.Port.Emps();
+                emps.RetrieveAll();
+                for (int i = 0; i < ess.size(); i++) {
+                	BP.WF.Port.EmpStation es  =  (EmpStation) ess.get(i);
+               	
+                   // de = des.GetEntityByKey(BP.GPM.DeptEmpAttr.FK_Emp, es.getFK_Emp()) as BP.GPM.DeptEmp;                    
+                  //  if (de == null)	
+                  //     continue; 	
+                  //emp = emps.GetEntityByKey(es.getFK_Emp()) as BP.Port.Emp;
+          		Object tempVar = des.GetEntityByKey(BP.GPM.DeptEmpAttr.FK_Emp, es.getFK_Emp());
+				de = (BP.GPM.DeptEmp)((tempVar instanceof BP.GPM.DeptEmp) ? tempVar : null);
+				if (de == null)
+				{
+				   continue;
+				}
+			   Object tempVar2 = emps.GetEntityByKey(es.getFK_Emp());
+			   emp = (BP.Port.Emp)((tempVar2 instanceof BP.Port.Emp) ? tempVar2 : null);
+ 
+
+                  
+                    dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+ 	
+                }
+ 	
+            }	
+            else 	
+           {
+ 	
+                BP.GPM.Emp emp = null;	
+                BP.GPM.Emps emps = new BP.GPM.Emps();
+                emps.RetrieveAll();
+ 	
+                BP.GPM.DeptEmpStations dess = new BP.GPM.DeptEmpStations();
+ 	
+                dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, deptid, BP.GPM.DeptEmpStationAttr.FK_Station, stid);
+
+                for(int j =0;j<dess.size() ;j++) 	
+                {
+                	BP.GPM.DeptEmpStation des = (DeptEmpStation) dess.get(j);
+                   
+//                	emp = emps.GetEntityByKey(des.getFK_Emp()) as BP.GPM.Emp;
+//                    dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+                	Object tempVar3 = emps.GetEntityByKey(des.getFK_Emp());
+					emp = (BP.GPM.Emp)((tempVar3 instanceof BP.GPM.Emp) ? tempVar3 : null);
+					dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+
+
+                }
+ 	
+           }
+ 
+         //  return Newtonsoft.Json.JsonConvert.SerializeObject(dt);
+           JSONArray jsonArray = JSONArray.fromObject(dt.Rows);
+   		  return jsonArray.toString();
+        }
+ 	
+
+ 	
+      private String GetStructureTreeRootTable()	
+       { 	
+            DataTable dt = new DataTable(); 	
+            dt.Columns.Add("NO", String.class);	
+            dt.Columns.Add("PARENTNO", String.class); 	
+            dt.Columns.Add("NAME", String.class); 	
+            dt.Columns.Add("TTYPE", String.class); 	
+            //string parentrootid = context.Request.QueryString["parentrootid"];
+            String parentrootid = this.getRequest().getParameter("parentrootid");
+ 	
+            if (BP.WF.Glo.getOSModel() == OSModel.OneOne) 	
+            {	
+               BP.WF.Port.Dept dept = new BP.WF.Port.Dept();
+               if (dept.Retrieve(BP.WF.Port.DeptAttr.ParentNo, parentrootid) == 0) 	
+                {	
+                   dept.setNo("-1");;	
+                   dept.setName("无部门");	
+                   dept.setParentNo("");
+ 	
+               }
+
+               dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT"); 	
+           }	
+            else	
+            { 	
+                BP.GPM.Dept dept = new BP.GPM.Dept();
+             if (dept.Retrieve(BP.GPM.DeptAttr.ParentNo, parentrootid) == 0)
+                {
+            	 dept.setNo("-1");;	
+                 dept.setName("无部门");	
+                 dept.setParentNo("");
+                }
+                dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
+
+            }
+
+           // return Newtonsoft.Json.JsonConvert.SerializeObject(dt);
+            JSONArray jsonArray = JSONArray.fromObject(dt.Rows);
+     		  return jsonArray.toString();
+
+        }
+
+        
+
+        /// <summary>
+        /// 获取指定部门下一级子部门及岗位列表
+        /// </summary>
+        /// <returns></returns>
+
+        private String GetSubDeptsTable()
+        {
+           DataTable dt = new DataTable();
+           dt.Columns.Add("NO", String.class);
+            dt.Columns.Add("PARENTNO", String.class);
+            dt.Columns.Add("NAME", String.class);
+            dt.Columns.Add("TTYPE",String.class);
+
+           // String rootid = context.Request.QueryString["rootid"];
+            String rootid = this.getRequest().getParameter("rootid");
+            if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
+            {
+                BP.WF.Port.Depts depts = new BP.WF.Port.Depts();
+                depts.Retrieve(BP.WF.Port.DeptAttr.ParentNo, rootid);
+                BP.WF.Port.Stations sts = new BP.WF.Port.Stations();
+                sts.RetrieveAll();
+               
+                BP.WF.Port.Emps emps = new BP.WF.Port.Emps();
+                emps.RetrieveAll(BP.WF.Port.EmpAttr.Name);
+                BP.WF.Port.EmpStations empsts = new BP.WF.Port.EmpStations();
+                empsts.RetrieveAll();
+                
+                BP.GPM.DeptEmps empdetps = new BP.GPM.DeptEmps();
+                empdetps.RetrieveAll();	
+                //部门人员
+                HashMap<String, List<String>> des = new HashMap<String, List<String>>(); 
+                //岗位人员
+ 	           HashMap<String, List<String>> ses = new HashMap<String, List<String>>(); 	
+               //部门岗位
+ 	           HashMap<String, List<String>> dss = new HashMap<String, List<String>>(); 
+                BP.WF.Port.Station stt = null;
+                //增加部门
+                BP.WF.Port.Dept dept = null;
+                for (int i = 0 ;i< depts.size();i++)	
+                {	
+                	 dept = (Dept) depts.get(i);
+                   dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");	
+                   
+                }
+                //获取部门下的岗位
+                empdetps.Retrieve(BP.GPM.DeptEmpAttr.FK_Dept, rootid);
+                dss.put(rootid, new ArrayList<String>());
+                
+               for (int j = 0 ;j<  empdetps.size();j++)	
+                {	
+            	   BP.GPM.DeptEmp empdept = (DeptEmp) empdetps.get(j);
+                    //判断该人员拥有的岗位
+                   empsts.Retrieve(BP.WF.Port.EmpStationAttr.FK_Emp, empdept.getFK_Emp());
+ 	
+                   for(int m = 0 ;m<empsts.size() ;m++)
+ 	               {
+                	   BP.WF.Port.EmpStation es = (EmpStation) empsts.get(m);
+                	   
+                	   if (ses.containsKey(es.getFK_Station()))
+						{
+
+                		   if (ses.get(es.getFK_Station()).contains(
+									es.getFK_Emp()) == false)
+                		   {
+                			   ses.get(es.getFK_Station()).add(es.getFK_Emp());
+                		   }
+
+						}
+					   else
+						{
+						   ses.put(es.getFK_Station(), new java.util.ArrayList<String>(java.util.Arrays.asList(new String[] { es.getFK_Emp()})));
+						}
+
+                       //增加部门的岗位
+                	   if (dss.get(dept.getNo()).contains(es.getFK_Station()) == false)
+					   {
+							Object tempVar = sts.GetEntityByKey(es.getFK_Station());
+							stt = (BP.WF.Port.Station)((tempVar instanceof BP.WF.Port.Station) ? tempVar : null);
+							if (stt == null)
+							{
+								continue;
+							}
+
+							dss.get(dept.getNo()).add(es.getFK_Station());
+						   dt.Rows.Add(es.getFK_Station(), rootid, stt.getName(), "STATION");
+					   }
+
+                   }
+              }
+           }
+            else
+           {
+                BP.GPM.Depts depts = new BP.GPM.Depts();
+                depts.Retrieve(BP.GPM.DeptAttr.ParentNo, rootid);
+                BP.GPM.Stations sts = new BP.GPM.Stations();
+                sts.RetrieveAll();
+                
+                BP.GPM.DeptStations dss = new BP.GPM.DeptStations();
+                dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, rootid);
+                BP.GPM.Station stt = null;
+               for (int i = 0;i<depts.size();i++)
+               {
+            	   BP.GPM.Dept dept = (BP.GPM.Dept) depts.get(i);
+                   //增加部门
+                    dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+               }
+               //增加部门岗位
+                for(int j = 0;j<depts.size();j++)
+              {
+                	BP.GPM.DeptStation ds = (DeptStation) dss.get(j);
+                	 Object tempVar2 = sts.GetEntityByKey(ds.getFK_Station());
+  				   stt = (BP.GPM.Station)((tempVar2 instanceof BP.GPM.Station) ? tempVar2 : null);
+  				   if (stt == null)
+  				   {
+  					   continue;
+  				   }
+  					dt.Rows.Add(ds.getFK_Station(), rootid, stt.getName(), "STATION");
+
+               }
+           }
+           //return Newtonsoft.Json.JsonConvert.SerializeObject(dt);
+           JSONArray jsonArray = JSONArray.fromObject(dt.Rows);
+    		  return jsonArray.toString();
+        }	
+	
 
 	/**
 	 * 获取用户信息
@@ -611,13 +899,12 @@ public class CCBPMDesignerBase extends BaseController {
 				}
 			}
 
-			for (java.util.Map.Entry<String, java.util.ArrayList<String>> ds : dss
-					.entrySet()) {
+			for (java.util.Map.Entry<String, java.util.ArrayList<String>> ds : dss.entrySet()) 
+			{
 				for (String st : ds.getValue()) {
 					for (String emp : ses.get(st)) {
 						Object tempVar2 = emps.GetEntityByKey(emp);
-						empt = (BP.WF.Port.Emp) ((tempVar2 instanceof BP.WF.Port.Emp) ? tempVar2
-								: null);
+						empt = (BP.WF.Port.Emp) ((tempVar2 instanceof BP.WF.Port.Emp) ? tempVar2 : null);
 
 						if (empt == null) {
 							continue;
@@ -810,11 +1097,23 @@ public class CCBPMDesignerBase extends BaseController {
 		}
 		return "false";
 	}
+	/**
+	 * 删除流程表单
+	 * 
+	 * @return
+	 */
+	private String DelFrm(){
+		String msg = WorkflowDefintionManager.DeleteFrmTemplate(this.getNo());
+		if(msg==null){
+			return "true";
+		}
+		return "false";
+	}
 
 	/**
 	 * 树节点管理
 	 */
-	public final String Do() {
+ 	public final String Do() {
 		AjaxJson j = new AjaxJson();
 		String doWhat = getUTF8ToString("doWhat");
 		String para1 = getUTF8ToString("para1");
@@ -844,10 +1143,19 @@ public class CCBPMDesignerBase extends BaseController {
 				frmSort = new SysFormTree(sameNodeNo);
 				frmSort.setName(para[1]);
 				frmSort.Update();
-				return null;
+				j.setSuccess(true);
+				j.setMsg("");
+				JSONObject member1 = new JSONObject();
+				member1.put("F", frmSort.getNo());
+				j.setData(member1);
+				return JsonPluginsUtil.beanToJson(j);
 			} catch (RuntimeException ex) {
-				return "Do Method NewFormSort Branch has a error , para:\t"
-						+ para1 + ex.getMessage();
+				BP.DA.Log
+				.DefaultLogWriteLineError("Do Method NewFormSort Branch has a error , para:\t"
+						+ para1 + ex.getMessage());
+				j.setSuccess(false);
+				j.setMsg(ex.getMessage());
+				return JsonPluginsUtil.beanToJson(j);
 			}
 		} else if (doWhat.equals("NewSubLevelFrmSort")) { // 创建子级别的 表单树 目录.
 			SysFormTree frmSortSub = null;
@@ -858,10 +1166,19 @@ public class CCBPMDesignerBase extends BaseController {
 				frmSortSub = new SysFormTree(sameNodeNo);
 				frmSortSub.setName(para[1]);
 				frmSortSub.Update();
-				return null;
+				j.setSuccess(true);
+				j.setMsg("");
+				JSONObject member1 = new JSONObject();
+				member1.put("F", frmSortSub.getNo());
+				j.setData(member1);
+				return JsonPluginsUtil.beanToJson(j);
 			} catch (RuntimeException ex) {
-				return "Do Method NewSubLevelFrmSort Branch has a error , para:\t"
-						+ para1 + ex.getMessage();
+				BP.DA.Log
+				.DefaultLogWriteLineError("Do Method NewSubLevelFrmSort Branch has a error , para:\t"
+						+ para1 + ex.getMessage());
+				j.setSuccess(false);
+				j.setMsg(ex.getMessage());
+				return JsonPluginsUtil.beanToJson(j);
 			}
 		} else if (doWhat.equals("NewSameLevelFlowSort")) { // 创建同级别的 流程树 目录.
 			FlowSort fs = null;
@@ -933,6 +1250,28 @@ public class CCBPMDesignerBase extends BaseController {
 				j.setMsg(ex.getMessage());
 				return JsonPluginsUtil.beanToJson(j);
 			}
+		}  else if(doWhat.equals("EditFrmSort")){//编辑流程树类别
+			SysFormTree frmSort = null;
+		try{
+			String[] para = para1.split("[,]", -1);
+			frmSort = new SysFormTree(para[0].replace("F", "")); // 传入的编号多出F符号，需要替换掉
+			frmSort.setName(para[1]);
+			frmSort.Save();
+
+			j.setSuccess(true);
+			j.setMsg("");
+			JSONObject member1 = new JSONObject();
+			member1.put("F", frmSort.getNo());
+			j.setData(member1);
+			return JsonPluginsUtil.beanToJson(j);
+		}catch(Exception e){
+				BP.DA.Log
+				.DefaultLogWriteLineError("Do Method EditFrmSort Branch has a error , para:\t"
+						+ para1 + e.getMessage());
+			j.setSuccess(false);
+			j.setMsg(e.getMessage());
+			return JsonPluginsUtil.beanToJson(j);
+			}
 		} else if (doWhat.equals("NewFlow")) { // 创建新流程.
 			try {
 				String[] ps = para1.split("[,]", -1);
@@ -984,6 +1323,72 @@ public class CCBPMDesignerBase extends BaseController {
 				j.setMsg(ex.getMessage());
 				return JsonPluginsUtil.beanToJson(j);
 			}
+		} else if(doWhat.equals("DelFrm")){//删除表单
+			try {
+				j.setSuccess(true);
+				j.setMsg(WorkflowDefintionManager.DeleteFrmTemplate(para1));
+				return JsonPluginsUtil.beanToJson(j);
+			} catch (RuntimeException ex) {
+				j.setSuccess(false);
+				j.setMsg(ex.getMessage());
+				return JsonPluginsUtil.beanToJson(j);
+			}
+			
+		}else if(doWhat.equals("DelFrmSort")){
+			
+			try{
+				String Frm = para1.replace("F", "");
+				String forceDel = getUTF8ToString("force");
+				String[] para = para1.split("[,]", -1);
+				SysFormTree frmSort = new SysFormTree(); // 传入的编号多出F符号，需要替换掉
+				frmSort.setNo(Frm);
+				// 强制删除，不需判断是否含有子项。
+				if (forceDel.equals("true")) {
+					//frmSort.DeleteChild();
+					frmSort.Delete();			
+					j.setSuccess(true);
+					JSONObject member1 = new JSONObject();
+					member1.put("reason", "");
+					j.setData(member1);
+					return JsonPluginsUtil.beanToJson(j);		
+				}// 判断是否包含子类别
+				System.out.println(frmSort.getHisSubFormSorts());
+				if (frmSort.getHisSubFormSorts() != null
+						&& frmSort.getHisSubFormSorts().size() > 0) {
+					j.setSuccess(false);
+					j.setMsg("此类别下包含子类别。");
+					JSONObject member1 = new JSONObject();
+					member1.put("reason", "havesubsorts");
+					j.setData(member1);
+					return JsonPluginsUtil.beanToJson(j);
+				}// 判断是否包含工作流程
+				if (frmSort.getHisForms() != null
+						&& frmSort.getHisForms().size() > 0) {
+
+					j.setSuccess(false);
+					j.setMsg("此类别下包含表单。");
+					JSONObject member1 = new JSONObject();
+					member1.put("reason", "haveflows");
+					j.setData(member1);
+					return JsonPluginsUtil.beanToJson(j);
+				}
+				
+				// 执行删除
+					frmSort.Delete();
+					j.setSuccess(true);
+					JSONObject member1 = new JSONObject();
+					member1.put("reason", "");
+					j.setData(member1);
+					return JsonPluginsUtil.beanToJson(j);
+				
+			}catch(Exception e){
+				BP.DA.Log
+				.DefaultLogWriteLineError("Do Method DelFrmSort Branch has a error , para:\t"
+						+ para1 + e.getMessage());
+				j.setSuccess(false);
+				j.setMsg(e.getMessage());
+				return JsonPluginsUtil.beanToJson(j);
+			}
 		} else if (doWhat.equals("DelFlowSort")) {
 			try {
 				String FK_FlowSort = para1.replace("F", "");
@@ -1001,7 +1406,7 @@ public class CCBPMDesignerBase extends BaseController {
 					j.setData(member1);
 					return JsonPluginsUtil.beanToJson(j);
 				}
-
+				System.out.println(delfs.getHisSubFlowSorts());
 				// 判断是否包含子类别
 				if (delfs.getHisSubFlowSorts() != null
 						&& delfs.getHisSubFlowSorts().size() > 0) {

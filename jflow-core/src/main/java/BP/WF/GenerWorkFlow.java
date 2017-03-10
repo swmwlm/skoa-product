@@ -12,6 +12,7 @@ import BP.En.QueryObject;
 import BP.En.RefMethod;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
+import BP.WF.Template.FlowAttr;
 
 /** 
  流程实例
@@ -640,6 +641,8 @@ public class GenerWorkFlow extends Entity
 		map.AddTBString(GenerWorkFlowAttr.FK_NY, null, "年月", false, false, 0, 7, 7);
 		map.AddTBInt(GenerWorkFlowAttr.WeekNum, 0, "周次", true, true);
 		map.AddTBInt(GenerWorkFlowAttr.TSpan, 0, "时间间隔", true, true);
+		
+		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
 
 
 			//待办状态(0=待办中,1=预警中,2=逾期中,3=按期完成,4=逾期完成) 

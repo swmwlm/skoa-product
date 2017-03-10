@@ -12,6 +12,7 @@ import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.En.FrmPopVal;
 import BP.Sys.Frm.MapExt;
+import BP.Tools.StringHelper;
 import BP.Web.WebUser;
 
 public class FrmPopValModel extends BaseModel {
@@ -153,7 +154,17 @@ public class FrmPopValModel extends BaseModel {
 					cb.addAttr("onclick", "isChange=true;");
 					cb.setText(name);
 					cb.addAttr("title", group);
-					cb.setChecked(this.get_CtrlVal().contains("," + no + ","));
+					if(!StringHelper.isNullOrEmpty(this.get_CtrlVal()))
+					{
+						if(this.get_CtrlVal().contains(","+name + ",") || this.get_CtrlVal().contains(","+no + ",") || this.get_CtrlVal().contains(";"+no + ","))
+						{
+							cb.setChecked(true);
+						}
+					}else
+					{
+						cb.setChecked(false);
+					}
+					
 					if (cb.getChecked()) {
 						cb.setText("<font color=green>" + cb.getText()
 								+ "</font>");

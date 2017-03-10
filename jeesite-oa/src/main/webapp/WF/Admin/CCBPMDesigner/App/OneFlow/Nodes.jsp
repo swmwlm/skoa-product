@@ -104,9 +104,9 @@
             String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
             int idx = 0;
-                idx++;
-            for (Node item: nds.Tolist()){
 
+            for (BP.WF.Node item : nds.Tolist()){
+                idx++;
                 //提前完成的分钟数.
                 BP.DA.Paras ps = new BP.DA.Paras();
                 //ps = new BP.DA.Paras();
@@ -123,14 +123,14 @@
                 //按期完成.
                 ps = new BP.DA.Paras();
                 ps.SQL = "SELECT COUNT(" + BP.WF.Data.CHAttr.MyPK + ") FROM  WF_CH WHERE CHSta=" + dbstr + "CHSta  AND FK_Node=" + dbstr + "FK_Node";
-                ps.Add(BP.WF.Data.CHAttr.CHSta, BP.WF.Data.CHSta.AnQi.ordinal());
+                ps.Add(BP.WF.Data.CHAttr.CHSta, (int)BP.WF.Data.CHSta.AnQi.ordinal());
                 ps.Add(BP.WF.Data.CHAttr.FK_Node, item.getNodeID());
                 int ch0 = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 
                 //及时完成.
                 ps = new BP.DA.Paras();
                 ps.SQL = "SELECT COUNT(" + BP.WF.Data.CHAttr.MyPK + ") FROM  WF_CH WHERE CHSta=" + dbstr + "CHSta  AND FK_Node=" + dbstr + "FK_Node";
-                ps.Add(BP.WF.Data.CHAttr.CHSta, BP.WF.Data.CHSta.JiShi.ordinal());
+                ps.Add(BP.WF.Data.CHAttr.CHSta, (int)BP.WF.Data.CHSta.JiShi.ordinal());
                 ps.Add(BP.WF.Data.CHAttr.FK_Node, item.getNodeID());
                 int ch1 = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 
@@ -144,7 +144,7 @@
                 //超期完成.
                 ps = new BP.DA.Paras();
                 ps.SQL = "SELECT COUNT(" + BP.WF.Data.CHAttr.MyPK + ") FROM  WF_CH WHERE CHSta=" + dbstr + "CHSta  AND FK_Node=" + dbstr + "FK_Node";
-                ps.Add(BP.WF.Data.CHAttr.CHSta, (int)BP.WF.Data.CHSta.YuQi.ordinal());
+                ps.Add(BP.WF.Data.CHAttr.CHSta, (int)BP.WF.Data.CHSta.ChaoQi.ordinal());
                 ps.Add(BP.WF.Data.CHAttr.FK_Node, item.getNodeID());
                 int ch3 = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 
@@ -215,7 +215,7 @@
                else
                { %>
             <td class="center" style="width: 55px;">
-                <%=new StringBuffer(item.getHisStationsStr()).deleteCharAt(',') %>
+                <%=new StringBuffer(item.getHisStationsStr()).deleteCharAt(item.getHisStationsStr().indexOf(",")) %>
             </td>
             <%} %>
             <td class="center">

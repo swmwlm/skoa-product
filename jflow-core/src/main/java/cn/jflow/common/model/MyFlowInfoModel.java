@@ -1,13 +1,13 @@
 package cn.jflow.common.model;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import BP.Sys.PubClass;
 import BP.WF.Dev2Interface;
+import BP.WF.Flow;
 import BP.WF.Glo;
 import BP.WF.WorkFlow;
-import BP.WF.Flow;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class MyFlowInfoModel {
 	

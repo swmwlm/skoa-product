@@ -1,17 +1,24 @@
 package cn.jflow.model.wf.admin.FoolFormDesigner.MaoExt;
 
-import BP.Sys.Frm.*;
+import java.io.File;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import BP.Sys.Frm.MapAttr;
+import BP.Sys.Frm.MapAttrs;
+import BP.Sys.Frm.MapExt;
+import BP.Sys.Frm.MapExtAttr;
+import BP.Sys.Frm.MapExtXmlList;
+import BP.Sys.Frm.MapExts;
 import cn.jflow.common.model.BaseModel;
 import cn.jflow.model.designer.ListSelectionMode;
 import cn.jflow.system.ui.core.LinkButton;
 import cn.jflow.system.ui.core.ListBox;
 import cn.jflow.system.ui.core.ListItem;
+import cn.jflow.system.ui.core.NamesOfBtn;
 import cn.jflow.system.ui.core.RadioButton;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 
 public class InputCheckModel extends BaseModel {
 
@@ -193,10 +200,10 @@ public class InputCheckModel extends BaseModel {
 	}
 
 	private ListBox rb_CheckedChanged(ListBox lb) {//Object sender, EventArgs e
-		String path = BP.Sys.SystemConfig.getPathOfData() + File.separator +"JSLib"+File.separator;
+		String path = BP.Sys.SystemConfig.getPathOfData() + "JSLib/";
 		//// = this.Pub1.append(GetRadioButtonByID("RB_0"));
 		if (this.getRB_0C() == false) {
-			path = BP.Sys.SystemConfig.getPathOfDataUser() + File.separator+"JSLib"+File.separator;
+			path = BP.Sys.SystemConfig.getPathOfDataUser() + "JSLib/";
 		}
 
 		//Object tempVar = null;////= this.Pub1.append(FindControl("LB1"));

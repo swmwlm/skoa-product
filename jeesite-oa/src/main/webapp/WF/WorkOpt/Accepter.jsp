@@ -91,6 +91,7 @@
           }
 
           var pushData = eval('(' + js + ')');
+
           $('#cc').combobox({
               data: pushData.ddl,
               valueField: 'id',
@@ -238,8 +239,10 @@
               FK_Flow: FK_Flow
           };
           queryData(params, function (js, scope) { }, this);
-          window.opener.location.reload();
           window.close();
+          window.returnValue = "true";//回传值--确定按钮
+      	  var url = "<%=basePath%>/WF/MyFlowInfo.jsp";
+      	  window.location.href = url;
 
       }
       //关闭

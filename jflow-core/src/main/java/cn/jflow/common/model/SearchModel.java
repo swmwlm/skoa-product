@@ -9,8 +9,10 @@ import cn.jflow.system.ui.core.DDL;
 import cn.jflow.system.ui.core.ListItem;
 import cn.jflow.system.ui.core.NamesOfBtn;
 import cn.jflow.system.ui.core.ToolBar;
-import BP.DA.CashEntity;
+import BP.DA.DBAccess;
+import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -206,12 +208,30 @@ public class SearchModel extends BaseModel {
 					+ en.GetValStrByKey("OID") + "','tdr');\" >"
 					+ en.GetValByKey("Title") + "</a>"));
 
+			String sql = "SELECT myPk,ndfrom FROM ND"+Integer.parseInt(currMapRpt.getFK_Flow())+"Track where workid="+en.GetValStrByKey("OID")+" order by rdt desc" ;
+			DataTable dt = DBAccess.RunSQLReturnTable_200705_SQL(sql, new Paras());
 			for (Attr attr : attrs) {
 				String key = attr.getKey();
 				if (attr.getIsRefAttr() || "MyNum".equals(key)
 						|| "Title".equals(key))
 					continue;
-
+				
+				//流程信息增加连接 到流程最后的一个节点的表单详细   FlowNote
+				if ("FlowNote".equals(key))
+				{
+					if(dt.Rows.size()!=0){
+						UCSys1.append(AddTD("<a href=\"javascript:WinOpen('"
+								+ Glo.getCCFlowAppPath() + "WF/WFRpt.jsp?FK_Flow="
+								+ currMapRpt.getFK_Flow() + "&WorkID="
+								+ en.GetValStrByKey("OID") +"&DoType=View&MyPK="+dt.Rows.get(0).get("mypk")
+								+ "&FK_Node="+dt.Rows.get(0).get("ndfrom")+"','tdr');\" >"
+								+ "表单详情</a>"));
+					}else
+					{
+						UCSys1.append(AddTDNum("表单详情"));
+					}
+				}
+				
 				if (attr.getUIContralType() == UIContralType.DDL) {
 					String s = en.GetValRefTextByKey(key);
 					if (StringHelper.isNullOrEmpty(s)) {

@@ -75,7 +75,7 @@ public class PageLoadFullController extends BaseController {
 		String FK_MapData = this.getParamter("FK_MapData");
 		
 		if (StringHelper.isNullOrEmpty(txt)) {
-			String path = SystemConfig.getPathOfDataUser() + "\\JSLibData\\"
+			String path = SystemConfig.getPathOfDataUser() + "JSLibData/"
 					+ FK_MapData + "_Self.js";
 		
 			File file = new File(path);
@@ -85,7 +85,7 @@ public class PageLoadFullController extends BaseController {
 			}
 		
 		} else {
-			String path = SystemConfig.getPathOfDataUser() + "\\JSLibData\\"
+			String path = SystemConfig.getPathOfDataUser() + "JSLibData/"
 					+ FK_MapData + "_Self.js";
 			BP.DA.DataType.WriteFile(path, txt);
 		}

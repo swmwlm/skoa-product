@@ -2,9 +2,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <script type="text/javascript">
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
 		LoadData();
 	function LoadData() {
-		var FK_Node = 101;
+		var FK_Node = GetQueryString("FK_Node");
 		var params = {
 			method : "getMyData",
 			FK_Node:FK_Node
@@ -47,7 +53,7 @@
         		    value:pushData.ttrolesed
          		}); 
             	 $("input[name='xxx']").eq(pushData.hischway).attr("checked","checked");
-            	 alert(pushData.cb_iseval+1);
+            	 /* alert(pushData.cb_iseval+1); */ // Xzd modified(Cancellation) 2016-10-13  判断为该js代码目的为调试，无任何业务逻辑功能
             	 $("#CB_IsEval").attr("checked",pushData.cb_iseval=="false"?false:true);
             });
 	}
@@ -75,14 +81,57 @@
 		});
 	}
 	  function savekhgz(){
+		  /* 
 		  var hischway;
 		  $("input[name='xxx']").each(function(){
 			  if(this.attributes["checked"].value){
 				  hischway=this.id;
 			  }
 		  })
+		  */
+		  var radio= $("input[name='xxx']:checked").val(); 
+		  var CB_IsEval =document.getElementById("CB_IsEval").checked;
 		  
-		  alert(1);
+		  var TB_TSpanDay= $("#TB_TSpanDay").val();
+		  var TB_TSpanHour= $("#TB_TSpanHour").val();
+		  var TB_WarningHour= $("#TB_WarningHour").val();
+		  var TB_WarningDay= $("#TB_WarningDay").val();
+		  var TB_TCent= $("#TB_TCent").val();
+		  
+		  //select 选中的值
+		  var DDL_TAlertRole = $("#DDL_TAlertRole").combobox("getValue");
+		  var DDL_TAlertWay = $("#DDL_TAlertWay").combobox("getValue");
+		  var DDL_WAlertRole = $("#DDL_WAlertRole").combobox("getValue");
+		  var DDL_WAlertWay = $("#DDL_WAlertWay").combobox("getValue");
+		  
+		  var FK_Node = GetQueryString("FK_Node");
+		  var params = {
+					"FK_Node":FK_Node,
+					"TB_TSpanDay":TB_TSpanDay,
+					"TB_TSpanHour":TB_TSpanHour,
+					"TB_WarningHour":TB_WarningHour,
+					"TB_WarningDay":TB_WarningDay,
+					"TB_TCent":TB_TCent,
+					"DDL_TAlertRole":DDL_TAlertRole,
+					"DDL_TAlertWay":DDL_TAlertWay,
+					"DDL_WAlertRole":DDL_WAlertRole,
+					"DDL_WAlertWay":DDL_WAlertWay,
+					"radio":radio,
+					"CB_IsEval":CB_IsEval
+				};
+		  $.ajax({
+	            type: 'GET', //使用POST方法访问后台
+	            contentType: "application/json; charset=utf-8",
+	            url:"<%=basePath%>WF/Admin/AttrNode/chRoleSave.do", //要访问的后台地址
+	            data : params,
+	            error : function() {
+	            	alert("保存失败");
+				},
+				success : function(msg) {//msg为返回的数据，在这里做数据绑定
+					alert(msg);
+				}
+		  
+		  });
 	  }
 </script>
 <body>
@@ -94,7 +143,7 @@
 					<td>
 						<fieldset>
 							<legend>
-								<input id="RB_None" type="radio" name="xxx" /><label
+								<input id="RB_None" type="radio" name="xxx" value="RB_None" /><label
 									style="cursor: pointer;" for="RB_None">不考核</label>
 							</legend>
 							<ul>
@@ -103,7 +152,7 @@
 						</fieldset>
 						<fieldset>
 							<legend>
-								<input id="RB_ByTime" type="radio" name="xxx" /> <label
+								<input id="RB_ByTime" type="radio" name="xxx" value="RB_ByTime" /> <label
 									style="cursor: pointer;" for="RB_ByTime">按时效考核</label>
 							</legend>
 							<table style="width: 100%;">
@@ -133,13 +182,13 @@
 								<tr>
 									<td>预警提醒规则</td>
 									<td>
-									<input id="DDL_WAlertRole" name="DDL_WAlertRole" >  </td>
+									<input id="DDL_WAlertRole" name="" >  </td>
 									<td>提醒方式</td>
 									<td><input id="DDL_WAlertWay" name="DDL_WAlertWay" >  </td>
 								</tr>
 								<tr>
 									<td>逾期提醒规则</td>
-									<td><input id="DDL_TAlertRole" name="DDL_TAlertRole" >   </td>
+									<td><input id="DDL_TAlertRole" name="DDL_TAlertRole" value=""/></td>
 									<td>提醒方式</td>
 									<td><input id="DDL_TAlertWay" name="DDL_TAlertWay" >  </td>
 								</tr>
@@ -147,7 +196,7 @@
 						</fieldset>
 						<fieldset>
 							<legend>
-								<input id="RB_ByWorkNum" type="radio" name="xxx" /> <label
+								<input id="RB_ByWorkNum" type="radio" name="xxx" value="RB_ByWorkNum" /> <label
 									style="cursor: pointer;" for="RB_ByWorkNum">按工作量考核</label>
 							</legend>
 							<ul style="color: Gray">
@@ -161,7 +210,7 @@
 								<li>质量考核，是当前节点对上一步的工作进行一个工作好坏的一个考核。</li>
 								<li>考核的方式是对上一个节点进行打分，该分值记录到WF_CHEval的表里，开发人员对WF_CHEval的数据根据用户的需求进行二次处理。</li>
 							</ul>
-							<input id="CB_IsEval" type="checkbox" /> <label
+							<input id="CB_IsEval" type="checkbox" value="CB_IsEval"/> <label
 								style="cursor: pointer;" for="CB_IsEval">是否是质量考核点？</label>
 						</fieldset> <input id="Btn_Save" type="button" value="保存"
 						class="easyui-linkbutton" onclick="savekhgz();" style="cursor: pointer;" />

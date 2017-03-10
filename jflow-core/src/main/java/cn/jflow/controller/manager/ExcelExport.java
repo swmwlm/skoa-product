@@ -1,17 +1,31 @@
 package cn.jflow.controller.manager;
 
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import org.apache.poi.hssf.usermodel.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
+import BP.DA.DBAccess;
+import BP.DA.DataRow;
+import BP.DA.DataTable;
 
 @Controller
 @RequestMapping(value="/DES")
@@ -27,7 +41,7 @@ public class ExcelExport {
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
         String sql="select (select Name from TX_QX where TX_QX.No= ND124Rpt.FK_QX1) FK_QX,(select lab from Sys_Enum where Sys_Enum.IntKey=ND124Rpt.DuiXiangLeiXing and Sys_Enum.EnumKey='duixiangleixing') DuiXiangLeiXing,COUNT(*) as HuShu,SUM(ND128Rpt.FaFangJinE) as JinE from ND124Rpt,ND128Rpt where ND124Rpt.BillNo in(select * from f_split(ND128Rpt.YinCangYu,',')) and ND124Rpt.BillNo!='' group by ND124Rpt.FK_QX1,ND124Rpt.DuiXiangLeiXing";
 		
-        DataTable dt= DBAccess.RunSQLReturnTable(sql);
+        DataTable dt=DBAccess.RunSQLReturnTable(sql);
 		
 		try {   
             HSSFWorkbook wb = new HSSFWorkbook();   
@@ -149,7 +163,7 @@ public class ExcelExport {
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
         String sql="select TX_JD.Name as FK_JD,Sys_Enum.Lab,COUNT(*) as HuShu,SUM(ND128Rpt.FaFangJinE) as JinE from ND124Rpt,ND128Rpt,TX_JD,Sys_Enum where ND124Rpt.BillNo in(select * from f_split(ND128Rpt.YinCangYu,',')) and ND124Rpt.BillNo!='' and TX_JD.No=ND124Rpt.FK_QX and Sys_Enum.EnumKey='DuiXiangLeiXing' and Sys_Enum.IntKey=ND124Rpt.DuiXiangLeiXing group by Sys_Enum.Lab,TX_JD.Name";
 		
-        DataTable dt= DBAccess.RunSQLReturnTable(sql);
+        DataTable dt=DBAccess.RunSQLReturnTable(sql);
 		
 		try {   
             HSSFWorkbook wb = new HSSFWorkbook();   
@@ -275,7 +289,7 @@ public class ExcelExport {
         response.setContentType("application/vnd.ms-excel;charset=UTF-8"); 
 
 		
-		DataTable dt= DBAccess.RunSQLReturnTable(sql);
+		DataTable dt=DBAccess.RunSQLReturnTable(sql);
 		
 		try {   
             HSSFWorkbook wb = new HSSFWorkbook();   

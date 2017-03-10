@@ -529,7 +529,7 @@ public class FormatToJson {
 	 * @param s
 	 * @return
 	 */
-	private static String String2Json(String s) {
+	public static String String2Json(String s) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.toCharArray()[i];

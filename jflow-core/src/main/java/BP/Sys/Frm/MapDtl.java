@@ -1052,9 +1052,18 @@ public class MapDtl extends EntityNoName
 		return this.GetValFloatByKey(FrmImgAttr.X);
 	}
 	
+	public final void setX(float value)
+	{
+		this.SetValByKey(MapDtlAttr.X, value);
+	}
+	
 	public final float getY()
 	{
 		return this.GetValFloatByKey(FrmImgAttr.Y);
+	}
+	public final void setY(float value)
+	{
+		this.SetValByKey(MapDtlAttr.Y, value);
 	}
 	
 	public final float getW()

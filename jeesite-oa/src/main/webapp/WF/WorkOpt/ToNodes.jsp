@@ -1,6 +1,4 @@
-<%@ page language="java" isELIgnored="false" import="BP.DA.DataSet" pageEncoding="utf-8"%>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="org.apache.commons.lang3.StringUtils" %>
+<%@ page language="java" isELIgnored="false" import="java.util.*" pageEncoding="utf-8"%>
 <%@ include file="/WF/head/head2.jsp"%>
 <link href="<%=Glo.getCCFlowAppPath() %>DataUser/Style/Table0.css" rel="stylesheet" type="text/css" />
 
@@ -137,22 +135,8 @@ function onSubmit(){
 											</span>
 											<% 
 											 	if(mynd.getHisDeliveryWay() == DeliveryWay.BySelected){
-													DataSet ds=Dev2Interface.WorkOpt_AccepterDB(FK_Flow, mynd.getNodeID(), WorkID, FID);
-													DataTable dt = (DataTable) ds.Tables.get(0);
-
 											%>
 												- <a href="javascript:WinShowModalDialog_Accepter('Accepter.jsp?FK_Flow=<%=FK_Flow %>&FK_Node=<%=FK_Node %>&ToNode=<%=mynd.getNodeID() %>&WorkID=<%=WorkID %>&FID=<%=FID %>&type=1')" >选择接受人</a>
-												<%
-													Iterator iterator=dt.Rows.iterator();
-													StringBuilder names=new StringBuilder();
-													while (iterator.hasNext()) {
-														DataRow dr = (DataRow) iterator.next();
-														names.append(dr.getValue("name") + ",");
-													}
-												%>
-													<div><%=StringUtils.strip(names.toString(),",")%></div>
-
-
 										    <%} %>
 										    	<br>
 										<%} %>

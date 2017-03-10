@@ -901,11 +901,13 @@ public class ToolBar extends PageBase{
                         break;
                     }
                     Entities ens = attr.getHisFKEns();
-                    ens.RetrieveAll();
-                    ddl.Items.add(new ListItem(">>" + desc, "all"));
-                    for(Object obj : ens.subList(0, ens.size())){
-                    	Entity en = (Entity) obj;
-                        ddl.Items.add(new ListItem(en.GetValStrByKey("Name"), en.GetValStrByKey("No")));
+                    if(ens != null){
+	                    ens.RetrieveAll();
+	                    ddl.Items.add(new ListItem(">>" + desc, "all"));
+	                    for(Object obj : ens.subList(0, ens.size())){
+	                    	Entity en = (Entity) obj;
+	                        ddl.Items.add(new ListItem(en.GetValStrByKey("Name"), en.GetValStrByKey("No")));
+	                    }
                     }
                     if (ddl.Items.size() >= 2)
                         ddl.Items.add(liMvals);

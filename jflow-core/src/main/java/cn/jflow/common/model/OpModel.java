@@ -118,18 +118,22 @@ public class OpModel extends BaseModel{
     // 强制删除流程
     public void FlowOverByCoercion()
     {
-        GenerWorkFlow gwf = new GenerWorkFlow(WorkID);
-        Pub2.append(this.AddEasyUiPanelInfoBegin("删除流程", "icon-tip", 30));//.AddEasyUiPanelInfoBegin("删除流程");
-        //Pub2.append(this.AddEasyUiPanelInfoBegin("删除流程", "collapse-panel-2"));
-        if (WebUser.getNo() == "admin")
-        {
-        	Pub2.append("功能执行:<a href=\"javascript:DoFunc('" + FlowOpList.FlowOverByCoercion + "','" + WorkID + "','" + FK_Flow + "','" + FK_Node + "')\" >点击执行删除流程</a>。");
-            Pub2.append(this.AddBR("说明：如果执行流程将会被彻底的删除。"));//.AddBR();
-        }
-        else
-        {
-        	Pub2.append("只有admin才能删除流程，您没有此权限.");
-        }	
+        try {
+
+            GenerWorkFlow gwf = new GenerWorkFlow(WorkID);
+            Pub2.append(this.AddEasyUiPanelInfoBegin("删除流程", "icon-tip", 30));//.AddEasyUiPanelInfoBegin("删除流程");
+            //Pub2.append(this.AddEasyUiPanelInfoBegin("删除流程", "collapse-panel-2"));
+			if (BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.FK_Flow,this.WorkID, WebUser.getNo()) ==true){
+				Pub2.append("功能执行:<a href=\"javascript:DeleteFlowInstance('" + FK_Flow + "','" + WorkID + "')\" >点击执行删除流程</a>。");
+			    Pub2.append(this.AddBR("说明：如果执行流程将会被彻底的删除。"));//.AddBR();
+			}
+			else
+			{
+				Pub2.append("对不起，您没有删除该流程的权限.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
         Pub2.append(this.AddEasyUiPanelInfoEnd());
         Pub2.append(this.AddBR());
     }

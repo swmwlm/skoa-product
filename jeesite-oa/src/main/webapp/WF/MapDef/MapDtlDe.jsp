@@ -26,7 +26,7 @@
             window.location.href = window.location.href;
         }
         function CopyF(mypk) {
-            var url = 'CopyDtlField.jsp?MyPK=' + mypk;
+            var url = 'CopyDtlField.jsp?=MyPK=' + mypk;
             var b = window.showModalDialog(url, 'ass', 'dialogHeight: 600px; dialogWidth: 800px;center: yes; help: no');
             window.location.href = window.location.href;
         }

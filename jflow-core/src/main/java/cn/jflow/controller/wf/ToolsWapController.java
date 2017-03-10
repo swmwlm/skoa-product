@@ -136,7 +136,7 @@ public class ToolsWapController extends BaseController {
 //		System.out.println("获得文件名：" + realFileName);
 		// 获取路径
 		String ctxPath = request.getSession().getServletContext().getRealPath(
-				"/") + "DataUser\\Siganture\\";
+				"/") + "DataUser/Siganture/";
 		// 创建文件
 		File dirPath = new File(ctxPath);
 		if (!dirPath.exists()) {
@@ -157,7 +157,7 @@ public class ToolsWapController extends BaseController {
 		List<String> files = new ArrayList<String>();
 		String ctxPath = request.getSession().getServletContext().getRealPath(
 				"/")
-				+ "DataUser\\Siganture\\";
+				+ "DataUser/Siganture/";
 		File file = new File(ctxPath);
 		if (file.exists()) {
 			File[] fs = file.listFiles();
@@ -205,7 +205,7 @@ public class ToolsWapController extends BaseController {
 //		System.out.println("获得文件名：" + realFileName);
 		// 获取路径
 		String ctxPath = request.getSession().getServletContext().getRealPath(
-				"/") + "DataUser\\UserIcon\\";
+				"/") + "DataUser/UserIcon/";
 		// 创建文件
 		File dirPath = new File(ctxPath);
 		if (!dirPath.exists()) {

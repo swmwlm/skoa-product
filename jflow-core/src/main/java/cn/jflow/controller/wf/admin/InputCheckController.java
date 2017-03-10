@@ -31,7 +31,7 @@ public class InputCheckController extends BaseController {
 		String[] LB1 = this.getRequest().getParameter("LB1").split(",");
 
 		// 检查路径. 没有就创建它。
-		String pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "\\JSLibData\\";
+		String pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "JSLibData/";
 		File file = new File(pathDir);
 		if (!file.exists() && !file.isDirectory()) {
 			file.mkdir();
@@ -65,10 +65,10 @@ public class InputCheckController extends BaseController {
 			me.setDoWay(doWay);
 			me.setDoc(BP.DA.DataType.ReadTextFile(li));
 			File info = new File(li);
-			System.out.println("info.getPath() "+info.getParent());
-			System.out.println("info.getName() "+info.getName());
-			System.out.println("info.getName().lastIndexOf(.) + 1:   "+info.getName().lastIndexOf(".") + 1);
-			me.setTag2(info.getParent().substring(info.getParent().lastIndexOf("\\") + 1));
+			//System.out.println("info.getPath() "+info.getParent());
+			//System.out.println("info.getName() "+info.getName());
+			//System.out.println("info.getName().lastIndexOf(.) + 1:   "+info.getName().lastIndexOf(".") + 1);
+			me.setTag2(info.getParent().substring(info.getParent().lastIndexOf("/") + 1)); // #134 表单字段的脚本验证不能使用
 
 			//获取函数的名称.
 			try{
@@ -103,12 +103,12 @@ public class InputCheckController extends BaseController {
 			js += "\r\n" + BP.DA.DataType.ReadTextFile(me1.getTag());
 		}
 
-		File file2 = new File(pathDir + "\\" + this.getRequest().getParameter("FK_MapData")+"" + ".js");
+		File file2 = new File(pathDir + "/" + this.getRequest().getParameter("FK_MapData")+"" + ".js");
 		if (!file2.exists() && !file2.isDirectory()) {
 			file2.delete();//(pathDir + "\\" + this.getFK_MapData() + ".js");
 		}
 
-		BP.DA.DataType.WriteFile(pathDir + "\\" + this.getRequest().getParameter("FK_MapData")+"" + ".js", js);
+		BP.DA.DataType.WriteFile(pathDir + "/" + this.getRequest().getParameter("FK_MapData")+"" + ".js", js);
 		///#endregion 把所有的js 文件放在一个文件里面。
 
 		/*try {

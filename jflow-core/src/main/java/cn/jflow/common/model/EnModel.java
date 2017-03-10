@@ -1549,8 +1549,7 @@ public class EnModel extends BaseModel {
 					if (ddl1.getEnabled() && isReadonly) {
 						ddl1.setEnabled(false);
 					}
-					ddl1.attributes.put("Width",
-							String.valueOf(attr.getUIWidth()));
+					ddl1.attributes.put("style","width: "+String.valueOf(attr.getUIWidth())+"px;height: 19px;");
 					ddl1.Items.add(new ListItem(HisEn.GetValRefTextByKey(attr
 							.getKeyOfEn()), HisEn.GetValStrByKey(attr
 							.getKeyOfEn())));
@@ -1823,8 +1822,8 @@ public class EnModel extends BaseModel {
 			appendPub("<span style=\"color:" + link.getFontColorHtml()
 					+ ";font-family: " + link.getFontName() + ";font-size: "
 					+ link.getFontSize() + "px\"> ");
-			appendPub("<a href=" + url + " target=" + link.getTarget() + "> "
-					+ link.getText() + "</a>");
+			appendPub("<a href=" + url + " target=" + link.getTarget() + "><font color='#0000FF'>"
+					+ link.getText() + "</font></a>");
 			appendPub("</span></DIV>");
 		}
 	}
@@ -1845,7 +1844,8 @@ public class EnModel extends BaseModel {
 					appendPub("<img id=\"" + line.getMyPK()
 							+ "\" style=\"padding:0px;position:absolute; left:"
 							+ x + "px; top:" + line.getY1() + "px; width:"
-							+ line.getBorderWidth() + "px; height:" + h
+							//+ line.getBorderWidth() + "px; height:" + h
+							+ "1px; height:" + h
 							+ "px;background-color:"
 							+ line.getBorderColorHtml() + "\">");
 
@@ -1854,7 +1854,8 @@ public class EnModel extends BaseModel {
 					appendPub("<img id=\"" + line.getMyPK()
 							+ "\" style=\"padding:0px;position:absolute; left:"
 							+ x + "px; top:" + line.getY2() + "px; width:"
-							+ line.getBorderWidth() + "px; height:" + h
+							//+ line.getBorderWidth() + "px; height:" + h
+							+ "1px; height:" + h
 							+ "px;background-color:"
 							+ line.getBorderColorHtml() + "\">");
 
@@ -1868,8 +1869,9 @@ public class EnModel extends BaseModel {
 					appendPub("<img id=\"" + line.getMyPK()
 							+ "\" style=\"padding:0px;position:absolute; left:"
 							+ x + "px; top:" + line.getY1() + "px; width:" + w
-							+ "px; height:" + line.getBorderWidth()
-							+ "px;background-color:"
+//							+ "px; height:" + line.getBorderWidth()
+//							+ "px;background-color:"
+							+ "px; height:1px;background-color:"
 							+ line.getBorderColorHtml() + "\">");
 
 				} else {
@@ -1877,8 +1879,9 @@ public class EnModel extends BaseModel {
 					appendPub("<img id=\"" + line.getMyPK()
 							+ "\" style=\"padding:0px;position:absolute; left:"
 							+ x + "px; top:" + line.getY2() + "px; width:" + w
-							+ "px; height:" + line.getBorderWidth()
-							+ "px;background-color:"
+//							+ "px; height:" + line.getBorderWidth()
+//							+ "px;background-color:"
+							+ "px; height:1px;background-color:"
 							+ line.getBorderColorHtml() + "\">");
 
 				}

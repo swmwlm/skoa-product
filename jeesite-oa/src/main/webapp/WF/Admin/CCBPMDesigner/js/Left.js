@@ -148,7 +148,6 @@ function newFlowSort(isSub) {
             doWhat: doWhat,
             para1: currSort.id + ',' + val
         };
-
         ajaxService(params, function (data) {
             var jdata = $.parseJSON(data);
             if (jdata.success) {
@@ -166,8 +165,54 @@ function newFlowSort(isSub) {
                         children: []
                     }]
                 });
+               window.location.reload();//不加刷新会显示查询不到编号。
+               $('#flowTree').tree('select', $('#flowTree').tree('find', jdata.data).target);
+            }
+            else {
+                $.messager.alert('错误', '新建' + propName + '失败：' + jdata.msg, 'error');
+            }
+        }, this);
+    }, null, false, 'icon-new');
+}
+//新建表单同类级别、子类级别
+function newFrmSort(isSub) {
+    var node = $('#formTree').tree('getSelected');
+//    if (node == null || undefined == typeof(node.attributes["isparent"]) ||
+//    		node.attributes["isparent"] != '1' || (node.attributes["isroot"] == '1' && isSub == false)) return;
+    var propName = (isSub ? '子级' : '同级') + '流程类别';
+    OpenEasyUiSampleEditDialog(propName, '新建', null, function (val) {
+        if (val == null || val.length == 0) {
+            $.messager.alert('错误', '请输入' + propName + '！', 'error');
+            return false;
+        }
 
-                $('#flowTree').tree('select', $('#flowTree').tree('find', jdata.data).target);
+        //传入参数
+        var doWhat = isSub ? 'NewSubLevelFrmSort' : 'NewSameLevelFrmSort';
+               
+        var params = {
+            method: "Do",
+            doWhat: doWhat,
+            para1: node.id +',' +val
+        };
+        ajaxService(params, function (data) {
+            var jdata = $.parseJSON(data);
+            if (jdata.success) {
+                var parentNode = isSub ? node : $('#formTree').tree('getParent', node.target);
+                
+                $('#formTree').tree('append', {
+                    parent: parentNode.target,
+                    data: [{
+                        id: jdata.data,
+                        text: val,
+                        attributes: { isparent: '1', MenuId: "mFormSort" },
+                        checked: false,
+                        iconCls: 'icon-tree_folder',
+                        state: 'open',
+                        children: []
+                    }]
+                });
+                window.location.reload();
+                $('#formTree').tree('select', $('#formTree').tree('find', jdata.data).target);
             }
             else {
                 $.messager.alert('错误', '新建' + propName + '失败：' + jdata.msg, 'error');
@@ -209,8 +254,39 @@ function editFlowSort() {
     }, null, false, 'icon-edit');
 }
 
+//修改表单类别
+function editFrmSort(){
+	/// <summary>编辑流程类别</summary>
+    var node = $('#formTree').tree('getSelected');
+    //if (node == null) return;
+    OpenEasyUiSampleEditDialog('表单类别', '编辑', node.text, function (val) {
+        if (val == null || val.length == 0) {
+            $.messager.alert('错误', '请输入表单类别！', 'error');
+            return false;
+        }
+        //传入后台参数
+        var params = {
+            method: "Do",
+            doWhat: "EditFrmSort",
+            para1: node.id + ',' + val
+        };
+        ajaxService(params, function (data) {
+            var jdata = $.parseJSON(data);
+            if (jdata.success) {
+                $('#formTree').tree('update', {
+                    target: node.target,
+                    text: val
+                });
+            }
+            else {
+                $.messager.alert('错误', '编辑流程类别失败：' + jdata.msg, 'error');
+            }
+        });
+    }, null, false, 'icon-edit');
+}
+
+//删除流程类别
 function deleteFlowSort() {
-    /// <summary>删除流程类别</summary>
     var currSort = $('#flowTree').tree('getSelected');
     if (currSort == null || currSort.attributes.isparent == undefined) return;
 
@@ -227,6 +303,7 @@ function deleteFlowSort() {
                 CloseAllTabs();
                 $('#flowTree').tree('remove', currSort.target);
             } else if (jdata.success == false && jdata.reason == "havesubsorts") {
+            	
                 OpenEasyUiConfirm("所选类别下包含子流程类别，确定强制删除吗？", function () {
                     //传入后台参数
                     var params = {
@@ -241,12 +318,14 @@ function deleteFlowSort() {
                             CloseAllTabs();
                             $('#flowTree').tree('remove', currSort.target);
                         } else {
+                        	
                             $.messager.alert('错误', '删除流程类别失败：' + jdata.msg, 'error');
                         }
                     });
 
                 });
             } else if (jdata.success == false && jdata.reason == "haveflows") {
+            	
                 OpenEasyUiConfirm("所选类别下包含流程，确定强制删除吗？", function () {
                     //传入后台参数
                     var params = {
@@ -255,12 +334,14 @@ function deleteFlowSort() {
                         force: "true",
                         para1: currSort.id
                     };
+                    
                     ajaxService(params, function (data) {
                         var jdata = $.parseJSON(data);
                         if (jdata.success == true) {
                             CloseAllTabs();
                             $('#flowTree').tree('remove', currSort.target);
                         } else {
+                        	
                             $.messager.alert('错误', '删除流程类别失败：' + jdata.msg, 'error');
                         }
                     });
@@ -268,13 +349,82 @@ function deleteFlowSort() {
                 });
             }
             else {
+            	
                 $.messager.alert('错误', '删除流程类别失败：' + jdata.msg, 'error');
             }
         });
     });
 }
 
+//删除表单类别
+function DeleteFrmSort(){
+    var node = $('#formTree').tree('getSelected');
+   // if (node == null || node.attributes.isparent == undefined) return;
+    OpenEasyUiConfirm("你确定要删除名称为“" + node.text + "”的表单类别吗？", function () {
+        //传入后台参数
+        var params = {
+            method: "Do",
+            doWhat: "DelFrmSort",
+            para1: node.id
+        };
+        ajaxService(params, function (data) {
+            var jdata = $.parseJSON(data);
+            if (jdata.success == true) {
+                CloseAllTabs();
+                $('#formTree').tree('remove', node.target);
+            } /*else if (jdata.success == false && jdata.reason == "havesubsorts") {
+                OpenEasyUiConfirm("所选类别下包含子表单类别，确定强制删除吗？", function () {
+                    //传入后台参数
+                    var params = {
+                        method: "Do",
+                        doWhat: "DelFrmSort",
+                        force: "true",
+                        para1: node.id
+                    };
+                    ajaxService(params, function (data) {
+                        var jdata = $.parseJSON(data);
+                        if (jdata.success == true) {
+                            CloseAllTabs();
+                            $('#formTree').tree('remove', node.target);
+                        } else {
+                            $.messager.alert('错误', '删除表单类别失败：' + jdata.msg, 'error');
+                        }
+                    });
+
+                });
+            } else if (jdata.success == false && jdata.reason == "haveflows") {
+            	
+                OpenEasyUiConfirm("所选类别下包含子类，确定强制删除吗？", function () {
+                    //传入后台参数
+                    var params = {
+                        method: "Do",
+                        doWhat: "DelFrmSort",
+                        force: "true",
+                        para1: node.id
+                    };
+                  
+                    ajaxService(params, function (data) {
+                        var jdata = $.parseJSON(data);
+                        if (jdata.success == true) {
+                            CloseAllTabs();
+                            $('#formTree').tree('remove', node.target);
+                        } else {
+                            $.messager.alert('错误', '删除表单类别失败：' + jdata.msg, 'error');
+                        }
+                    });
+
+                });
+            }*/
+            else {
+            
+                $.messager.alert('错误', '删除表单类别失败：此类别中含有表单或者子类别，不能删除。' , 'error');
+            }
+        });
+    });
+} 
+
 function CloseAllTabs() {
+
     $('.tabs-inner span').each(function (i, n) {
         var t = $(n).text();
         if (t != '首页') {
@@ -284,6 +434,7 @@ function CloseAllTabs() {
 }
 
 //查询流程
+
 function SearchFlow() {
     url = "./../CCBPMDesigner/SearchFlow.jsp?Lang=CH";
     addTab("SPO", "查询流程", url);
@@ -345,11 +496,9 @@ function ExpFlowBySort() {
 
 //删除流程
 function DeleteFlow() {
-    /// <summary>删除流程</summary>
     var currFlow = $('#flowTree').tree('getSelected');
     if (currFlow == null || currFlow.attributes.isparent != '0')
         return;
-
     OpenEasyUiConfirm("你确定要删除名称为“" + currFlow.text + "”的流程吗？", function () {
         var params = {
             method: "Do",
@@ -373,7 +522,44 @@ function DeleteFlow() {
         }, this);
     });
 }
-
+//删除表单
+function DeleteFrm() {
+	var node = $('#formTree').tree('getSelected');
+    if (!node) {
+        return;  
+    }
+    OpenEasyUiConfirm("你确定要删除名称为“" + node.text + "”的表单吗？？", function () {
+    	var params = {
+                method: "Do",
+                doWhat: "DelFrm",
+                para1: node.id
+    	}
+    	ajaxService(params, function (data) {
+            var jdata = $.parseJSON(data);
+            if (jdata.success) {
+                if (node) {
+                    //todo:此处因为有关闭前事件，直接这样用会弹出提示关闭框，怎么解决有待进一步确认
+                    $('#tabs').tabs('close', node.text);
+                }
+                $('#formTree').tree('remove', node.target);
+                
+            }
+            else {
+                $.messager.alert('错误', '删除表单失败：' + jdata.msg, 'error');
+            }
+        }, this);
+    });  
+}
+ //表单属性
+function FrmProperty(){
+	var node = $('#formTree').tree('getSelected');
+	if (!node) {
+        return;
+    }
+    var FK_MapData = node.id;
+	url = "../../Comm/RefFunc/UIEn.jsp?EnsName=BP.WF.Template.MapDataExts&PK="+FK_MapData;
+	addTab(node, "表单属性", url);
+}
 //流程属性
 function FlowProperty() {
     var currFlow = $('#flowTree').tree('getSelected');
@@ -630,6 +816,109 @@ function InitUserInfo() {
         }
     }, this);
 }
+
+//2017.01.20新增
+function GenerStructureTree(parentrootid, pnodeid, treeid) {
+    ajaxService({ action: "GetStructureTreeRoot", parentrootid: parentrootid }, function (re) {
+        var data = $.parseJSON(re);
+        var roottarget;
+
+        if (pnodeid) {
+            roottarget = $("#" + treeid).tree("find", pnodeid).target;
+        }
+
+        $("#" + treeid).tree("append", {
+            parent: roottarget,
+            data: [{
+                id: "DEPT_" + data[0].NO,
+                text: data[0].NAME,
+                state: "closed",
+                attributes: {TType: "DEPT", IsLoad: false},
+                children: [{
+                    text: "加载中..."
+                }]
+            }]
+        });
+
+        $("#" + treeid).tree({
+            onExpand: function (node) {
+                ShowSubDepts(node, treeid);
+            }
+        });
+    });
+}
+function ShowSubDepts(node, treeid) {
+    if (node.attributes.IsLoad) {
+        return;
+    }
+    var isStation = node.attributes.TType == "STATION";
+    var data;
+    if (isStation) {
+        var deptid = node.attributes.DeptId;
+        var stid = node.attributes.StationId;
+        ajaxService({ action: "GetEmpsByStation", deptid: deptid, stationid: stid }, function (re) {
+            data = $.parseJSON(re);
+            var children = $("#" + treeid).tree('getChildren', node.target);
+            if (children && children.length >= 1) {
+                if (children[0].text == "加载中...") {
+                    $("#" + treeid).tree("remove", children[0].target);
+                }
+            }
+
+            $.each(data, function () {
+                $("#" + treeid).tree("append", {
+                    parent: node.target,
+                    data: [{
+                        id: this.PARENTNO +  "|" + this.NO,
+                        text: this.NAME,
+                        iconCls: "icon-user",
+                        attributes: { TType: "EMP", StationId: stid, DeptId: deptid }
+                    }]
+                });
+            });
+
+            node.attributes.IsLoad = true;
+        });
+    }
+    else {
+        var deptid = node.id.replace(/DEPT_/g, "");
+        ajaxService({ action: "GetSubDepts", rootid: deptid }, function (re) {
+            data = $.parseJSON(re);
+
+            var children = $("#" + treeid).tree('getChildren', node.target);
+            if (children && children.length >= 1) {
+                if (children[0].text == "加载中...") {
+                    $("#" + treeid).tree("remove", children[0].target);
+                }
+            }
+
+            $.each(data, function () {
+                $("#" + treeid).tree("append", {
+                    parent: node.target,
+                    data: [{
+                        id: this.TTYPE + "_" + this.NO,
+                        text: this.NAME,
+                        iconCls: this.TTYPE == "STATION" ? "icon-station" : "icon-tree_folder",
+                        state: "closed",
+                        attributes: {
+                            TType: this.TTYPE,
+                            IsLoad: false,
+                            StationId: this.TTYPE == "STATION" ? this.NO : undefined,
+                            DeptId: this.TTYPE == "STATION" ? deptid : undefined 
+                        },
+                        children: [{
+                            text: "加载中..."
+                        }]
+                    }]
+                });
+            });
+
+            node.attributes.IsLoad = true;
+        });
+    }
+}
+
+
 
 var treesObj;   //保存功能区处理对象
 

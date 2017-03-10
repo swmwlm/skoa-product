@@ -1,10 +1,10 @@
-/*  Table é£æ ¼  */
+/*  Table ·ç¸ñ  */
 body
 {
-   font-size: 14px;
+    font-size: 14px;
 }
 
-/* æŒ‰é’®é£æ ¼ */
+/* °´Å¥·ç¸ñ */
 input[type="button"], input[type="submit"]
 {
     border: 0;
@@ -15,7 +15,7 @@ input[type="button"], input[type="submit"]
     margin: 5px 3px 5px 3px;
 }
 
-/* æ–‡æœ¬æ¡†åªè¯»é£æ ¼. */
+/* ÎÄ±¾¿òÖ»¶Á·ç¸ñ. */
 .TBReadonly
 {
     font-size: 12px;
@@ -35,7 +35,7 @@ input[type="button"], input[type="submit"]
     height: 1px;
     display: none;
 }
-/*  table ç±»å‹é£æ ¼ */
+/*  table ÀàĞÍ·ç¸ñ */
 table
 {
     border: 1px outset #C0C0C0;
@@ -44,9 +44,9 @@ table
     border-collapse: collapse;
 }
 
-/*  æ—¶å­¦ä¸šæ·»åŠ  å¼€å§‹ä½ç½® */
+/*  Ê±Ñ§ÒµÌí¼Ó ¿ªÊ¼Î»ÖÃ */
 
-/*æ‰©å±•åº”ç”¨æ˜ç»†è¡¨ä¸å¤šé™„ä»¶.*/
+/*À©Õ¹Ó¦ÓÃÃ÷Ï¸±íÓë¶à¸½¼ş.*/
 .TitleExt
 {
     background-color: #f4f4f4;
@@ -61,7 +61,7 @@ table
 }
 
 
-/*  æ—¶å­¦ä¸šæ·»åŠ  ç»“æŸä½ç½® */
+/*  Ê±Ñ§ÒµÌí¼Ó ½áÊøÎ»ÖÃ */
 th, .Title
 {
     border-width: 1px;
@@ -77,14 +77,14 @@ th, .Title
     font-size: 12px;
     font-weight: normal;
 }
- 
+
 .Idx
 {
     font-size: 12px;
     border: 1px solid #ccc;
     text-align: center;
     font-weight: bold;
-    width:20px;
+    width: 20px;
 }
 
 .Sum
@@ -156,7 +156,7 @@ td input
     width: auto;
     word-break: keep-all;
 }
- 
+
 .TBcalendar
 {
     background-position: left center;
@@ -183,17 +183,17 @@ td input
     vertical-align: middle;
 }
 
-caption
+caption, .caption
 {
     vertical-align: bottom;
     text-align: left;
     height: 32px;
     line-height: 20px;
     font-size: 14px;
-    background: url('Img/TitleBG.png') repeat-x;
+    background: url('/DataUser/Style/Img/TitleBG.png') repeat-x;
     height: 30px;
     padding-left: 10px;
-    font-family: é»‘ä½“;
+    font-family: ºÚÌå;
     font-weight: bolder;
     color: #333333;
 }
@@ -209,19 +209,18 @@ caption
     text-align: center;
     vertical-align: middle;
     height: 30px;
-    font-family: é»‘ä½“;
+    font-family: ºÚÌå;
     font-weight: bolder;
     color: #FFFFFF;
-    background: url('Img/TitleMsg.png');
-    width: 158px;
+    background: url('/DataUser/Style/Img/TitleMsg.png');
+    width: 138px;
     margin-left: -10px;
     padding-left: 0px;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
-
-.CaptionMsg  a:hover
+.CaptionMsg a:hover
 {
     color: white;
 }
@@ -237,29 +236,66 @@ caption
     text-align: center;
     vertical-align: middle;
     height: 30px;
-    font-family: é»‘ä½“;
+    font-family: ºÚÌå;
     font-weight: bolder;
     color: #FFFFFF;
-    background: url('Img/TitleMsgLong.png');
+    background: url('/DataUser/Style/Img/TitleMsgLong.png');
     width: 238px;
+    margin-left: -10px;
     padding-left: 0px;
     background-repeat: no-repeat;
-    /* margin-left: -10px;
-    background-attachment: fixed;  2016-6-17 pxf ä¿®æ”¹*/ 
-    text-align:center;
+    background-attachment: fixed;
+    text-align: center;
+}
+/*¿É±ä³¤¶ÈCaptionÑùÊ½£¬Èı¶ÎÊ½Æ´½Ó*/
+.CapLeft
+{
+    margin-left: -10px;
+    width: 40px;
+    height: 30px;
+    background-position: 0 0;
+    line-height: 30px;
+    font-size: 12px;
+    background: url('/DataUser/Style/Img/TitleMsg.png');
+    background-repeat: no-repeat;
+    float: left;
 }
 
+.CapCenter
+{
+    text-align: left;
+    height: 30px;
+    background-position: left top;
+    line-height: 30px;
+    font-size: 12px;
+    font-family: ºÚÌå;
+    font-weight: bolder;
+    color: #FFFFFF;
+    background: url('/DataUser/Style/Img/TitleMsgCenterBg.png');
+    background-repeat: repeat-x;
+    float: left;
+}
+
+.CapRight
+{
+    width: 20px;
+    height: 30px;
+    line-height: 30px;
+    background-image: url('/DataUser/Style/Img/TitleMsgRightBg.png');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    float: left;
+}
+/*¿É±ä³¤¶ÈCaptionÑùÊ½£¬Èı¶ÎÊ½Æ´½Ó Íê³É*/
 .TBDoc
 {
-   /*border-style: dotted; */
+    /*border-style: dotted; */
     border-width: 1px;
-    border-color: #CCCCCC;
-  /*  overflow: visible;*/
+    border-color: #CCCCCC; /*  overflow: visible;*/
     width: 100%;
     margin: 0px;
-    padding: 0px; 
-    display:block;
-    
+    padding: 0px;
+    display: block;
 }
 
 .TB
@@ -273,7 +309,7 @@ caption
 }
 
 
-/** å…¶å®ƒ  */
+/** ÆäËü  */
 .ToolBar
 {
     background-color: #d8edff;
@@ -306,11 +342,11 @@ caption
 
 .Icon
 {
-    width:12px;
-    height:12px;
-    margin-right:5px;
-    text-align:center;
-    vertical-align:middle;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .GroupField a
@@ -318,7 +354,7 @@ caption
     font-weight: bold;
 }
 
-/* åœ¨è¾“å…¥ä¿¡æ¯å­—æ®µåç§°ï¼Œå•å…ƒæ ¼å¼çš„é£æ ¼ */
+/* ÔÚÊäÈëĞÅÏ¢×Ö¶ÎÃû³Æ£¬µ¥Ôª¸ñÊ½µÄ·ç¸ñ */
 .FDesc
 {
     padding: 4px;
@@ -382,7 +418,7 @@ caption
 {
 }
 
-/* å†…éƒ¨æ ‡ç­¾é£æ ¼ */
+/* ÄÚ²¿±êÇ©·ç¸ñ */
 fieldset
 {
     margin: 5px;
@@ -396,7 +432,6 @@ legend
     color: green;
     font-style: inherit;
     font-weight: bold;
-    
 }
 
 .FieldsetInfo
@@ -422,8 +457,9 @@ Img
     background-color: #FFFFFF;
 }
 
-/*é¼ æ ‡ç§»åŠ¨åˆ°è¡Œä¸Šï¼Œè¡ŒèƒŒæ™¯è‰²å˜åŒ–*/
+/*Êó±êÒÆ¶¯µ½ĞĞÉÏ£¬ĞĞ±³¾°É«±ä»¯*/
 .tr_hover
 {
     background: none repeat scroll 0 0 #e0ecff;
 }
+

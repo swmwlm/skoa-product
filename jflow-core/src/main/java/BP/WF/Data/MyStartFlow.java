@@ -16,6 +16,7 @@ import BP.WF.Glo;
 import BP.WF.TaskSta;
 import BP.WF.WFSta;
 import BP.WF.WFState;
+import BP.WF.Template.FlowAttr;
 
 /** 
  我发起的流程
@@ -500,6 +501,7 @@ public class MyStartFlow extends Entity
 		map.AddSearchAttr(MyStartFlowAttr.WFSta);
 		map.AddSearchAttr(MyStartFlowAttr.TSpan);
 
+		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
 
 		AttrOfSearch search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", BP.Web.WebUser.getNo(), 0, true);
 		map.getAttrsOfSearch().Add(search);

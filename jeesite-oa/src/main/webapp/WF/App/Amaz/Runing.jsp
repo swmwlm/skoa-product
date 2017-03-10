@@ -37,7 +37,7 @@ function WinOpen(url) {
 	}
 	// 催办
 	function Press(appPath, fid, workid, fk_flow) {
-		var url = appPath + 'WF/WorkOpt/Press.jsp?FID=' + fid + '&WorkID='
+		var url = appPath + 'WF/WorkOpt/press.htm?FID=' + fid + '&WorkID='
 				+ workid + '&FK_Flow=' + fk_flow;
 		var v = window.open(url, 'sd', 'height=300,width=600,top=200,left=400,toolbar=no,menubar=no,scrollbars=yes, resizable=yes,location=no, status=no');
 	}

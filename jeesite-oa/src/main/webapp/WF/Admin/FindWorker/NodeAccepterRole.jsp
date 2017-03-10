@@ -5,6 +5,7 @@
 <%@page import="BP.WF.Template.NodeStations"%>
 <%@page import="BP.WF.Template.NodeDepts"%>
 <%@page import="BP.WF.Template.NodeEmps"%>
+<%@page import="BP.WF.Template.NodeDept"%>
 <%@page import="BP.WF.Template.NodeStationAttr"%>
 <%@page import="BP.WF.Template.AccepterRole.*"%>
 <%@page import="BP.WF.DeliveryWay"%>
@@ -347,7 +348,7 @@
 
         NodeDepts ndepts = new NodeDepts();
         ndepts.Retrieve(NodeStationAttr.FK_Node, nodeID);
-
+        
         NodeEmps nEmps = new NodeEmps();
         nEmps.Retrieve(NodeStationAttr.FK_Node, nodeID);
         
@@ -554,11 +555,11 @@
                                 <ul>
                                     <li id="node_8">
                                         <div>
-                                            <a id="A_8" class='l-link' onclick="onclickSJ(8)" href="javascript:"><span class="nav">与上一节点处理人员相同</span></a></div>
+                                            <a id="A_8" class='l-link' onclick="onclickSJ(8)" href="javascript:"><span class="nav">与开始节点处理人相同</span></a></div>
                                     </li>
                                     <li id="node_9">
                                         <div>
-                                            <a id="A_9" class='l-link' onclick="onclickSJ(9)" href="javascript:"><span class="nav">与开始节点处理人相同</span></a></div>
+                                            <a id="A_9" class='l-link' onclick="onclickSJ(9)" href="javascript:"><span class="nav">与上一节点处理人员相同</span></a></div>
                                     </li>
                                     <li id="node_10">
                                         <div>
@@ -644,9 +645,15 @@
                                     <div style="float: left">
                                         <input type="radio" <% if(RB_1){%>checked="checked"<%}%> ID="RB_1" Text="按节点绑定的部门计算" name="xxx" runat="server" />
                                     </div>
+                                    <% if(Glo.getIsUnit()){%>
+                                    	<div style="float: right">
+                                        <a href="javascript:WinOpen('<%=basePath %>WF/Comm/Port/DeptTree.jsp?NodeID=<%=nd.getNodeID() %>&r=<%=k %>')">
+                                            设置/更改部门(<%=ndepts.size() %>)</a></div>
+                                    <%} else {%>
                                     <div style="float: right">
                                         <a href="javascript:WinOpen('<%=basePath %>WF/Comm/RefFunc/Dot2DotSingle.jsp?EnsName=BP.WF.Template.Selectors&EnName=BP.WF.Template.Selector&AttrKey=BP.WF.Template.NodeDepts&NodeID=<%=nd.getNodeID() %>&r=<%=k %>')">
                                             设置/更改部门(<%=ndepts.size() %>)</a></div>
+                                     <%}%>
                                 </th>
                             </tr>
                             <tr id="YC_02">
@@ -768,9 +775,7 @@
                             <tr id="YC_08">
                                 <td class="BigDoc">
                                     <ul>
-                                        <li style="font-size: 12px;">当前节点的处理人与开始节点一致，发起人是zhangsan,现在节点的处理人也是他。</li>
-                                        <li style="font-size: 12px;">也就是说自己发给自己。</li>
-
+                                           <li style="font-size: 12px;">节点A是甲处理，发送到节点B,也是需要甲处理。</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -785,8 +790,9 @@
                             <tr id="YC_09">
                                 <td class="BigDoc">
                                     <ul>
-                                        <li style="font-size: 12px;">节点A是甲处理，发送到节点B,也是需要甲处理。</li>
-                                    </ul>
+                                    	<li style="font-size: 12px;">当前节点的处理人与开始节点一致，发起人是zhangsan,现在节点的处理人也是他。</li>
+                                        <li style="font-size: 12px;">也就是说自己发给自己。</li>
+                                     </ul>
                                 </td>
                             </tr>
                             <!-- ===================================  09.与指定节点处理人相同 -->
@@ -804,7 +810,7 @@
                                     <!-- <asp:CheckBoxList ID="CBL_8" runat="server" RepeatDirection="Horizontal" RepeatColumns="5">
                                     </asp:CheckBoxList> -->
                                     <% for(Map.Entry<String, String> entry:CBL_8.entrySet()){%>
-                                    			<input type="checkbox" <%if(CBL_8List.contains(entry.getKey().substring(0,3))){ %>checked="checked"<%} %> name="CBL_8" value="<%=entry.getKey() %>"><%=entry.getValue()%>
+                                    			<input type="checkbox" <%if(CBL_8List.contains(entry.getKey().split(" ")[0])){ %>checked="checked"<%} %> name="CBL_8" value="<%=entry.getKey() %>"><%=entry.getValue()%>
 									<%}%>
                                 </td>
                             </tr>
@@ -1047,6 +1053,7 @@
     </div>
 </body>
 <script type="text/javascript">
+          $("#DDL_5 option[value='<%=DDL_5Value%>']").attr("selected", "selected");
             function RSize() {
                 if (document.body.scrollWidth > (window.screen.availWidth - 100)) {
                     window.dialogWidth = (window.screen.availWidth - 100).toString() + "px"

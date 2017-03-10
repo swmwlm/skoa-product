@@ -63,13 +63,14 @@ function SetSelected(cb, ids) {
 		var EnName='<%=dot.getEnName()%>';
 		var PK='<%=dot.getPK()%>';
 		var AttrKey='<%=dot.getAttrKey()%>';
+		var ShowWay = $("#DDL_Group").val();
 		$("#FormHtml").val($("#form1").html());
 		$.ajax({
 				cache: false,
 				type: "POST",
 				url:"<%=basePath%>WF/MapDef/getStr.do?btnId=" + btnId
 					+ "&DDL_Group=" + DDL_Group + "&EnName=" + EnName + "&PK="
-					+ PK + "&AttrKey=" + AttrKey, //把表单数据发送到ajax.jsp
+					+ PK + "&AttrKey=" + AttrKey +"&ShowWay="+ShowWay, //把表单数据发送到ajax.jsp
 			data : $('#form1').serialize(), //要发送的是ajaxFrm表单中的数据
 			async : false,
 			error : function(request) {

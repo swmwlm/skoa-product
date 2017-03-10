@@ -15,6 +15,7 @@ import BP.WF.Glo;
 import BP.WF.WFState;
 import BP.WF.Entity.TaskSta;
 import BP.WF.Entity.WFSta;
+import BP.WF.Template.FlowAttr;
 import BP.WF.Template.FlowSheet;
 import BP.WF.Template.FlowSorts;
 
@@ -491,6 +492,7 @@ public class GenerWorkFlowView extends Entity
 		map.AddTBInt(GenerWorkFlowViewAttr.FK_Node, 0, "FK_Node", false, false);
 		map.AddTBInt(GenerWorkFlowViewAttr.WFState, 0, "WFState", false, false);
 
+		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
 
 
 		map.AddDDLEntities(GenerWorkFlowViewAttr.FK_NY, null, "月份", new GenerWorkFlowViewNYs(), false);

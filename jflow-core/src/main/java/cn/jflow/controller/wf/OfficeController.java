@@ -36,9 +36,9 @@ public class OfficeController {
 			MultipartFile file = entity.getValue();// 获取上传文件对象
 			InputStream is = file.getInputStream();
 			// word文件路径
-			String fileNameR = path + "\\" + fileStart + fileExtension;
+			String fileNameR = path + "/" + fileStart + fileExtension;
 			// pdf文件路径
-			String savePath = path + "\\" + fileStart + ".pdf";
+			String savePath = path + "/" + fileStart + ".pdf";
 			OfficeToPDF.file_put_contents(is, fileNameR, savePath);
 		}
 	}

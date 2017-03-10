@@ -35,56 +35,79 @@ public class FileAccess {
 	}
 
 	public static void Copy(String oldPath, String newPath) {
+		InputStream inStream = null;
+		FileOutputStream fs = null;
+		
 		try {
 			int bytesum = 0;
 			int byteread = 0;
 			File oldfile = new File(oldPath);
 			if (oldfile.exists()) {
-				InputStream inStream = new FileInputStream(oldPath);
-				FileOutputStream fs = new FileOutputStream(newPath);
+				inStream =  new FileInputStream(oldPath);
+				fs = new FileOutputStream(newPath);
 				byte[] buffer = new byte[1444];
 				while ((byteread = inStream.read(buffer)) != -1) {
 					bytesum += byteread;
-//					System.out.println(bytesum);
 					fs.write(buffer, 0, byteread);
 				}
-				inStream.close();
-				fs.close();
 			}
 		} catch (Exception e) {
-//			System.out.println("error  ");
 			e.printStackTrace();
+		}finally{
+			try {
+				if(null != fs)
+				{
+					fs.close();
+				}
+				if(null != inStream)
+				{
+					inStream.close();
+				} 
+				}catch (IOException e2) {
+					e2.printStackTrace();
+			}
 		}
 	}
 
 	public static void Copy(File oldfile, String newPath) {
+		InputStream inStream = null;
+		FileOutputStream fs = null;
 		try {
 			int bytesum = 0;
 			int byteread = 0;
-			// File oldfile = new File(oldPath);
 			if (oldfile.exists()) {
-				InputStream inStream = new FileInputStream(oldfile);
-				FileOutputStream fs = new FileOutputStream(newPath);
+				inStream = new FileInputStream(oldfile);
+				fs = new FileOutputStream(newPath);
 				byte[] buffer = new byte[1444];
 				while ((byteread = inStream.read(buffer)) != -1) {
 					bytesum += byteread;
-//					System.out.println(bytesum);
 					fs.write(buffer, 0, byteread);
 				}
-				inStream.close();
-				fs.close();
 			}
 		} catch (Exception e) {
-//			System.out.println("error  ");
 			e.printStackTrace();
+		}finally{
+			try {
+				if(null != fs)
+				{
+					fs.close();
+				}
+				if(null != inStream)
+				{
+					inStream.close();
+				} 
+				}catch (IOException e2) {
+					e2.printStackTrace();
+			}
 		}
 	}
 	
 	public static void Copy(InputStream inStream, String newPath){
+		FileOutputStream fs = null;
 		try {
 			int bytesum = 0;
 			int byteread = 0;
-			FileOutputStream fs = new FileOutputStream(newPath);
+			fs = new FileOutputStream(newPath);
 			byte[] buffer = new byte[1444];
 			while ((byteread = inStream.read(buffer)) != -1) {
 				bytesum += byteread;
@@ -95,10 +118,21 @@ public class FileAccess {
 		} catch (Exception e) {
 //			System.out.println("error  ");
 			e.printStackTrace();
+		}finally{
+			try {
+				if(null != fs)
+				{
+					fs.close();
+				}
+				}catch (IOException e2) {
+					e2.printStackTrace();
+			}
 		}
 	}
 	
 	public static void copyFolder(File src, File dest) {
+		InputStream in = null;
+		OutputStream out = null;
 		try {
 			if (src.isDirectory()) {
 				if (!dest.exists()) {
@@ -112,8 +146,8 @@ public class FileAccess {
 					copyFolder(srcFile, destFile);
 				}
 			} else {
-				InputStream in = new FileInputStream(src);
-				OutputStream out = new FileOutputStream(dest);
+				in = new FileInputStream(src);
+				out = new FileOutputStream(dest);
 
 				byte[] buffer = new byte[1024];
 
@@ -122,11 +156,22 @@ public class FileAccess {
 				while ((length = in.read(buffer)) > 0) {
 					out.write(buffer, 0, length);
 				}
-				in.close();
-				out.close();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				if(null != out)
+				{
+					out.close();
+				}
+				if(null != in)
+				{
+					in.close();
+				} 
+				}catch (IOException e2) {
+					e2.printStackTrace();
+			}
 		}
 	}
 	
@@ -134,8 +179,9 @@ public class FileAccess {
 		int len=0;
 		String line=null;
         StringBuffer str=new StringBuffer();
+        BufferedReader in= null;
         try {
-            BufferedReader in= new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));  ;
+            in= new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));  ;
             while( (line=in.readLine())!=null ){
                 if(len != 0){// 处理换行符的问题
                     str.append("\r\n"+line);
@@ -147,7 +193,16 @@ public class FileAccess {
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }finally{
+			try {
+				if(null != in)
+				{
+					in.close();
+				} 
+				}catch (IOException e2) {
+					e2.printStackTrace();
+			}
+		}
         return str.toString();
 	}
 	

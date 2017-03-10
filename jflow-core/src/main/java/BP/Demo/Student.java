@@ -106,6 +106,70 @@ public class Student extends EntityNoName
 	}
 	
 	/**
+	 * 是否特困生？
+	 */
+	public final String getIsTeKunSheng()
+	{
+		return this.GetValStringByKey(StudentAttr.IsTeKunSheng);
+	}
+	
+	public final void setIsTeKunSheng(String value)
+	{
+		this.SetValByKey(StudentAttr.IsTeKunSheng, value);
+	}
+	
+	/**
+	 * 是否有重大疾病史？
+	 */
+	public final String getIsJiBing()
+	{
+		return this.GetValStringByKey(StudentAttr.IsJiBing);
+	}
+	
+	public final void setIsJiBing(String value)
+	{
+		this.SetValByKey(StudentAttr.IsJiBing, value);
+	}
+	/**
+	 * 是否偏远山区？
+	 */
+	public final String getIsPianYuanShanQu()
+	{
+		return this.GetValStringByKey(StudentAttr.IsPianYuanShanQu);
+	}
+	
+	public final void setIsPianYuanShanQu(String value)
+	{
+		this.SetValByKey(StudentAttr.IsPianYuanShanQu, value);
+	}
+	/**
+	 * 是否独生子
+	 */
+	
+	public final String getIsDuShengZi()
+	{
+		return this.GetValStringByKey(StudentAttr.IsDuShengZi);
+	}
+	
+	public final void setIsDuShengZi(String value)
+	{
+		this.SetValByKey(StudentAttr.IsDuShengZi, value);
+	}
+	/**
+	 * 政治面貌
+	 */
+	public final String getZZMM()
+	{
+		return this.GetValStringByKey(StudentAttr.ZZMM);
+	}
+	
+	public final void setZZMM(String value)
+	{
+		this.SetValByKey(StudentAttr.ZZMM, value);
+	}
+	
+	
+	/**
 	 * 电话
 	 */
 	public final String getTel()
@@ -181,13 +245,22 @@ public class Student extends EntityNoName
 		map.AddTBStringPK(StudentAttr.No, null, "学号", true, true, 4, 4, 4); // 如果设置自动编号字段必须是只读的.
 		map.AddTBString(StudentAttr.Name, null, "名称", true, false, 0, 200, 70);
 		map.AddTBString(StudentAttr.PWD, null, "登录密码", true, false, 0, 200, 70);
-		
 		map.AddTBString(StudentAttr.Addr, null, "地址", true, false, 0, 200, 100,
 				true);
 		map.AddTBInt(StudentAttr.Age, 0, "年龄", true, false);
 		map.AddTBString(StudentAttr.Tel, null, "电话", true, false, 0, 200, 60);
 		map.AddTBString(StudentAttr.Email, null, "邮件", true, false, 0, 200, 50);
 		map.AddTBDateTime(StudentAttr.RegDate, null, "注册日期", true, true);
+		
+		//增加checkbox属性.
+        map.AddBoolean(StudentAttr.IsDuShengZi, false, "是否是独生子？", true, true);
+        map.AddBoolean(StudentAttr.IsJiBing, false, "是否有重大疾病？", true, true);
+        map.AddBoolean(StudentAttr.IsPianYuanShanQu, false, "是否偏远山区？", true, true);
+        map.AddBoolean(StudentAttr.IsTeKunSheng, false, "是否是特困生？", true, true);
+
+        // 枚举字段 - 整治面貌.
+        map.AddDDLSysEnum(StudentAttr.ZZMM, 0, "整治面貌", true, true, StudentAttr.ZZMM,
+            "@0=少先队员@1=团员@2=党员");
 		
 		// 枚举字段
 		map.AddDDLSysEnum(StudentAttr.XB, 0, "性别", true, false, StudentAttr.XB,

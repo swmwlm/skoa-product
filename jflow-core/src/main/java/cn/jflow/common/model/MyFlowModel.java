@@ -1,77 +1,28 @@
 package cn.jflow.common.model;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
-
-import cn.jflow.controller.wf.MyFlowController;
-import cn.jflow.model.designer.UCEnModel;
-import cn.jflow.system.ui.core.Button;
-import cn.jflow.system.ui.core.NamesOfBtn;
-import cn.jflow.system.ui.core.TextBox;
-import cn.jflow.system.ui.core.TextBoxMode;
-import cn.jflow.system.ui.core.ToolBar;
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.DA.DataType;
-import BP.DA.Paras;
 import BP.En.QueryObject;
-import BP.Port.Emp;
+import BP.Sys.Frm.FrmType;
+import BP.Sys.Frm.MapData;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
-import BP.Sys.Frm.FrmEventList;
-import BP.Sys.Frm.FrmType;
-import BP.Sys.Frm.MapAttr;
-import BP.Sys.Frm.MapAttrs;
-import BP.Sys.Frm.MapData;
 import BP.Tools.StringHelper;
-import BP.WF.ActionType;
-import BP.WF.BatchRole;
-import BP.WF.CCRole;
-import BP.WF.Dev2Interface;
-import BP.WF.Flow;
-import BP.WF.FlowAppType;
-import BP.WF.FormRunType;
-import BP.WF.Glo;
-import BP.WF.Node;
-import BP.WF.NodeFormType;
-import BP.WF.PrintDocEnable;
-import BP.WF.ReturnWork;
-import BP.WF.ReturnWorkAttr;
-import BP.WF.ReturnWorks;
-import BP.WF.RunModel;
-import BP.WF.ShiftWork;
-import BP.WF.ShiftWorkAttr;
-import BP.WF.ShiftWorks;
-import BP.WF.StartWorkAttr;
-import BP.WF.SubFlowCtrlRole;
-import BP.WF.TrackAttr;
-import BP.WF.WFState;
-import BP.WF.Work;
-import BP.WF.WorkFlow;
-import BP.WF.WorkNode;
+import BP.WF.*;
 import BP.WF.Entity.GenerWorkFlow;
-import BP.WF.Template.Btn;
-import BP.WF.Template.BtnLab;
-import BP.WF.Template.DraftRole;
-import BP.WF.Template.Frm;
-import BP.WF.Template.FrmNode;
-import BP.WF.Template.FrmWorkCheck;
-import BP.WF.Template.FrmWorkCheckSta;
-import BP.WF.Template.Frms;
-import BP.WF.Template.NodeToolbar;
-import BP.WF.Template.NodeToolbarAttr;
-import BP.WF.Template.NodeToolbars;
-import BP.WF.Template.ShowWhere;
-import BP.WF.Template.WebOfficeWorkModel;
+import BP.WF.Template.*;
 import BP.Web.UserWorkDev;
 import BP.Web.WebUser;
+import cn.jflow.controller.wf.MyFlowController;
+import cn.jflow.system.ui.core.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Enumeration;
 
 public class MyFlowModel extends EnModel{
 	
@@ -596,13 +547,13 @@ public class MyFlowModel extends EnModel{
 					String sql = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + workId + " AND " + TrackAttr.ActionType + "=" + ActionType.AskforHelp.getValue();
 					DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 					for (DataRow dr : dt.Rows) {
-						String msgAskFor = String.valueOf(dr.get(TrackAttr.Msg));
-						String worker = String.valueOf(dr.get(TrackAttr.EmpFrom));
-						String workerName = String.valueOf(dr.get(TrackAttr.EmpFromT));
-						String rdt = String.valueOf(dr.get(TrackAttr.RDT));
+						String msgAskFor = String.valueOf(dr.get(TrackAttr.Msg.toLowerCase()));
+						String worker = String.valueOf(dr.get(TrackAttr.EmpFrom.toLowerCase()));
+						String workerName = String.valueOf(dr.get(TrackAttr.EmpFromT.toLowerCase()));
+						String rdt = String.valueOf(dr.get(TrackAttr.RDT.toLowerCase()));
 
 						//提示信息.
-						BaseModel.AddMsgOfInfo(worker + "," + workerName + "请求加签:", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + " --<a href='./WorkOpt/AskForRe.jsp?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workId + "&FID=" +fid + "' >回复加签意见</a> --");
+						pub2.append(BaseModel.AddMsgOfInfo(worker + "," + workerName + "请求加签:", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + " --<a href='./WorkOpt/AskForRe.jsp?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workId + "&FID=" +fid + "' >回复加签意见</a> --"));
 					}
 					isAskFor = true;
 				}
@@ -777,15 +728,6 @@ public class MyFlowModel extends EnModel{
 	
 	public final void InitToolbar(boolean isAskFor, String appPath, GenerWorkFlow gwf)
 	{
-		//this.Page.Title = this.getcurrND().getName();
-		//small = this.PageID;
-		//定义timekey
-		//small = small.replace("MyFlow", "");
-		//if (!small.equals(""))
-		//{
-		//	toolbar.AddBR();
-		//}
-
 		this.toolbar.Add("&nbsp;&nbsp;");
 
 		if (this.getIsNotCC())
@@ -803,7 +745,6 @@ public class MyFlowModel extends EnModel{
 
 		//#region 加载流程控制器 - 按钮
 		BtnLab btnLab = new BtnLab(getcurrND().getNodeID());
-	  //  BtnWord = null;  // btnLab.WebOfficeEnable + "";
 
 		if (this.getcurrND().getHisFormType() == NodeFormType.SelfForm)
 		{
@@ -811,7 +752,6 @@ public class MyFlowModel extends EnModel{
 			/*处理保存按钮.*/
 			if (btnLab.getSaveEnable() && isAskFor == false)
 			{
-				//toolbar.Add("<input type=button  value='" + btnLab.getSaveLab() + "' enable=true onclick=\" SaveSelfFrom();\" />");
 				toolbar.Add("<input type=button id=Btn_"+NamesOfBtn.Save+  " value='" + btnLab.getSaveLab() + "' enable=true onclick=\"Save();\" />");
 			}
 			/*如果是嵌入式表单.*/
@@ -821,11 +761,8 @@ public class MyFlowModel extends EnModel{
 				if (btnLab.getSendEnable() && getcurrND().getHisBatchRole() != BatchRole.Group)
 				{
 					/*如果启用了发送按钮.*/
-					//toolbar.Add("<input type=button  value='" + btnLab.getSendLab() + "' enable=true />");
-					toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"Send();\" />");
+					toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"if (SendSelfFrom()==false) return false;this.disabled=true;Send();"+btnLab.getSendJS()+" \" />");
 					this.getBtn_Send().setUseSubmitBehavior(false);
-					//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + "if (SendSelfFrom()==false) return false;this.disabled=true;";
-					//this.Btn_Send.Click += new System.EventHandler(ToolBar1_ButtonClick);
 					this.getBtn_Send().addAttr("onclick", btnLab.getSendJS() + "if (SendSelfFrom()==false) return false;this.disabled=true;");
 				}
 			}
@@ -837,31 +774,26 @@ public class MyFlowModel extends EnModel{
 					if (btnLab.getSelectAccepterEnable() == 2)
 					{
 						/*如果启用了选择人窗口的模式是【选择既发送】.*/
-						toolbar.Add("<input type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\"javascript:OpenSelectAccepter('" + fk_flow + "','" + fk_node + "','" + workId + "','" + fid + "')\" />");
+						toolbar.Add("<input type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\"if( SendSelfFrom()==false) return false;this.disabled=true; javascript:OpenSelectAccepter('" + fk_flow + "','" + fk_node + "','" + workId + "','" + fid + "');" + btnLab.getSendJS()+" \" />");
 						toolbar.AddBtn(NamesOfBtn.Send.toString(), btnLab.getSendLab());
 						getBtn_Send().setStyle(" style = \"display:none; \"");
 						this.getBtn_Send().setUseSubmitBehavior(false);
 
 						if (this.getcurrND().getHisFormType() == NodeFormType.DisableIt)
 						{
-							//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + "this.disabled=true;"; //this.disabled='disabled'; return true;";
 							this.getBtn_Send().addAttr("onclick", btnLab.getSendJS() + "this.disabled=true;");
 						}
 						else
 						{
-							//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + "if( SendSelfFrom()==false) return false;this.disabled=true;"; //this.disabled='disabled'; return true;";
 							this.getBtn_Send().addAttr("onclick",btnLab.getSendJS() + "if( SendSelfFrom()==false) return false;this.disabled=true;");
 						}
-						//this.getBtn_Send().Click += new System.EventHandler(ToolBar1_ButtonClick);
 					}
 					else
 					{
-						//toolbar.AddBtn(NamesOfBtn.Send.toString(), btnLab.getSendLab());
-						toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"Send();\" />");
+						toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"if(SendSelfFrom()==false) return false;this.disabled=true; Send();"+btnLab.getSendJS()+" \" />");
 						this.getBtn_Send().setUseSubmitBehavior(false);
 						if (btnLab.getSendJS().trim().length() > 2)
 						{
-							//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + ";if(SendSelfFrom()==false) return false;this.disabled=true;"; //this.disabled='disabled'; return true;";
 							this.getBtn_Send().addAttr("onclick", btnLab.getSendJS() + ";if(SendSelfFrom()==false) return false;this.disabled=true;");
 						}
 						else
@@ -869,16 +801,13 @@ public class MyFlowModel extends EnModel{
 							this.getBtn_Send().setUseSubmitBehavior(false);
 							if (this.getcurrND().getHisFormType() == NodeFormType.DisableIt)
 							{
-								//this.getBtn_Send().OnClientClick = "this.disabled=true;"; //this.disabled='disabled'; return true;";
 								this.getBtn_Send().addAttr("onclick", "this.disabled=true;");
 							}
 							else
 							{
-								//this.getBtn_Send().OnClientClick = "if(SendSelfFrom()==false) return false;this.disabled=true;"; //this.disabled='disabled'; return true;";
 								this.getBtn_Send().addAttr("onclick", "if(SendSelfFrom()==false) return false;this.disabled=true;");
 							}
 						}
-						//this.getBtn_Send().Click += new System.EventHandler(ToolBar1_ButtonClick);
 					}
 				}
 			}
@@ -892,10 +821,7 @@ public class MyFlowModel extends EnModel{
 			if (btnLab.getSaveEnable() && isAskFor == false)
 			{
 				toolbar.Add("<input type=button id=Btn_"+NamesOfBtn.Save+  " value='" + btnLab.getSaveLab() + "' enable=true onclick=\"Save();\" />");
-				//toolbar.AddBtn(NamesOfBtn.Save.toString(), btnLab.getSaveLab());
 				this.getBtn_Save().setUseSubmitBehavior(false);
-				//this.getBtn_Save().OnClientClick = "if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();"; //this.disabled='disabled'; return true;";
-				//this.Btn_Save.Click += new System.EventHandler(ToolBar1_ButtonClick);
 				this.getBtn_Save().addAttr("onclick", "if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();");
 			}
 			/*启用了其他的表单.*/
@@ -905,11 +831,8 @@ public class MyFlowModel extends EnModel{
 				if (btnLab.getSendEnable() && getcurrND().getHisBatchRole() != BatchRole.Group)
 				{
 					/*如果启用了选择人窗口的模式是【选择既发送】.*/
-					//toolbar.AddBtn(NamesOfBtn.Send.toString(), btnLab.getSendLab());
-					toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"Send();\" />");
+					toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync(); Send();"+btnLab.getSendJS()+" \" />");
 					this.getBtn_Send().setUseSubmitBehavior(false);
-					//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();";
-					//this.getBtn_Send().Click += new System.EventHandler(ToolBar1_ButtonClick);
 					this.getBtn_Send().addAttr("onclick", btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();");
 				}
 			}
@@ -925,31 +848,24 @@ public class MyFlowModel extends EnModel{
 					{
 						/*如果启用了选择人窗口的模式是【选择既发送】.*/
 						toolbar.Add("<input type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\"if(SysCheckFrm()==false) return false;KindEditerSync();if (OpenSelectAccepter('" + fk_flow + "','" + fk_node + "','" + workId + "','" + fid + "')==false) return false; \" />");
-						//toolbar.AddBtn(NamesOfBtn.Send.toString(), btnLab.getSendLab());
-						//getBtn_Send().Style.Add("display", "none");
 						getBtn_Send().setStyle(" style = \"display:none; \"");
 						this.getBtn_Send().setUseSubmitBehavior(false);
 
 						if (this.getcurrND().getHisFormType() == NodeFormType.DisableIt)
 						{
-							//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + "this.disabled=true;"; //this.disabled='disabled'; return true;";
 							this.getBtn_Send().addAttr("onclick", btnLab.getSendJS() + "this.disabled=true;");
 						}
 						else
 						{
-							//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + "if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();"; //this.disabled='disabled'; return true;";
 							this.getBtn_Send().addAttr("onclick", btnLab.getSendJS() + "if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();");
 						}
-						//this.getBtn_Send().Click += new System.EventHandler(ToolBar1_ButtonClick);
 					}
 					else
 					{
-						toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"Send();\" />");
-						//toolbar.AddBtn(NamesOfBtn.Send.toString(), btnLab.getSendLab());
+						toolbar.Add("<input type=button id=\"Btn_"+NamesOfBtn.Send +"\"  value='" + btnLab.getSendLab() + "' enable=true onclick=\"if(SysCheckFrm()==false) return false;KindEditerSync();Send();"+btnLab.getSendJS()+" \" />");
 						this.getBtn_Send().setUseSubmitBehavior(false);
 						if (btnLab.getSendJS().trim().length() > 2)
 						{
-							//this.getBtn_Send().OnClientClick = btnLab.getSendJS() + ";if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();"; //this.disabled='disabled'; return true;";
 							this.getBtn_Send().addAttr("onclick",btnLab.getSendJS() + ";if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();");
 						}
 						else
@@ -957,16 +873,13 @@ public class MyFlowModel extends EnModel{
 							this.getBtn_Send().setUseSubmitBehavior(false);
 							if (this.getcurrND().getHisFormType() == NodeFormType.DisableIt)
 							{
-								//this.getBtn_Send().OnClientClick = "this.disabled=true;"; //this.disabled='disabled'; return true;";
 								this.getBtn_Send().addAttr("onclick", "this.disabled=true;");
 							}
 							else
 							{
-								//this.getBtn_Send().OnClientClick = "if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();"; //this.disabled='disabled'; return true;";
 								this.getBtn_Send().addAttr("onclick", "if(SysCheckFrm()==false) return false;this.disabled=true;SaveDtlAll();KindEditerSync();");
 							}
 						}
-						//this.Btn_Send.Click += new System.EventHandler(ToolBar1_ButtonClick);
 					}
 				}
 			}
@@ -1009,37 +922,22 @@ public class MyFlowModel extends EnModel{
 			toolbar.Add("<input type=button  value='" + btnLab.getReturnLab() + "' enable=true onclick=\"ReturnWork('" + urlr + "','" + btnLab.getReturnField() + "'); \" />");
 		}
 
-		//if (btnLab.ReturnEnable && isAskFor == false && this.currND.IsStartNode == false && this.currND.FocusField != ""  )
-		//{
-		//    /*如果有焦点字段*/
-		//    toolbar.AddBtn("Btn_ReturnWork", btnLab.ReturnLab);
-		//    this.Btn_ReturnWork.UseSubmitBehavior = false;
-		//    this.Btn_ReturnWork.OnClientClick = "this.disabled=true;";
-		//    this.Btn_ReturnWork.Click += new System.EventHandler(ToolBar1_ButtonClick);
-		//}
-
-		//  if (btnLab.HungEnable && this.currND.IsStartNode == false)
 		if (btnLab.getHungEnable())
 		{
 			/*挂起*/
 			String urlr = appPath + "WF/WorkOpt/HungUp.jsp?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 			toolbar.Add("<input type=button  value='" + btnLab.getHungLab() + "' enable=true onclick=\"WinOpen('" + urlr + "'); \" />");
-			//toolbar.Add("<input type=button  value='" + btnLab.PrintDocLab + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />");
 		}
 
 		if (btnLab.getShiftEnable() && isAskFor == false)
 		{
 			/*移交*/
-			//toolbar.AddBtn("Btn_Shift", btnLab.getShiftLab());
-			//this.Btn_Shift.Click += new System.EventHandler(ToolBar1_ButtonClick);
-			
 			toolbar.Add("<input type=button id=\"Btn_Shift\"  value='" + btnLab.getShiftLab() + "' enable=true onclick=\"ShowUrl(this);\" />");
 		}
 
 		if ((btnLab.getCCRole() == CCRole.HandCC || btnLab.getCCRole() == CCRole.HandAndAuto))
 		{
 			/* 抄送 */
-			// toolbar.Add("<input type=button value='" + btnLab.CCLab + "' enable=true onclick=\"WinOpen('" + appPath + "WF/Msg/Write.jsp?WorkID=" + this.WorkID + "&FK_Node=" + this.FK_Node + "','ds'); \" />");
 			toolbar.Add("<input type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/CC.jsp?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey + "','ds'); \" />");
 		}
 
@@ -1058,10 +956,6 @@ public class MyFlowModel extends EnModel{
 					break;
 				case DeleteReal: // 不需要交互，直接干净的删除.
 					toolbar.Add("<input type=button id=\"Btn_Delete\" value='" + btnLab.getDeleteLab() + "' enable=true onclick=\"ShowUrl(this); \" />");
-					//toolbar.AddBtn("Btn_Delete", btnLab.getDeleteLab());
-					//this.getBtn_Delete().OnClientClick = "return confirm('将要执行删除流程，您确认吗?')";
-					//this.getBtn_Delete().addAttr("onclick", " return confirm('您确定要删除吗？');");
-					//this.Btn_Delete.Click += new System.EventHandler(ToolBar1_ButtonClick);
 					break;
 				default:
 					break;
@@ -1071,13 +965,7 @@ public class MyFlowModel extends EnModel{
 		if (btnLab.getEndFlowEnable() && this.getcurrND().getIsStartNode() == false && isAskFor == false)
 		{
 			toolbar.Add("<input type=button  value='" + btnLab.getEndFlowLab() + "' enable=true onclick=\"To('./WorkOpt/StopFlow.jsp?&DoType=StopFlow&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey + "'); \" />");
-			//toolbar.AddBtn("Btn_EndFlow", btnLab.EndFlowLab);
-			//toolbar.GetBtnByID("Btn_EndFlow").OnClientClick = "return confirm('" + this.ToE("AYS", "将要执行终止流程，您确认吗？") + "')";
-			//toolbar.GetBtnByID("Btn_EndFlow").Click += new System.EventHandler(ToolBar1_ButtonClick);
 		}
-
-		//if (btnLab.RptEnable)
-		//    toolbar.Add("<input type=button  value='" + btnLab.RptLab + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WFRpt.jsp?WorkID=" + this.WorkID + "&FK_Flow=" + this.FK_Flow + "&FID=" + this.FID + "','ds0'); \" />");
 
 		if (btnLab.getPrintDocEnable() && isAskFor == false)
 		{
@@ -1104,9 +992,6 @@ public class MyFlowModel extends EnModel{
 		{
 			toolbar.Add("<input type=button  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/Track.jsp?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />");
 		}
-
-		//if (btnLab.OptEnable)
-		//    toolbar.Add("<input type=button  value='" + btnLab.OptLab + "' onclick=\"WinOpen('" + appPath + "WF/WorkOpt/Home.jsp?WorkID=" + this.WorkID + "&FK_Node=" + currND.NodeID + "&FK_Flow=" + this.FK_Flow + "&FID=" + this.FID + "','opt'); \"  />");
 
 		switch (btnLab.getSelectAccepterEnable())
 		{
@@ -1140,16 +1025,13 @@ public class MyFlowModel extends EnModel{
 			/*加签 */
 			String urlr3 = appPath + "WF/WorkOpt/Askfor.jsp?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 			toolbar.Add("<input type=button  value='" + btnLab.getAskforLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />");
-			//toolbar.Add("<input type=button  value='" + btnLab.BatchLab + "' enable=true onclick=\"To('" + urlr + "'); \" />");
 		}
 
 		if (btnLab.getWebOfficeWorkModel() == WebOfficeWorkModel.Button)
 		{
 			/*公文正文 */
 			String urlr = appPath + "WF/WorkOpt/WebOffice.jsp?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + (new Date());
-			//toolbar.Add("<input type=button  value='" + btnLab.getWebOfficeLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','公文正文'); \" />");
 			toolbar.Add("<input type=button id=\"Btn_Office\" value='" + btnLab.getWebOfficeLab() + "' enable=true onclick=\"ShowUrl(this); \" />");
-			//toolbar.Add("<input type=button  value='" + btnLab.BatchLab + "' enable=true onclick=\"To('" + urlr + "'); \" />");
 		}
 
 		if (this.currFlow.getIsResetData() == true && this.getcurrND().getIsStartNode())
@@ -1157,7 +1039,6 @@ public class MyFlowModel extends EnModel{
 			/* 启用了数据重置功能 */
 			String urlr3 = appPath + "WF/MyFlow.jsp?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
 			toolbar.Add("<input type=button  value='数据重置' enable=true onclick=\"To('" + urlr3 + "','ds'); \" />");
-			//toolbar.Add("<input type=button  value='" + btnLab.BatchLab + "' enable=true onclick=\"To('" + urlr + "'); \" />");
 		}
 
 		if (btnLab.getSubFlowCtrlRole() != SubFlowCtrlRole.None)
@@ -1259,8 +1140,6 @@ public class MyFlowModel extends EnModel{
 	*/
 	public final long getWorkID()
 	{
-//		if (ViewState["WorkID"] == null)
-//		{
 			if (request.getParameter("WorkID") == null)
 			{
 				return workId;
@@ -1269,11 +1148,6 @@ public class MyFlowModel extends EnModel{
 			{
 				return Long.parseLong(request.getParameter("WorkID"));
 			}
-//		}
-//		else
-//		{
-//			return Long.parseLong(ViewState["WorkID"].toString());
-//		}
 	}
 	public final void setWorkID(long value)
 	{

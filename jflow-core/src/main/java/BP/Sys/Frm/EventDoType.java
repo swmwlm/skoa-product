@@ -25,7 +25,7 @@ public enum EventDoType
 	/**
 	 * EXE
 	 */
-	EXE(5),
+	SpecClass(5),
 	/**
 	 * 基类
 	 */

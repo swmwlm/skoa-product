@@ -125,8 +125,11 @@ public class Dot2DotSingleController {
 
 						//key = id.split("_")[1];// split('_',1);
 						key = id.replace("CB_", "");
-						if(key.contains("_")){
-							key = key.substring(0,key.lastIndexOf("_"));
+						if("BP.WF.Template.NodeEmps".equals(request.getParameter("AttrKey"))){
+							if(!"None".equals(request.getParameter("ShowWay")))
+							{
+								key = key.substring(0,key.lastIndexOf("_"));
+							}
 						}
 						
 						if (key == "EN" || key == "SE" || keys.contains(key))
@@ -247,7 +250,7 @@ public class Dot2DotSingleController {
 
 						//key = id.split("_")[1];// split('_',1);
 						key = id.replace("CB_", "");
-						if(key.contains("_")){
+						if("BP.WF.Template.NodeEmps".equals(request.getParameter("AttrKey"))){
 							key = key.substring(0,key.lastIndexOf("_"));
 						}
 

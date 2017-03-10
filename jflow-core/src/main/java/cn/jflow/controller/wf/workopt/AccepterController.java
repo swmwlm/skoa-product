@@ -421,7 +421,7 @@ public class AccepterController {
 		if (this.getIsWinOpen() == 0)
 		{
 			//如果是 MyFlow.jsp 调用的, 就要调用发送逻辑. 
-			this.DoSend();
+			//this.DoSend();
 		}
 		if (_request.getParameter("IsEUI") == null)
 		{

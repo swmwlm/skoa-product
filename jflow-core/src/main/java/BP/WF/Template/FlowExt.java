@@ -25,6 +25,7 @@ import BP.Tools.StringHelper;
 import BP.WF.ActionType;
 import BP.WF.Flow;
 import BP.WF.FlowAppType;
+import BP.WF.FlowDeleteType;
 import BP.WF.FlowRunWay;
 import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkFlowAttr;
@@ -338,7 +339,10 @@ public class FlowExt extends EntityNoName {
 		
 		//为 莲荷科技增加一个系统类型, 用于存储当前所在流程树的第2级流程树编号.
 		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
-		///#endregion 基本属性。
+		 // add for 华夏银行.
+        map.AddDDLSysEnum(FlowAttr.FlowDeleteRole, FlowDeleteType.AdminOnly.getValue(), "流程实例删除规则",
+    true, true, FlowAttr.FlowDeleteRole,
+    "@0=超级管理员可以删除@1=分级管理员可以删除@2=发起人可以删除@3=节点启动删除按钮的操作员");   
 
 		///#region 启动方式
 		//map.AddDDLSysEnum(FlowAttr.FlowRunWay, (int)FlowRunWay.HandWork, "启动方式",
@@ -1615,10 +1619,7 @@ public class FlowExt extends EntityNoName {
 		// fl.RetrieveFromDBSources();
 		//fl.Update();
 
-		if (Glo.getOSModel() == OSModel.OneMore) {
-			DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.getName() + "' WHERE Flag='Flow" + this.getNo() + "' AND FK_App='"
-					+ SystemConfig.getSysNo() + "'");
-		}
+		 
 	}
 
 	@Override

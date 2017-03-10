@@ -41,8 +41,7 @@ public class GroupFields extends EntitiesOID
 	 */
 	public GroupFields(String EnName)
 	{
-		int i = this
-				.Retrieve(GroupFieldAttr.EnName, EnName, GroupFieldAttr.Idx);
+		int i = this.Retrieve(GroupFieldAttr.EnName, EnName, GroupFieldAttr.Idx);
 		if (i == 0)
 		{
 			GroupField gf = new GroupField();

@@ -5,6 +5,7 @@ import BP.En.EntitySimpleTree;
 import BP.En.Map;
 import BP.Sys.Frm.MapData;
 import BP.Tools.StringHelper;
+import BP.WF.Flows;
 
 /** 
   独立表单树
@@ -44,6 +45,40 @@ public class SysFormTree extends EntitySimpleTree//EntityTree
 	public void setParent(String value)
 	{
 		this.SetValByKey(SysFormTreeAttr.ParentNo, value);
+	}
+	
+	/** 
+	 子文件夹
+	*/
+	public final SysForms getHisSubFormSorts()
+	{
+		try
+		{
+			SysForms formSorts = new SysForms();
+			formSorts.RetrieveByAttr(SysFormTreeAttr.ParentNo, this.getNo());
+			return formSorts;
+		}
+		catch (java.lang.Exception e)
+		{
+		}
+		return null;
+	}
+	
+	/** 
+	 类别下所包含表单
+	*/
+	public final SysForms getHisForms()
+	{
+		try
+		{
+			SysForms flowSorts = new SysForms();
+			flowSorts.RetrieveByAttr(SysFormTreeAttr.FK_FormSort, this.getNo());
+			return flowSorts;
+		}
+		catch (java.lang.Exception e)
+		{
+		}
+		return null;
 	}
 	/** 
 	 数据源

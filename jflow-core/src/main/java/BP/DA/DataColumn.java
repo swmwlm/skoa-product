@@ -36,6 +36,10 @@ public class DataColumn
 		// this.ColumnName = columnName;
 	}
 	
+	public DataColumn()
+	{
+	}
+	
 	public DataColumn(String columnName, Object DataType)
 	{
 		this.ColumnName = columnName.toLowerCase();

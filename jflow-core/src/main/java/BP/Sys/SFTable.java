@@ -1,7 +1,22 @@
 package BP.Sys;
 
+import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import BP.DA.DataSet;
+import BP.DA.DataTable;
 import BP.DA.Depositary;
+import BP.DA.Log;
+import BP.En.ClassFactory;
 import BP.En.EnType;
+import BP.En.Entities;
 import BP.En.EntitiesNoName;
 import BP.En.EntityNoName;
 import BP.En.Map;
@@ -11,6 +26,8 @@ import BP.En.UAC;
 import BP.Sys.Frm.MapAttr;
 import BP.Sys.Frm.MapAttrAttr;
 import BP.Sys.Frm.MapAttrs;
+import BP.Tools.Json;
+import BP.Tools.StringHelper;
 
 /**
  * 用户自定义表
@@ -451,36 +468,6 @@ public class SFTable extends EntityNoName
 	}
 	
 	/** 
-	 表数据来源类型
-	 
-	*/
-	public enum SrcType {
-		/** 
-		 本地表或者视图
-		 
-		*/
-		TableOrView,
-		/** 
-		 通过一个SQL确定的一个外部数据源
-		 
-		*/
-		SQL,
-		/** 
-		 通过WebServices获得的一个数据源
-		 
-		*/
-		WebServices;
-
-		public int getValue() {
-			return this.ordinal();
-		}
-
-		public static SrcType forValue(int value) {
-			return values()[value];
-		}
-	}
-	
-	/** 
 	 数据源类型
 	 
 	*/
@@ -512,5 +499,344 @@ public class SFTable extends EntityNoName
 		this.SetValByKey(SFTableAttr.CashMinute, value);
 	}
 
+	/** 
+	 *获得该数据源的数据
+	 * @return 
+	 */
+	public final DataTable GenerData()
+	{
+		String sql = "";
+		if (this.getSrcType() == SrcType.CreateTable)
+		{
+			sql = "SELECT * FROM " + getSrcTable();
+			return this.RunSQLReturnTable(sql);
+		}
 
+		if (getSrcType() == SrcType.TableOrView)
+		{
+			sql = "SELECT * FROM " + getSrcTable();
+			return this.RunSQLReturnTable(sql);
+		}
+
+		throw new RuntimeException("@没有判断的数据.");
+	}
+	
+	/** 
+	 * 获得外部数据表
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public final DataTable getGenerHisDataTable()
+	{
+		//创建数据源.
+		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
+
+		//#region 自己定义的表.
+		if (this.getSrcType() == SrcType.BPClass)
+		{
+			Entities ens = ClassFactory.GetEns(this.getNo());
+			return ens.RetrieveAllToTable();
+		}
+		//#endregion
+		
+		//#region  WebServices
+		// this.SrcType == Sys.SrcType.WebServices，by liuxc 
+		//暂只考虑No,Name结构的数据源，2015.10.04，added by liuxc
+		if (this.getSrcType() == SrcType.WebServices)
+		{
+			String[] td = this.getTableDesc().split("[,]", -1); //接口名称,返回类型
+			String[] ps = ((this.getSelectStatement() != null) ? this.getSelectStatement() : "").split("[&]", -1);
+			ArrayList args = new ArrayList();
+			String[] pa = null;
+
+			for (String p : ps)
+			{
+				if (StringHelper.isNullOrWhiteSpace(p))
+				{
+					continue;
+				}
+
+				pa = p.split("[=]", -1);
+				if (pa.length != 2)
+				{
+					continue;
+				}
+
+					//此处要SL中显示表单时，会有问题
+				try
+				{
+					if (pa[1].contains("@WebUser.No"))
+					{
+						pa[1] = pa[1].replace("@WebUser.No", BP.Web.WebUser.getNo());
+					}
+					if (pa[1].contains("@WebUser.Name"))
+					{
+						pa[1] = pa[1].replace("@WebUser.Name", BP.Web.WebUser.getName());
+					}
+					if (pa[1].contains("@WebUser.FK_Dept"))
+					{
+						pa[1] = pa[1].replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+					}
+					if (pa[1].contains("@WebUser.FK_DeptName"))
+					{
+						pa[1] = pa[1].replace("@WebUser.FK_DeptName", BP.Web.WebUser.getFK_DeptName());
+					}
+				}
+				catch (java.lang.Exception e)
+				{
+				}
+
+				if (pa[1].contains("@WorkID"))
+				{
+					pa[1] = pa[1].replace("@WorkID", (BP.Sys.Glo.getRequest().getParameter("WorkID") != null) ? BP.Sys.Glo.getRequest().getParameter("WorkID") : "");
+				}
+				if (pa[1].contains("@NodeID"))
+				{
+					pa[1] = pa[1].replace("@NodeID", (BP.Sys.Glo.getRequest().getParameter("NodeID") != null) ? BP.Sys.Glo.getRequest().getParameter("NodeID") : "");
+				}
+				if (pa[1].contains("@FK_Node"))
+				{
+					pa[1] = pa[1].replace("@FK_Node", (BP.Sys.Glo.getRequest().getParameter("FK_Node") != null) ? BP.Sys.Glo.getRequest().getParameter("FK_Node") : "");
+				}
+				if (pa[1].contains("@FK_Flow"))
+				{
+					pa[1] = pa[1].replace("@FK_Flow", (BP.Sys.Glo.getRequest().getParameter("FK_Flow") != null) ? BP.Sys.Glo.getRequest().getParameter("FK_Flow") : "");
+				}
+				if (pa[1].contains("@FID"))
+				{
+					pa[1] = pa[1].replace("@FID", (BP.Sys.Glo.getRequest().getParameter("FID") != null) ? BP.Sys.Glo.getRequest().getParameter("FID") : "");
+				}
+
+				args.add(pa[1]);
+			}
+
+			Object result = InvokeWebService(src.getIP(), td[0], args.toArray(new Object[0]));
+			
+			if("DataSet".equals(td[1])){
+				return result == null ? new DataTable() : ((DataSet)((result instanceof DataSet) ? result : null)).getTables().get(0);
+			}else if("DataTable".equals(td[1]))
+			{
+				return (DataTable)((result instanceof DataTable) ? result : null);
+			}else if("Json".equals(td[1]))
+			{
+				String json = Json.ToJson(((result instanceof String) ? result.toString() : null));
+				/*
+				if (!jdata.IsArray)
+				{
+					throw new RuntimeException("@返回的JSON格式字符串“" + ((result != null) ? result : "") + "”不正确");
+				}*/
+
+				DataTable dt = new DataTable();
+				dt.Columns.Add("No", "");
+				dt.Columns.Add("Name", "");
+				dt = Json.ToDataTable(json);
+				/*
+				for (int i = 0; i < jdata.length; i++)
+				{
+					dt.Rows.Add(jdata["No"].toString(), jdata[i]["Name"].toString());
+				}
+				 */
+				return dt;
+			}else if("Xml".equals(td[1]))
+			{
+				if (result == null || StringHelper.isNullOrWhiteSpace(result.toString()))
+				{
+					throw new RuntimeException("@返回的XML格式字符串不正确。");
+				}
+				/*
+				XmlDocument xml = new XmlDocument();
+				xml.LoadXml((String)((result instanceof String) ? result : null));
+
+				XmlNode root = null;
+				if (xml.ChildNodes.size() < 2)
+				{
+					root = xml.ChildNodes[0];
+				}
+				else
+				{
+					root = xml.ChildNodes[1];
+				}
+
+				dt = new DataTable();
+				dt.Columns.Add("No", String.class);
+				dt.Columns.Add("Name", String.class);
+
+				for (XmlNode node : root.ChildNodes)
+				{
+					dt.Rows.Add(node.SelectSingleNode("No").InnerText, node.SelectSingleNode("Name").InnerText);
+				}
+
+				return dt;*/
+				
+				DataTable dt = new DataTable();
+				dt.Columns.Add("No", String.class);
+				dt.Columns.Add("Name", String.class);
+				
+				try {
+					DocumentBuilderFactory factory  = DocumentBuilderFactory.newInstance();
+					DocumentBuilder builder = factory.newDocumentBuilder();
+					
+					Document dc = builder.parse(new InputSource(((result instanceof String) ? result.toString() : "")));
+					NodeList books  = dc.getChildNodes();
+					
+					for(int i=0;i<books.getLength();i++)
+					{
+						Node book = books.item(i);
+						dt.Rows.Add(book.getNodeName(), book.getFirstChild().getNodeValue());
+					}
+				} catch (Exception e) {
+					Log.DebugWriteError("getGenerHisDataTable() xml格式读取错误:"+e.getMessage());
+				}
+				return dt;
+			}else
+			{
+				throw new RuntimeException("@不支持的返回类型" + td[1]);
+			}
+		}
+		//#endregion
+
+		//#region 如果是一个SQL.
+		if (this.getSrcType() == SrcType.SQL)
+		{
+			String runObj = this.getSelectStatement();
+			runObj = runObj.replace("~", "'");
+			if (runObj.contains("@WebUser.No"))
+			{
+				runObj = runObj.replace("@WebUser.No", BP.Web.WebUser.getNo());
+			}
+
+			if (runObj.contains("@WebUser.Name"))
+			{
+				runObj = runObj.replace("@WebUser.Name", BP.Web.WebUser.getName());
+			}
+
+			if (runObj.contains("@WebUser.FK_Dept"))
+			{
+				runObj = runObj.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+			}
+			return src.RunSQLReturnTable(runObj);
+		}
+		//#endregion 如果是一个SQL.
+
+		//#region 如果是一个外键表.
+		if (this.getSrcType() == SrcType.TableOrView)
+		{
+			String sql = "SELECT No, Name FROM " + this.getNo();
+			return src.RunSQLReturnTable(sql);
+		}
+		//#endregion 如果是一个SQL.
+
+		//#region 自己定义的表.
+		if (this.getSrcType() == SrcType.CreateTable)
+		{
+			String sql = "SELECT No, Name FROM " + this.getNo();
+			return src.RunSQLReturnTable(sql);
+		}
+		///#endregion
+		
+		throw new RuntimeException("@没有判断的数据类型." + this.getSrcType() + " - " + this.getSrcTypeText());
+	}
+	
+	/** 
+	 * 数据源类型名称
+	 */
+	public final String getSrcTypeText()
+	{
+		switch (this.getSrcType())
+		{
+			case TableOrView:
+				if (this.getIsClass())
+				{
+					return "<img src='/WF/Img/Class.png' width='16px' broder='0' />实体类";
+				}
+				else
+				{
+					return "<img src='/WF/Img/Table.gif' width='16px' broder='0' />表/视图";
+				}
+			case SQL:
+				return "<img src='/WF/Img/SQL.png' width='16px' broder='0' />SQL表达式";
+			case WebServices:
+				return "<img src='/WF/Img/WebServices.gif' width='16px' broder='0' />WebServices";
+			default:
+				return "";
+		}
+	}
+	
+	
+	/** 
+	 * 实例化 WebServices
+	 * @param url WebServices地址
+	 * @param methodname 调用的方法
+	 * @param args 把webservices里需要的参数按顺序放到这个object[]里
+	 */
+	public final Object InvokeWebService(String url, String methodname, Object[] args)
+	{
+		return args;
+		/*
+		//这里的namespace是需引用的webservices的命名空间，在这里是写死的，大家可以加一个参数从外面传进来。
+		String namespace = "BP.RefServices";
+		try
+		{
+			if (url.endsWith(".asmx"))
+			{
+				url += "?wsdl";
+			}
+			else if (url.endsWith(".svc"))
+			{
+				url += "?singleWsdl";
+			}
+
+			//获取WSDL
+			WebClient wc = new WebClient();
+			Stream stream = wc.OpenRead(url);
+			ServiceDescription sd = ServiceDescription.Read(stream);
+			String classname = sd.Services[0].Name;
+			ServiceDescriptionImporter sdi = new ServiceDescriptionImporter();
+			sdi.AddServiceDescription(sd, "", "");
+			CodeNamespace cn = new CodeNamespace(namespace);
+
+			//生成客户端代理类代码
+			CodeCompileUnit ccu = new CodeCompileUnit();
+			ccu.Namespaces.Add(cn);
+			sdi.Import(cn, ccu);
+			CSharpCodeProvider csc = new CSharpCodeProvider();
+			ICodeCompiler icc = csc.CreateCompiler();
+
+			//设定编译参数
+			CompilerParameters cplist = new CompilerParameters();
+			cplist.GenerateExecutable = false;
+			cplist.GenerateInMemory = true;
+			cplist.ReferencedAssemblies.Add("System.dll");
+			cplist.ReferencedAssemblies.Add("System.XML.dll");
+			cplist.ReferencedAssemblies.Add("System.Web.Services.dll");
+			cplist.ReferencedAssemblies.Add("System.Data.dll");
+
+			//编译代理类
+			CompilerResults cr = icc.CompileAssemblyFromDom(cplist, ccu);
+			if (true == cr.Errors.HasErrors)
+			{
+				StringBuilder sb = new StringBuilder();
+				for (System.CodeDom.Compiler.CompilerError ce : cr.Errors)
+				{
+					sb.append(ce.toString());
+					sb.append(System.lineSeparator());
+				}
+				throw new RuntimeException(sb.toString());
+			}
+
+			//生成代理实例，并调用方法
+			System.Reflection.Assembly assembly = cr.CompiledAssembly;
+			java.lang.Class t = assembly.GetType(namespace + "." + classname, true, true);
+			Object obj = Activator.CreateInstance(t);
+			java.lang.reflect.Method mi = t.getMethod(methodname);
+
+			return mi.Invoke(obj, args);
+		}
+		catch (java.lang.Exception e)
+		{
+			return null;
+		}
+		*/
+	}
+
+	
 }

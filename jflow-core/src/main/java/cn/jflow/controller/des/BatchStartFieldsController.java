@@ -32,9 +32,7 @@ public class BatchStartFieldsController {
 		String BatchParas = request.getParameter("BatchParas");
 		
 		Node nd = new Node(FK_Node);
-		nd.setBatchParas(tBcount);
-		
-		//
+		nd.setBatchListCount(Integer.parseInt(tBcount));
 		if("0".equals(BRole)){
 			nd.setHisBatchRole(BatchRole.None);
 		}
@@ -47,7 +45,9 @@ public class BatchStartFieldsController {
 		nd.setBatchParas(BatchParas);
 		nd.Update();
 		mv.setViewName("redirect:" + "/WF/Admin/AttrNode/BatchStartFields.jsp?s=d34&FK_Flow="+FK_Flow+"&FK_Node=" + FK_Node); 
+
 		return mv;
+		
 	}
 
 }

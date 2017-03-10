@@ -36,7 +36,19 @@ public class FrmRBAttr extends EntityMyPKAttr
 	 */
 	public static final String Lab = "Lab";
 	/**
+	 * 脚本
+	 */
+	public static final String Script = "Script";
+	/**
+	 * 配置信息
+	 */
+	 public static final String FieldsCfg = "FieldsCfg";
+	/**
 	 * GUID
 	 */
 	public static final String GUID = "GUID";
+	/**
+	 * 提示信息
+	 */
+	public static final String Tip  ="Tip"; 
 }

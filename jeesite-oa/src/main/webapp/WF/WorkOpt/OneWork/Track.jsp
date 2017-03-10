@@ -290,7 +290,7 @@
 			 $("#lcrz_div").css("display","none");
 			 $("#d1").removeClass("selected");  
 			 $("#d3").addClass("selected");  
-			 $("#d4").removeClass("selected");  
+			 $("#d4").removeClass("selected");
 			 var adminUrl='<%=basePath %>WF/WorkOpt/OneWork/Ath.jsp?FK_Node=<%=FK_Node %>&WorkID=<%=WorkID %>&FK_Flow=<%=FK_Flow %>&FID=<%=fid %>';
 			 $('#mainFrame').attr("src", adminUrl);
 			 $("#mainFrame").height(document.body.scrollHeight-50);
@@ -304,6 +304,10 @@
 			 var adminUrl='<%=basePath %>WF/WorkOpt/OneWork/OP.jsp?FK_Node=<%=FK_Node%>&WorkID=<%=WorkID %>&FK_Flow=<%=FK_Flow %>&FID=<%=fid %>';
 			 $('#mainFrame').attr("src", adminUrl);
 			 $("#mainFrame").height(document.body.scrollHeight-50);
+		}
+		else if(v==5){ 
+			 var adminUrl='<%=basePath %>WF/WorkOpt/OneWork/FlowBBS.htm?FK_Node=<%=FK_Node%>&WorkID=<%=WorkID %>&FK_Flow=<%=FK_Flow %>&FID=<%=fid %>';
+			 WinOpen(adminUrl);
 		}
 	}
 </script>
@@ -333,6 +337,8 @@
 			<li><div id="d3"><a href="javascript:showDiv('3');" ><span class='nav'>流程附件</span></a></div>
 			</li> 	
 			<li><div id="d4"><a href="javascript:showDiv('4');" ><span class='nav'>操作</span></a></div>
+			</li> 	
+			<li><div id="d4"><a href="javascript:showDiv('5');" ><span class='nav'>流程评论</span></a></div>
 			</li> 	
         </ul>
     </div>

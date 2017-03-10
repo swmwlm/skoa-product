@@ -127,6 +127,11 @@ public enum ActionType
 	/** 
 	 信息
 	*/
+	FlowBBS(29),
+	/** 
+	 评论
+	*/
+	
 	Info(100);
 
 	private int intValue;

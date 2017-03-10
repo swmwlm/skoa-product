@@ -24,9 +24,6 @@
 	String TB_ZDGW="";
 	String TB_ZDRY="";
 	
-	
-	
-	
 %>
 <body>
 
@@ -49,19 +46,18 @@
 
 </td>
 
-<th colspan="4">必选项</th>
-
+<th colspan="4">必选项 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="CheckBox"  id="selectAll" runat="server"   Enabled="false" name="gjzk" />选择全部 </th>
 </tr>
 
 <tr>
 <td> 
-    <input type="CheckBox"id="CB_FQR" runat="server" name="gjzk" value=""  Enabled="false" />发起人可见 </td>
+    <input type="CheckBox"id="CB_FQR" runat="server" name="gjzk" value=""  Enabled="false" checked="checked"  disabled="disabled"/>发起人可见 </td>
 
 	
 <td>
-    <input type="CheckBox"id="CB_CYR" runat="server" name="gjzk" value="" Enabled="false"/>参与人可见 </td>
+    <input type="CheckBox"id="CB_CYR" runat="server" name="gjzk" checked="checked"  Enabled="false" disabled="disabled"/>参与人可见 </td>
 <td>
-    <input type="CheckBox"id="CB_CSR" runat="server" name="gjzk"value="" Enabled="false"/>被炒送人可见 </td>
+    <input type="CheckBox"id="CB_CSR" runat="server" name="gjzk" checked="checked" Enabled="false" disabled="disabled"/>被炒送人可见 </td>
 <td>
      </td>
 </tr>
@@ -121,34 +117,115 @@
     </div>
 </body>
 <script  type="text/javascript">
-	
+window.onload=function(){
+	$.ajax({
+		type : 'post',
+		async : false,
+		url : '<%=basePath%>WF/TruckViewPower/Init.do',
+		data:{FK_Flow:'<%=FK_Flow%>'},
+		dataType : 'json',
+		error: function(data){},
+		success : function(data) {
+			for (var i = 0; i < data.length; i++) {
+				voluation(data[i]);
+			}
+		}
+	});	
+  }
+    $('#selectAll').click(function(){
+    	var ch=document.getElementsByName("gjzk");
+    	if(document.getElementsByName("gjzk")[0].checked==true){
+    	for(var i=0;i<ch.length;i++){
+    	        ch[i].checked=true;
+    	    }
+    	   }else{
+    	    for(var i=0;i<ch.length;i++){
+    	    	if(ch[i].id=="CB_FQR" || ch[i].id=="CB_CYR" || ch[i].id=="CB_CSR"){
+    	    		continue;
+    	    	   }else{
+    	           ch[i].checked=false;	
+    	    	}  
+    	      }
+    	   }
+      });
+ 
+    function  voluation(data){	 
+		var pmydept = data.pmydept;
+		var ppmydept = data.ppmydept;
+		var ppdept = data.ppdept;
+		var psamedept = data.psamedept;
+		var pspecdept = data.pspecdept;		
+		var pspecsta = data.pspecsta;	
+		var pspecgroup = data.pspecgroup;	
+		var pspecemp = data.pspecemp;
+		var pspecdeptext = data.pspecdeptext;	
+		var pspecstaext = data.pspecstaext;		
+		var pspecgroupext = data.pspecgroupext;	
+		var pspecempext = data.pspecempext;	
+    	 if (pmydept == "1"){
+             $("#CB_BBM").attr("checked", true);
+    	 }
+    	 if (ppmydept == "1"){
+             $("#CB_ZSSJ").attr("checked", true);
+    	 }
+    	 if (ppdept == "1"){
+             $("#CB_SJ").attr("checked", true);
+    	 }
+    	 if (psamedept == "1"){
+             $("#CB_PJ").attr("checked", true);
+    	 }
+    	 if (pspecdept == "1"){
+             $("#QY_ZDBM").attr("checked", true);
+    	 }
+    	 if (pspecsta == "1"){
+             $("#QY_ZDGW").attr("checked", true);
+    	 }
+    	 if (pspecgroup == "1"){
+             $("#QY_ZDQXZ").attr("checked", true);
+    	 }
+    	 if (pspecemp == "1"){
+             $("#QY_ZDRY").attr("checked", true);
+    	 }
+    	 if (pspecdeptext!="" || pspecdeptext!==null){
+    		  $("#TB_ZDBM").val(pspecdeptext);
+    	 }
+    	 if (pspecstaext!="" || pspecstaext!==null){
+   		  $("#TB_ZDGW").val(pspecstaext);
+   	     }
+    	 if (pspecgroupext!="" || pspecgroupext!==null){
+      		  $("#TB_ZDQXZ").val(pspecgroupext);
+      	 }
+    	 if (pspecempext!="" || pspecempext!==null){
+      		  $("#TB_ZDRY").val(pspecempext);
+      	 }	 
+       }
 	//ajax 提交
 	function onSave(){
-		var keys = "";
-		var gj=$("input[name=gjck]:checked").attr("id");
+		var TB_ZDBM=$("#TB_ZDBM").val();
+		var TB_ZDGW=$("#TB_ZDGW").val();
+		var TB_ZDQXZ=$("#TB_ZDQXZ").val();
+		var TB_ZDRY=$("#TB_ZDRY").val();
+		var BBM=$('input[id="CB_BBM"]:checked').attr('id');
+		var ZSSJ=$('input[id="CB_ZSSJ"]:checked').attr('id');
+		var SJ=$('input[id="CB_SJ"]:checked').attr('id');		
+		var PJ=$('input[id="CB_PJ"]:checked').attr('id');
+		var ZDBM=$('input[id="QY_ZDBM"]:checked').attr('id');
+		var ZDGW=$('input[id="QY_ZDGW"]:checked').attr('id');
+		var ZDQXZ=$('input[id="QY_ZDQXZ"]:checked').attr('id');
+		var ZDRY=$('input[id="QY_ZDRY"]:checked').attr('id');
 		$.ajax({
 			url:'<%=basePath%>WF/TruckViewPower/BtnSaveClick.do',
 			type:'post', //数据发送方式
 			dataType:'json', //接受数据格式
-			data:{CB_FQR:CB_FQR,CB_CYR:CB_CYR,CB_CSR:CB_CSR,CB_BBM:CB_BBM,CB_ZSSJ:CB_ZSSJ,CB_SJ:CB_SJ,CB_PJ:CB_PJ,
-				TB_ZDBM:TB_ZDBM,QY_ZDGW:QY_ZDGW.TB_ZDGW:TB_ZDGW,QY_ZDQXZ:QY_ZDQXZ,TB_ZDRY:TB_ZDRY,TB_ZDQXZ:TB_ZDQXZ,
-				QY_ZDRY:QY_ZDRY,QY_ZDBM:QY_ZDBM,gjck:gjck,FK_Flow:'<%=FK_Flow%>'},
+			data:{BBM:BBM,ZSSJ:ZSSJ,SJ:SJ,PJ:PJ,ZDBM:ZDBM,ZDGW:ZDGW,ZDQXZ:ZDQXZ,ZDRY:ZDRY,
+				PSpecDeptExt:TB_ZDBM,PSpecStaExt:TB_ZDGW,PSpecGroupExt:TB_ZDQXZ,PSpecEmpExt:TB_ZDRY,FK_Flow:'<%=FK_Flow%>'
+				},
 			async: false ,
 			error: function(data){},
 			success: function(data){
-				var json = eval("("+data+")");
-				if(json.success){
-					keys = json.msg;
-				}else{
-				}
+			alert("保存成功");
 			}
 		});
-		if (window.opener != undefined) {
-	        window.top.returnValue = keys;
-	    } else {
-	        window.returnValue = keys;
-	    }
-		window.close();
-	}
+	  }
 </script>
 </html>

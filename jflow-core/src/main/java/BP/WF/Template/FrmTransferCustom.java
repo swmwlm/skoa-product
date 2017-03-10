@@ -133,6 +133,37 @@ public class FrmTransferCustom extends Entity
 		return uac;
 	}
 	/** 
+	 控件状态
+	 */
+	public final FTCSta getFTCSta()
+	{
+		return FTCSta.forValue(this.GetValIntByKey(FTCAttr.FTCSta));
+	}
+	public final void setFTCSta(FTCSta value)
+	{
+		this.SetValByKey(FTCAttr.FTCSta, value);
+	}
+	/** 
+	 显示标签
+	 */
+	public final String getFTCLab()
+	{
+		return this.GetValStrByKey(FTCAttr.FTCLab);
+	}
+	/** 
+	 * H
+	 */
+	public final float getFTC_H()
+	{
+		return this.GetValFloatByKey(FTCAttr.FTC_H);
+	}
+	public final void setFTC_H(float value)
+	{
+		this.SetValByKey(FTCAttr.FTC_H, value);
+	}
+
+	
+	/** 
 	 重写主键
 	 
 	*/

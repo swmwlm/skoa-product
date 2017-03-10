@@ -34,31 +34,31 @@
 	//ORIGINAL LINE: case "1":
 	if (me.getFK_DBSrc().equals("1"))
 	{
-			DDL_DBSrc = "SQLServer数据库";
+			DDL_DBSrc = "SQLServer";
 	}
 	//ORIGINAL LINE: case "100":
 	else if (me.getFK_DBSrc().equals("100"))
 	{
-			DDL_DBSrc = "WebService数据源";
+			DDL_DBSrc = "WebService";
 	}
 	//ORIGINAL LINE: case "2":
 	else if (me.getFK_DBSrc().equals("2"))
 	{
-			DDL_DBSrc = "Oracle数据库";
+			DDL_DBSrc = "Oracle";
 	}
 	//ORIGINAL LINE: case "3":
 	else if (me.getFK_DBSrc().equals("3"))
 	{
-			DDL_DBSrc = "MySQL数据库";
+			DDL_DBSrc = "MySQL";
 	}
 	//ORIGINAL LINE: case "4":
 	else if (me.getFK_DBSrc().equals("4"))
 	{
-			DDL_DBSrc = "Informix数据库";
+			DDL_DBSrc = "Informix";
 	}
 	else
 	{
-			DDL_DBSrc = "应用系统主数据库(默认)";
+			DDL_DBSrc = "应用系统主数据库";
 	}
 	//this.DDL_DBSrc.DataSource = arr;
 	//this.DDL_DBSrc.DataBind();
@@ -91,6 +91,55 @@
                 ctrl.style.display = 'block';
             }
         }
+      //ajax 提交
+    	function onSave(x){
+    		var keys = "";
+    		var TB_SQL=$("#TB_SQL").val();
+    		var DDL_DBSrc=$("#DDL_DBSrc").val();
+    		$.ajax({
+    			url:'<%=basePath%>WF/TBFullCtrl/Btn_Save_Click.do',
+    			type:'post', //数据发送方式
+    			dataType:'json', //接受数据格式
+    			data:{TB_SQL:TB_SQL,DDL_DBSrc:DDL_DBSrc,FK_MapData:'<%=FK_MapData%>',OperAttrKey:'<%=OperAttrKey%>',ExtType:'<%=ExtType%>',RefNo:'<%=RefNo%>'},
+    			async: false ,
+    			error: function(data){
+    				alert("保存失败");
+    			},
+    			success: function(data){
+    				alert("保存成功");
+    			}
+    		});
+    		if(x>0){
+    			window.close();
+    		}
+    	}
+    	//ajax 删除
+    	function Btn_Delete_Click(){
+    		$.ajax({
+    			url:'<%=basePath%>WF/TBFullCtrl/Btn_Delete_Click.do',
+    			type:'post', //数据发送方式
+    			dataType:'json', //接受数据格式
+    			data:{FK_MapData:'<%=FK_MapData%>',OperAttrKey:'<%=OperAttrKey%>',ExtType:'<%=ExtType%>',RefNo:'<%=RefNo%>'},
+    			async: false ,
+    			error: function(data){
+    				alert("删除失败");
+    			},
+    			success: function(data){
+    				alert("删除成功");
+    			}
+    		});
+    		window.close();
+    	}
+    	
+    	function Btn_FullDtl_Click(){
+    		var url = "TBFullCtrl_Dtl.jsp?FK_MapData=<%=FK_MapData%>&MyPK=<%=MyPK%>";
+    		window.location.href=url;
+    	}
+    	
+    	function Btn_FullDDL_Click(){
+    		var url = "TBFullCtrl_ListNew.jsp?FK_MapData=<%=FK_MapData%>&MyPK=<%=MyPK%>";
+    		window.location.href=url;
+    	}
     </script>
 <table style=" width:100%;">
 <caption>为文本框【<%=request.getParameter("RefNo") %>】设置自动填充 </caption>
@@ -133,14 +182,14 @@
 
 <tr>
 <td colspan="3">
-    <input type="button" ID="Btn_Save" runat="server" value="保存" onclick="onSave(0)" />
-    <input type="button" ID="Btn_SaveAndClose" runat="server" value="保存并关闭" 
+    <input type="button" ID="Btn_Save" value="保存" onclick="onSave(0)" />
+    <input type="button" ID="Btn_SaveAndClose"  value="保存并关闭" 
         onclick="onSave(1)" />
     <input value="关闭" type="button"  onclick="javascript:window.close();" />
 
 
-    <input type="button" ID="Btn_FullDtl" runat="server" value="填充从表" ToolTip="当数据填充后，需要改变指定的从表数据。比如：主表选择人员，从表人员简历信息。" OnClick="Btn_FullDtl_Click()"  />
-    <input type="button" ID="Btn_FullDDL" runat="server" value="填充下拉框"  ToolTip="当数据填充后，需要改变指定的下拉框内容。比如：选择人员后，有一个人员岗位的下拉框，该下拉框的内容仅仅需要显示人员岗位。" OnClick="Btn_FullDDL_Click()"  />
+    <input type="button" ID="Btn_FullDtl" value="填充从表" ToolTip="当数据填充后，需要改变指定的从表数据。比如：主表选择人员，从表人员简历信息。" OnClick="Btn_FullDtl_Click()"  />
+    <input type="button" ID="Btn_FullDDL" value="填充下拉框"  ToolTip="当数据填充后，需要改变指定的下拉框内容。比如：选择人员后，有一个人员岗位的下拉框，该下拉框的内容仅仅需要显示人员岗位。" OnClick="Btn_FullDDL_Click()"  />
     <input type="button" ID="Btn_Delete"  
         OnClientClick="javascript:return confirm('您确定要删除吗？');"  runat="server" 
         value="删除" onclick="Btn_Delete_Click()" />
@@ -150,56 +199,43 @@
 </body>
 <script>
 	$("img").attr("src","Img/TBCtrlFull.png");
-	
-	//ajax 提交
-	function onSave(x){
-		var keys = "";
-		var TB_SQL=$("#TB_SQL").val();
-		var DDL_DBSrc=$("#DDL_DBSrc").val();
-		$.ajax({
-			url:'<%=basePath%>WF/TBFullCtrl/Btn_Save_Click.do',
-			type:'post', //数据发送方式
-			dataType:'json', //接受数据格式
-			data:{TB_SQL:TB_SQL,DDL_DBSrc:DDL_DBSrc,FK_MapData:'<%=FK_MapData%>',OperAttrKey:'<%=OperAttrKey%>',ExtType:'<%=ExtType%>',RefNo:'<%=RefNo%>'},
-			async: false ,
-			error: function(data){
-				alert("保存失败");
-			},
-			success: function(data){
-				alert("保存成功");
-			}
-		});
-		if(x>0){
-			window.close();
-		}
+	//给数据源下拉框赋值
+	var DDL_DBSrc = <%=me.getFK_DBSrc()%>;
+	if (DDL_DBSrc=="1")
+	{
+			DDL_DBSrc = "SQLServer";
+			$("#DDL_DBSrc").val(DDL_DBSrc);
+	}
+	//ORIGINAL LINE: case "100":
+	else if (DDL_DBSrc=="100")
+	{
+			DDL_DBSrc = "WebService数据源";
+			$("#DDL_DBSrc").val(DDL_DBSrc);
+	}
+	//ORIGINAL LINE: case "2":
+	else if (DDL_DBSrc=="2")
+	{
+			DDL_DBSrc = "Oracle";
+			$("#DDL_DBSrc").val(DDL_DBSrc);
+	}
+	//ORIGINAL LINE: case "3":
+	else if (DDL_DBSrc=="3")
+	{
+			DDL_DBSrc = "MySQL";
+			$("#DDL_DBSrc").val(DDL_DBSrc);
+	}
+	//ORIGINAL LINE: case "4":
+	else if (DDL_DBSrc=="4")
+	{
+			DDL_DBSrc = "Informix";
+			$("#DDL_DBSrc").val(DDL_DBSrc);
+	}
+	else
+	{
+			DDL_DBSrc = "应用系统主数据库";
+			$("#DDL_DBSrc").val(DDL_DBSrc);
 	}
 	
-	//ajax 删除
-	function Btn_Delete_Click(){
-		$.ajax({
-			url:'<%=basePath%>WF/TBFullCtrl/Btn_Delete_Click.do',
-			type:'post', //数据发送方式
-			dataType:'json', //接受数据格式
-			data:{FK_MapData:'<%=FK_MapData%>',OperAttrKey:'<%=OperAttrKey%>',ExtType:'<%=ExtType%>',RefNo:'<%=RefNo%>'},
-			async: false ,
-			error: function(data){
-				alert("删除失败");
-			},
-			success: function(data){
-				alert("删除成功");
-			}
-		});
-		window.close();
-	}
 	
-	function Btn_FullDtl_Click(){
-		var url = "TBFullCtrl_Dtl.jsp?FK_MapData=<%=FK_MapData%>&MyPK=<%=MyPK%>";
-		window.location.href=url;
-	}
-	
-	function Btn_FullDDL_Click(){
-		var url = "TBFullCtrl_ListNew.jsp?FK_MapData=<%=FK_MapData%>&MyPK=<%=MyPK%>";
-		window.location.href=url;
-	}
 </script>
 </html>

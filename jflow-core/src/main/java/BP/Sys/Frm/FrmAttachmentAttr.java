@@ -137,8 +137,12 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 是否可见？
 	*/
 	public static final String IsVisable = "IsVisable";
-
-		///#region weboffice属性。
+	/** 
+	 附件删除方式
+	*/
+	public static final String DeleteWay = "DeleteWay";
+	
+	//#region weboffice属性。
 	/** 
 	 是否启用锁定行
 	*/

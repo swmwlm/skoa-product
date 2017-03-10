@@ -10,11 +10,42 @@ import BP.En.Map;
  */
 public class FrmRB extends EntityMyPK
 {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 要执行的脚本
+	 */	
+	public final String getScript()
+	{	
+		return this.GetValStringByKey(FrmRBAttr.Script);	
+	} 
+	public final void setScript(String value)
+	{
+		this.SetValByKey(FrmRBAttr.Script, value);
+	}
+	/**
+	 * 字段-配置信息
+	 */
+	public final String getFieldsCfg()
+	{
+		return this.GetValStringByKey(FrmRBAttr.FieldsCfg);
+	}
+	public final void setFieldsCfg(String value)
+	{
+		this.SetValByKey(FrmRBAttr.FieldsCfg, value);
+	}
+	/**
+	 * 提示信息
+	 */
+	public final String getTip()
+	{
+		return this.GetValStrByKey(FrmRBAttr.Tip);
+	}
+	public final void setTip(String value)
+	{
+		this.SetValByKey(FrmRBAttr.Tip, value);
+	}
 	// 属性
 	public final String getLab()
 	{
@@ -136,6 +167,13 @@ public class FrmRB extends EntityMyPK
 		
 		map.AddTBFloat(FrmRBAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmRBAttr.Y, 5, "Y", false, false);
+		
+		//要执行的脚本.
+        map.AddTBString(FrmRBAttr.Script, null, "要执行的脚本", true, false, 0, 4000, 20);
+        map.AddTBString(FrmRBAttr.FieldsCfg, null, "配置信息@FieldName=Sta", true, false, 0, 4000, 20);
+
+        map.AddTBString(FrmRBAttr.Tip, null, "选择后提示的信息", true, false, 0, 1000, 20);
+
 		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 		
 		this.set_enMap(map);

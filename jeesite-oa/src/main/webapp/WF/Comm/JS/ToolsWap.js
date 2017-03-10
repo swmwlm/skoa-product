@@ -34,9 +34,8 @@
 	       
 	    var url='Do.jsp?DoType=LogAs&FK_Emp='+fk_emp;
 	    WinShowModalDialog(url,'');
-	    alert('登录成功，现在您可以以['+fk_emp+']处理工作。');
-		window.location.reload();
-		// window.location.href='EmpWorks.jsp';
+	    alert('登录成功，现在您可以以['+fk_emp+']处理工作。'); 
+	    window.location.href='EmpWorks.jsp';
 	}
 
 	function CHPass()

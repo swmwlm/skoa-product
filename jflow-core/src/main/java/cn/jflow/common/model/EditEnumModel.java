@@ -318,7 +318,7 @@ public class EditEnumModel extends BaseModel{
 			this.Pub1.append(AddTDIdx(idx++));
 			String html = "<a href=\"javascript:WinOpen('./MapExt/DDLFullCtrl.jsp?FK_MapData=" + mapAttr.getFK_MapData() + "&RefNo=" + mapAttr.getKeyOfEn() + "&MyPK=" + mapAttr.getFK_MapData() + "_" + MapExtXmlList.DDLFullCtrl + "_" + mapAttr.getKeyOfEn() + "')\">下拉框自动完成</a>";
 
-			html += " - <a href=\"javascript:WinOpen('./MapExt/RadioBtns.jsp?FK_MapData=" + mapAttr.getFK_MapData() + "&KeyOfEn=" + mapAttr.getKeyOfEn() + "&MyPK=" + mapAttr.getFK_MapData() + "_" + MapExtXmlList.DDLFullCtrl + "_" + mapAttr.getKeyOfEn() + "')\">高级JS设置</a>";
+			html += " - <a href=\"javascript:WinOpen('./MapExt/RadioBtns.htm?FK_MapData=" + mapAttr.getFK_MapData() + "&KeyOfEn=" + mapAttr.getKeyOfEn() + "&MyPK=" + mapAttr.getFK_MapData() + "_" + MapExtXmlList.DDLFullCtrl + "_" + mapAttr.getKeyOfEn() + "')\">高级JS设置</a>";
 
 			this.Pub1.append(AddTD(html));
 			this.Pub1.append(AddTREnd());

@@ -50,9 +50,9 @@ public class AskForController {
 			} else if ("RB_1".equals(object.getToEmp())) {
 				sta = AskforHelpSta.AfterDealSendByWorker;
 			}
-
+			String str = new String(request.getParameter("Info").getBytes("iso-8859-1"),"UTF-8") ;
 			String info = Dev2Interface.Node_Askfor(object.getWorkID(), sta,
-					object.getAskFor(), object.getInfo());
+					object.getAskFor(), str);
 
 			request.getSession().setAttribute("info", info);
 

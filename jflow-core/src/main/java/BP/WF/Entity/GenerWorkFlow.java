@@ -15,6 +15,7 @@ import BP.WF.Node;
 import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkFlow;
+import BP.WF.Template.FlowAttr;
 
 /**
  * 流程实例
@@ -719,6 +720,8 @@ public class GenerWorkFlow extends Entity
 		map.AddTBMyNum();
 		map.AddTBString(GenerWorkFlowAttr.FK_NY, null, "年月", false, false, 0,
 				7, 7);
+		
+		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
 		
 		RefMethod rm = new RefMethod();
 		rm.Title = "工作轨迹"; // "工作报告";

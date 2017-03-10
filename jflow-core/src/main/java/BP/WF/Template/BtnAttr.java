@@ -173,6 +173,10 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
 	*/
 	public static final String WebOfficeEnable = "WebOfficeEnable";
 	/** 
+	 表单工作方式
+	*/
+	public static final String WebOfficeFrmModel = "WebOfficeFrmModel";
+	/** 
 	 是否启用-节点时限
 	*/
 	public static final String CHEnable = "CHEnable";

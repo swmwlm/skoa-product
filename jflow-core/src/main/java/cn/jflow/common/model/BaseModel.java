@@ -1,5 +1,29 @@
 package cn.jflow.common.model;
 
+import BP.DA.DataColumn;
+import BP.DA.DataRow;
+import BP.DA.DataTable;
+import BP.DA.DataType;
+import BP.En.*;
+import BP.Sys.SysEnum;
+import BP.Sys.SysEnums;
+import BP.Sys.SystemConfig;
+import BP.Sys.XML.Search;
+import BP.Sys.XML.SearchAttr;
+import BP.Sys.XML.Searchs;
+import BP.Tools.StringHelper;
+import BP.WF.Comm.UIRowStyleGlo;
+import BP.WF.Glo;
+import BP.WF.Template.Btn;
+import BP.Web.WebUser;
+import BP.XML.XmlEn;
+import cn.jflow.common.util.ContextHolderUtils;
+import cn.jflow.system.ui.UiFatory;
+import cn.jflow.system.ui.core.*;
+import org.apache.poi.hssf.usermodel.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,51 +34,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import BP.DA.DataColumn;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.En.Attr;
-import BP.En.Attrs;
-import BP.En.EnDtl;
-import BP.En.EnDtls;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.FieldType;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethods;
-import BP.En.UIContralType;
-import BP.Sys.SysEnum;
-import BP.Sys.SysEnums;
-import BP.Sys.SystemConfig;
-import BP.Sys.XML.Search;
-import BP.Sys.XML.SearchAttr;
-import BP.Sys.XML.Searchs;
-import BP.Tools.StringHelper;
-import BP.WF.Glo;
-import BP.WF.Comm.UIRowStyleGlo;
-import BP.WF.Template.Btn;
-import BP.Web.WebUser;
-import BP.XML.XmlEn;
-import cn.jflow.common.util.ContextHolderUtils;
-import cn.jflow.system.ui.UiFatory;
-import cn.jflow.system.ui.core.BaseWebControl;
-import cn.jflow.system.ui.core.Button;
-import cn.jflow.system.ui.core.CheckBox;
-import cn.jflow.system.ui.core.DDL;
-import cn.jflow.system.ui.core.RadioButton;
-import cn.jflow.system.ui.core.TextBox;
 
 /** 
 	UCWFRpt 的摘要说明。
@@ -1556,6 +1535,14 @@ public class BaseModel {
 		{
 			return new Btn(key);
 			//(Button)FindControl(key);
+		}
+		
+		public static DDL GetDDLByID(String key)
+		{
+			UiFatory uiFactory = new UiFatory();
+			DDL ddl = uiFactory.creatDDL(key);
+			uiFactory.append(ddl);
+			return ddl;
 		}
 	
 		public  Button GetButtonByID(String key)

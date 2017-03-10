@@ -43,6 +43,8 @@
         }
     </script>
 	<style type="text/css">
+		a{color:#0066CC;text-decoration:none;}
+        a:hover{color:#0084C5;text-decoration:underline;}
 		table {margin: 0px;padding: 0px;width: 100%;}
 		table tr:nth-child(odd)>td,table tr:nth-child(odd)>th {background-color: #EEF3FF;}
 		table td{font-family:Microsoft YaHei;padding:10px;}

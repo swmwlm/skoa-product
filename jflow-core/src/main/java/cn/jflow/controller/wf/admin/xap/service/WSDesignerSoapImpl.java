@@ -900,14 +900,13 @@ public class WSDesignerSoapImpl implements WSDesignerSoap {
 	}
 
 	public int RunSQL(String sql, String UserNo, String SID) {
-		/* 因sid验证取消，暂时注释掉该验证
+		/* 因sid验证取消，暂时注释掉该验证*/
 		if (!(WebUser.CheckSID(UserNo, SID) && Glo.getIsAdmin(UserNo))){
 			throw new RuntimeException("@权限已丢失,请重新登录.");
     	}
 		if (!Glo.getIsAdmin(WebUser.getNo())){
 			throw new RuntimeException("@权限已丢失,请重新登录.");
 		}
-		*/
 		return BP.DA.DBAccess.RunSQL(sql);
 	}
 
@@ -942,11 +941,10 @@ public class WSDesignerSoapImpl implements WSDesignerSoap {
 	 * @return
 	 */
 	public String RunSQLReturnTable(String sql, String UserNo, String SID) {
-		/*sid不做验证
+		/*sid不做验证 */
 		if (!(WebUser.CheckSID(UserNo, SID) && Glo.getIsAdmin(UserNo))){
-			throw new RuntimeException("@权限已丢失,请重新登录.");
+			//throw new RuntimeException("@权限已丢失,请重新登录.");
     	}
-		*/
 		DataSet ds = new DataSet();
 		ds.Tables.add(BP.DA.DBAccess.RunSQLReturnTable(sql));
 		return DataSet.ConvertDataSetToXml(ds);
@@ -972,6 +970,7 @@ public class WSDesignerSoapImpl implements WSDesignerSoap {
 	 * @return
 	 */
 	public int RunSQLReturnValInt(String sql, String UserNo, String SID) {
+	
 		if (!(WebUser.CheckSID(UserNo, SID) && Glo.getIsAdmin(UserNo))){
 			throw new RuntimeException("@权限已丢失,请重新登录.");
     	}
@@ -994,7 +993,7 @@ public class WSDesignerSoapImpl implements WSDesignerSoap {
 	public String RunSQLReturnTableS(String sqls, String UserNo, String SID) {
 		if (!(WebUser.CheckSID(UserNo, SID) && Glo.getIsAdmin(UserNo))){
 //			TODO 这里获取不到 UserNo SID 先注释掉，稍后修改
-//			throw new RuntimeException("@权限已丢失,请重新登录.");
+			//throw new RuntimeException("@权限已丢失,请重新登录.");
     	}
 		// 验证用户未通过
 		DataSet newDs = FlowDesignerUtils.RunSQLReturnDataSet(sqls);
@@ -1528,7 +1527,7 @@ public class WSDesignerSoapImpl implements WSDesignerSoap {
 			throws IOException {
 		try {
 			// 文件存放路径
-			String filepath = BP.Sys.SystemConfig.getPathOfTemp() + "\\"
+			String filepath = BP.Sys.SystemConfig.getPathOfTemp() + "/"
 					+ fileName;
 			File fileps = new File(filepath);
 			// 如果文件已经存在则删除
@@ -2051,7 +2050,7 @@ public class WSDesignerSoapImpl implements WSDesignerSoap {
 			String fk_frmSort) throws IOException {
 		try {
 			// 文件存放路径
-			String filepath = BP.Sys.SystemConfig.getPathOfTemp() + "\\"
+			String filepath = BP.Sys.SystemConfig.getPathOfTemp() + "/"
 					+ fileName;
 			File file = new File(filepath);
 			// 如果文件已经存在则删除

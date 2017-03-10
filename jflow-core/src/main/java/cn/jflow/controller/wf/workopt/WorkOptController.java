@@ -58,7 +58,7 @@ public class WorkOptController {
 				else
 				{
 					String from = request.getParameter("FromUrl");
-					if (from.equals("FHLFlow")){
+					if (from != null && from.equals("FHLFlow")){ // 修正退回消息界面，点击取消按钮报null错误
 						url= Glo.getCCFlowAppPath()+"WF/WorkOpt/fhlflow.jsp?FK_Flow=" + FK_Flow + "&WorkID=" + WorkID + "&FK_Node=" + FK_Node + "&FID=" + FID;
 					}
 					else{

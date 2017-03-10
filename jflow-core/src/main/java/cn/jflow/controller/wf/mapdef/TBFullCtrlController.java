@@ -64,27 +64,27 @@ public class TBFullCtrlController {
 
 		// switch (this.DDL_DBSrc.Text)
 		// ORIGINAL LINE: case "应用系统主数据库(默认)":
-		if (DDL_DBSrc.equals("应用系统主数据库(默认)")) {
+		if (DDL_DBSrc.equals("应用系统主数据库")) {
 			me.setFK_DBSrc("0");
 		}
 		// ORIGINAL LINE: case "SQLServer数据库":
-		else if (DDL_DBSrc.equals("SQLServer数据库")) {
+		else if (DDL_DBSrc.equals("SQLServer")) {
 			me.setFK_DBSrc("1");
 		}
 		// ORIGINAL LINE: case "WebService数据源":
-		else if (DDL_DBSrc.equals("WebService数据源")) {
+		else if (DDL_DBSrc.equals("WebService")) {
 			me.setFK_DBSrc("100");
 		}
 		// ORIGINAL LINE: case "Oracle数据库":
-		else if (DDL_DBSrc.equals("Oracle数据库")) {
+		else if (DDL_DBSrc.equals("Oracle")) {
 			me.setFK_DBSrc("2");
 		}
 		// ORIGINAL LINE: case "MySQL数据库":
-		else if (DDL_DBSrc.equals("MySQL数据库")) {
+		else if (DDL_DBSrc.equals("MySQL")) {
 			me.setFK_DBSrc("3");
 		}
 		// ORIGINAL LINE: case "Informix数据库":
-		else if (DDL_DBSrc.equals("Informix数据库")) {
+		else if (DDL_DBSrc.equals("Informix")) {
 			me.setFK_DBSrc("4");
 		} else {
 		}

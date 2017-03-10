@@ -142,4 +142,55 @@ public class CHRoleModel {
 
 		return sBuilder.toString();
 	}
+	
+	@RequestMapping(value = "/chRoleSave", method = RequestMethod.GET)
+	public void chRoleSave(HttpServletRequest request,
+			HttpServletResponse response){
+		String msg = "保存成功";
+		
+		//执行保存.
+		BP.WF.Node nd = new BP.WF.Node(request.getParameter("FK_Node"));
+		nd.setTSpanDay(Integer.parseInt(request.getParameter("TB_TSpanDay")));
+		nd.setTSpanHour(Float.parseFloat(request.getParameter("TB_TSpanHour")));
+		nd.setWarningHour(Float.parseFloat(request.getParameter("TB_WarningHour")));
+		nd.setWarningDay(Float.parseFloat(request.getParameter("TB_WarningDay")));
+		nd.setTCent(Float.parseFloat(request.getParameter("TB_TCent")));
+		
+		nd.setTAlertRole(BP.WF.CHAlertRole.values()[Integer.parseInt(request.getParameter("DDL_TAlertRole"))]);
+		nd.setTAlertWay(BP.WF.CHAlertWay.values()[Integer.parseInt(request.getParameter("DDL_TAlertWay"))]);
+
+		nd.setWAlertRole(BP.WF.CHAlertRole.values()[Integer.parseInt(request.getParameter("DDL_WAlertRole"))]);
+		nd.setWAlertWay(BP.WF.CHAlertWay.values()[Integer.parseInt(request.getParameter("DDL_WAlertWay"))]);
+
+		if("RB_None".equals(request.getParameter("radio")))
+		{
+			nd.setHisCHWay(BP.WF.CHWay.None);
+		} else if ("RB_ByTime".equals(request.getParameter("radio")))
+		{
+			nd.setHisCHWay(BP.WF.CHWay.ByTime);
+		}else if ("RB_ByWorkNum".equals(request.getParameter("radio")))
+		{
+			nd.setHisCHWay(BP.WF.CHWay.ByWorkNum);
+		}
+		if("true".equals(request.getParameter("CB_IsEval")))
+		{
+			nd.setIsEval(true);
+		}
+		nd.Update();
+
+		
+		
+		
+		// 组装ajax字符串格式,返回调用客户端
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html");
+		try {
+			response.getOutputStream().write(
+					msg.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

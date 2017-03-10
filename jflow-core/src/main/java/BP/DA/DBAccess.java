@@ -1171,7 +1171,7 @@ public class DBAccess {
 		}
 	}
 
-	private static DataTable RunSQLReturnTable_200705_SQL(String sql, Paras paras) {
+	public static DataTable RunSQLReturnTable_200705_SQL(String sql, Paras paras) {
 		ResultSet rs = null;
 		Connection conn = null;
 		Statement stmt = null;
@@ -1934,7 +1934,7 @@ public class DBAccess {
 			if (obj == null || "".equals(obj.toString())) {
 				return IsNullReturnVal;
 			} else {
-				BigDecimal d =new BigDecimal(Integer.parseInt(obj.toString()));
+				BigDecimal d =new BigDecimal(Double.valueOf(obj.toString()));
 				/*
 				 * warning return BigDecimal.(d, blws);
 				 */

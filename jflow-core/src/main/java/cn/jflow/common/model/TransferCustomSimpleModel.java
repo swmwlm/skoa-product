@@ -1,10 +1,12 @@
 package cn.jflow.common.model;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -70,7 +72,6 @@ public class TransferCustomSimpleModel extends BaseModel{
 						DataTable dtDept = null;
 						DataRow rd = null;
 						String deptName = null;
-
 						ds = BP.WF.Dev2Interface.WorkOpt_AccepterDB("",node.getNodeID(), workId,0);
 						for(DataTable dt :ds.getTables())
 						{
@@ -85,21 +86,62 @@ public class TransferCustomSimpleModel extends BaseModel{
 						}
 						//dtEmp = ds.getTables().Tables[];
 						//dtDept = ds.Tables["Port_Dept"];
+						 DataTable dtEmpNews = dtEmp.clone();
+                         String dept ="";
+                         List<DataRow> empRows = null;
+                       
+                         if (dtDept != null){
+                        	 
+						 for(DataRow r:dtDept.Rows)
+                         {
+                             dept = r.getValue("No").toString();
+                             empRows = dtEmp.select(String.format("FK_Dept='{0}'", dept));
+                            // rd = dtDept.select(String.format("No='{0}'", r.getValue("FK_Dept"))).get(0);
 
-						for (DataRow r : dtEmp.Rows)
-						{
-							if (dtEmp.Columns.contains("DeptName"))
-							{
-								deptName = r.getValue("DeptName").toString();
-							}
-							else
-							{
-								rd = dtDept.select(String.format("No='%1$s'", r.getValue("FK_Dept"))).get(0);
-								deptName = rd.getValue("Name").toString();
-							}
+                             for(DataRow r1:empRows)
+                             {
+                     			DataRow dr = dtEmpNews.NewRow();
+                     			for (DataColumn dc : r1.columns) {
+                     				dr.put(dc.ColumnName, r1.getValue(dc.ColumnName));
+                     			}
+                     			dtEmpNews.Rows.add(dr);
+                             	}
+                         	}
+						 }else{
+							 for(DataRow r:dtEmp.Rows)
+							 {dept = r.getValue("FK_Dept").toString();
 
-							re += "{\"no\": \"" + r.getValue("No") + "\", \"name\": \"" + r.getValue("Name") + "\", \"dept\":\"" + deptName + "\"},";
-						}
+                                 if (dtEmpNews.select(String.format("FK_Dept='{0}'", dept)).size() > 0)
+                                     continue;
+
+                                 empRows = dtEmp.select(String.format("FK_Dept='{0}'", dept));
+
+                                 for(DataRow r1:empRows)
+                                 {
+                                	 DataRow dr = dtEmpNews.NewRow();
+                          			for (DataColumn dc : r1.columns) 
+                          			{
+                          			dr.put(dc.ColumnName, r1.getValue(dc.ColumnName));
+                          			}
+                          			dtEmpNews.Rows.add(dr);
+                                 	}
+                             	}
+							}
+                         
+							for (DataRow r : dtEmpNews.Rows)
+							{
+								if (dtEmp.Columns.contains("DeptName"))
+								{
+									deptName = r.getValue("DeptName").toString();
+								}	
+								else
+								{
+									rd = dtDept.select(String.format("No='%1$s'", r.getValue("FK_Dept"))).get(0);
+									deptName = rd.getValue("Name").toString();
+								}
+
+								re += "{\"no\": \"" + r.getValue("No") + "\", \"name\": \"" + r.getValue("Name") + "\", \"dept\":\"" + deptName + "\"},";
+								}
 					}
 
 					re = StringHelper.trimEnd(re, ',') + "]";

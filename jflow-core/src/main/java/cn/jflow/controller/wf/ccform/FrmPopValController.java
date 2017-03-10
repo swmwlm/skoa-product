@@ -80,8 +80,6 @@ public class FrmPopValController extends BaseController{
 		if (val.length() > 2 && popValFormat != 2)
 		{
 			val = val.substring(1);
-		}else{
-			val=" ";
 		}
 		
 		try {

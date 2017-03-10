@@ -207,10 +207,9 @@
                 if (BP.WF.Glo.getIsWinOpenEmpWorks())
                 {
                     sBuilder.append("<td onclick=\"SetImg('" + appPath + "','I" + gIdx + "_" + i + "')\"" + " >" + "<a href=\"javascript:WinOpenIt('../../MyFlow.jsp?FK_Flow=" + dr.getValue("FK_Flow") + "&FID=0&WorkID=" + dr.getValue("WorkID") + "&IsRead=0&T=" + timeKey + "');\" ><img class=Icon align='middle'  src='../../Img/Mail_UnRead.png' id='I" + gIdx + "_" + i + "' />" + dr.getValue("Title").toString() + "</a>" + "</td>");
-                }
-                else {
-                    sBuilder.append("<td onclick=\"SetImg('" + appPath + "','I" + gIdx + "_" + i + "')\"" + " >" + "<a href=\"../../MyFlow.jsp?FK_Flow=" + dr.getValue("FK_Flow") + "&FID=0&WorkID=" + dr.getValue("WorkID") + "&IsRead=0&T=" + timeKey + "\" ><img class=Icon align='middle'  src='../../Img/Mail_UnRead.png' id='I" + gIdx + "_" + i + "' />" + dr.getValue("Title").toString() + "</a>" + "</td>");
-                }
+                }else {
+            		sBuilder.append("<td onclick=\"SetImg('" + appPath + "','I" + gIdx + "_" + i + "')\"" + " >" + "<a href=\"../../MyFlow.jsp?FK_Flow=" + dr.getValue("FK_Flow") + "&FID=0&WorkID=" + dr.getValue("WorkID") + "&IsRead=0&T=" + timeKey + "\" ><img class=Icon align='middle'  src='../../Img/Mail_UnRead.png' id='I" + gIdx + "_" + i + "' />" + dr.getValue("Title").toString() + "</a>" + "</td>");
+            	}
 
                 sBuilder.append("<td  nowrap >" + dr.getValue("FlowName").toString() + "</td>");
 

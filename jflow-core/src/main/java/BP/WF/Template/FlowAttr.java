@@ -335,6 +335,11 @@ public class FlowAttr
 	 指定的人员可看
 	*/
 	public static final String PSpecEmp = "PSpecEmp";
+	
+	/** 
+	 删除规则
+	*/
+	public static final String FlowDeleteRole = "FlowDeleteRole";
 		///#endregion 权限组.
 
 	public static final String FlowJson = "FlowJson";

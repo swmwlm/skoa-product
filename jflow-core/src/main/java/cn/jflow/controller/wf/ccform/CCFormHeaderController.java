@@ -206,7 +206,7 @@ public class CCFormHeaderController extends BaseController {
 					throw new RuntimeException("@路径配置错误,变量没有被正确的替换下来." + savePath);
 				}
 			} else {
-				savePath = athDesc.getSaveTo() + "\\" + pkVal;
+				savePath = athDesc.getSaveTo() + "/" + pkVal;
 			}
 
 			//替换关键的字串.

@@ -674,12 +674,12 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getUser() {
-		String user = getAppSettings().get("User").toString();
+		String user = getAppSettings().get("JflowUser").toString();
 		return user;
 	}
 
 	public static String getPassword() {
-		String password = getAppSettings().get("Password").toString();
+		String password = getAppSettings().get("JflowPassword").toString();
 		return password;
 	}
 
