@@ -345,4 +345,5 @@ ALTER TABLE project_info_meeting modify COLUMN `status_current` char(3);
 
 /* 添加菜单“我的审批” */
 insert into `jeesite`.`sys_menu` ( `id`, `create_date`, `parent_id`, `href`, `create_by`, `permission`, `update_date`, `update_by`, `is_show`, `target`, `icon`, `del_flag`, `parent_ids`, `sort`, `name`, `remarks`) values ( 'a8708f68a09447938aed8bf16a288355', '2017-03-01 11:23:06', 'e22d3ad2e03b415fa1ceb212cd76ed5a', '/project/projectInfoMeeting', '1', 'project:projectInfoMeeting:view,project:projectInfoMeeting:edit', '2017-03-01 11:23:06', '1', '1', '', '', '0', '0,1,5c503ff8bdef4172a68233b2dfd8b048,e22d3ad2e03b415fa1ceb212cd76ed5a,', '5060', '我的审批', '');
-
+/* 添加菜单“项目列表-仅预览” */
+INSERT INTO jeesite.sys_menu (id, parent_id, parent_ids, name, sort, href, target, icon, is_show, permission, create_by, create_date, update_by, update_date, remarks, del_flag) VALUES ('ca6078e5a5c24a85a65425f8adccad24', 'e22d3ad2e03b415fa1ceb212cd76ed5a', '0,1,5c503ff8bdef4172a68233b2dfd8b048,e22d3ad2e03b415fa1ceb212cd76ed5a,', '项目列表-仅预览', 5090, '/project/projectInfo/listn', '', '', '1', 'project:projectInfo:view', '1', '2017-03-09 15:02:12', '1', '2017-03-09 15:05:58', '', '0');
