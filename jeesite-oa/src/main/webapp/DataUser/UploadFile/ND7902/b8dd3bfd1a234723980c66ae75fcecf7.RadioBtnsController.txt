@@ -1,0 +1,159 @@
+package cn.jflow.common.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.protocol.HttpContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import BP.DA.DataRow;
+import BP.DA.DataSet;
+import BP.DA.DataTable;
+import BP.DA.Log;
+import BP.DTS.DoType;
+import BP.Sys.SysEnum;
+import BP.Sys.SysEnums;
+import BP.Sys.Frm.FrmRB;
+import BP.Sys.Frm.FrmRBAttr;
+import BP.Sys.Frm.FrmRBs;
+import BP.Sys.Frm.GroupFields;
+import BP.Sys.Frm.MapAttr;
+import BP.Sys.Frm.MapAttrs;
+import BP.Sys.Frm.MapExt;
+import BP.Tools.StringHelper;
+import BP.WF.GenerWorkFlow;
+import cn.jflow.common.model.BaseModel;
+import cn.jflow.common.model.TempObject;
+import cn.jflow.controller.wf.workopt.BaseController;
+
+@Controller
+@RequestMapping("/common/RadioBtns")//保存未完成
+public class RadioBtnsController extends BaseController{
+	HttpServletResponse response;
+	HttpServletRequest request;
+	@RequestMapping(value = "/radio", method = RequestMethod.POST)
+	protected void execute(TempObject object, HttpServletRequest request,HttpServletResponse response) {
+		String doType = request.getParameter("DoType");
+        String msg = "";
+        PrintWriter out =null;
+        try
+        {
+        	/*if("TBFullCrtl_Init".equals(doType)) {
+        		msg = this.getTBFullCtrl_Init()	
+        	}else if("TBFullCtrl_Save".equals(doType)){
+        		msg = this.getTBFullCtrl_Save();
+        	}else if("RegularExpression_Init".equals(doType)){
+        		msg = this.getRegularExpression_Init();
+        	}else if("RegularExpression_Save".equals(doType)){
+        		msg = this.getRegularExpression_Save();
+        	}else if("PopVal_Init".equals(doType)){
+        		msg = this.getPopVal_Init();
+        	}else if("PopVal_Save".equals(doType)){
+        		msg = this.getPopVal_Save();
+        	}*/
+        	if("RadioBtns_Init".equals(doType)){
+        		msg = this.getRadioBtns_Init( request, response);
+        	}else if("RadioBtns_Save".equals(doType)){
+        		msg = this.getRadioBtns_Save();
+        	}
+        	else{
+        		  msg = "err@标记错误:" + this.getDoType();
+        	}
+        	out = response.getWriter();
+      		out.write(msg);
+        }
+        catch (Exception ex)
+        {
+        	Log.DebugWriteError("commemt/RadioBtns.do?DoType= "+doType +"err@"+ex.getMessage());
+            msg = "err@" + ex.getMessage();
+        }
+      
+	}
+	/*
+	 * 返回信息          
+	 */
+    public String getRadioBtns_Init(HttpServletRequest request,HttpServletResponse response)
+    {
+        DataSet ds = new DataSet();
+
+        //放入表单字段.
+        MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+        ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+
+        //属性.
+        MapAttr attr = new MapAttr();
+        attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+        attr.Retrieve();
+
+        //把分组加入里面.
+       
+        GroupFields gfs = new GroupFields(this.getFK_MapData());
+        ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
+
+        //字段值.
+        FrmRBs rbs = new FrmRBs();
+        rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+       
+        if (rbs.size() == 0)
+        {
+            /*初始枚举值变化.
+             */
+            SysEnums ses = new SysEnums(attr.getUIBindKey());
+            for(SysEnum se : ses.ToJavaList())
+            {
+                FrmRB rb = new FrmRB();
+                rb.setFK_MapData(this.getFK_MapData());
+                rb.setKeyOfEn(this.getKeyOfEn());
+                rb.setIntKey(se.getIntKey());
+                rb.setLab(se.getLab());
+                rb.setEnumKey(attr.getUIBindKey());
+                rb.Insert(); //插入数据.
+            }
+
+            rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+        }
+        //加入单选按钮.
+        ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
+        return BP.Tools.Json.ToJson(ds);
+    }
+    /*
+     * 执行保存
+     */
+    public String getRadioBtns_Save()
+    {
+        String json =request.getParameter("data");
+     /*  DataTable dt = BP.Tools.Json.ToDataTable(json);
+
+   for(DataRow dr : dt.Rows)
+        {
+            FrmRB rb = new FrmRB();
+            rb.setMyPK(dr.getValue("MyPK").toString());
+            rb.Retrieve();
+
+            rb.setScript(dr.getValue("Script").toString());
+            rb.setFieldsCfg(dr.getValue("FieldsCfg").toString()); //格式为 @字段名1=1@字段名2=0
+            rb.setTip(dr.getValue("Tip").toString()); //提示信息
+            rb.Update();
+        }*/
+        return "保存成功.";
+    }
+    
+	    public String getKeyOfEn()
+	    {
+	            String str = getRequest().getParameter("KeyOfEn");
+	            return str;
+	    }
+	    public String getFK_MapData() {
+			String fk_mapdata = getRequest().getParameter("FK_MapData");
+			if (StringHelper.isNullOrEmpty(fk_mapdata)) {
+				fk_mapdata = "ND" + getFK_Node();
+			}
+			return fk_mapdata;
+		}
+	}

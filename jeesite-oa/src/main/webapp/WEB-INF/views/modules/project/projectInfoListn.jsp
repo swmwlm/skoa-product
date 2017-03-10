@@ -17,27 +17,6 @@
 			$("#searchForm").submit();
         	return false;
         }
-		function updateProgress(id, progress){
-            $('#myModal').modal();
-            $("#projectInfoId").val(id);
-            $("#progressBoxProgress").val(progress).trigger("change");
-		}
-		function toValid(){
-			var projectInfoId=$("#projectInfoId").val();
-			var currentProjectProgress=$("#href_"+projectInfoId).attr("current-progress");
-			var changeProjectProgress=$("#progressBoxProgress").val();
-			if(changeProjectProgress==currentProjectProgress){
-				alertx("项目进度无变更!");
-				return false;
-			}
-			if(currentProjectProgress!=""&&currentProjectProgress>changeProjectProgress){
-				alertx("项目进度不能后撤");
-				return false;
-			}
-			$('#myModal').modal('hide');
-			return true;
-		}
-
 	</script>
 </head>
 <body>
@@ -47,7 +26,6 @@
 	<form:form id="searchForm" modelAttribute="projectInfo" action="${ctx}/project/projectInfo/listn" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<%--<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>--%>
 		<ul class="ul-form">
 			<li><label>归属部门：</label>
 				<sys:treeselect id="office" name="office.id" value="${projectInfo.office.id}" labelName="office.name" labelValue="${projectInfo.office.name}"
@@ -146,30 +124,13 @@
 					${fns:getDictLabel(projectInfo.industryDomain, 'industryDomain', '')}
 				</td>
 				<td>
-					<c:choose>
-						<c:when test="${fns:isAllowedUpdateProjectProgress(projectInfo)}">
-							<a href="javascript:updateProgress('${projectInfo.id}', '${projectInfo.projectProgress}')" title="设置进度" current-progress="${projectInfo.projectProgress}" id="href_${projectInfo.id}">
-								${fns:getDictLabel(projectInfo.projectProgress, 'projectProgress', '暂无进度')}
-							</a>
-						</c:when>
-						<c:otherwise>
-							${fns:getDictLabel(projectInfo.projectProgress, 'projectProgress', '暂无进度')}
-						</c:otherwise>
-					</c:choose>
+					${fns:getDictLabel(projectInfo.projectProgress, 'projectProgress', '暂无进度')}
 				</td>
 				<td>
 					${fns:getDictLabel(projectInfo.projectType, 'projectType', '')}
 				</td>
 				<td>
-					<c:choose>
-						<c:when test="${fns:isAllowedUpdateProjectMeeting(projectInfo)}">
-							<a href="javascript:updateMeeting('${projectInfo.id}', '${projectInfo.projectStatus}')"
-							   title="审批">
-									${fns:getDictLabel(projectInfo.projectStatus, 'projectStatus', '')}
-							</a>
-						</c:when>
-						<c:otherwise>${fns:getDictLabel(projectInfo.projectStatus, 'projectStatus', '')}</c:otherwise>
-					</c:choose>
+					${fns:getDictLabel(projectInfo.projectStatus, 'projectStatus', '')}
 				</td>
 				<td>
 					<fmt:formatDate value="${projectInfo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
