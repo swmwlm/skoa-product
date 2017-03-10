@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>数据字典表</title>
+ <script language="JavaScript" src="../Comm/JScript.js" type="text/javascript" ></script>
+    <script type="text/javascript" src="../Scripts/bootstrap/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="../Scripts/config.js" type="text/javascript"></script>
+     <base target="_self" /> 
+    <link href="../Comm/Style/Table0.css" rel="stylesheet" type="text/css" />
+     <script language="javascript" type="text/javascript" >
+        /* ESC Key Down */
+        function Esc() {
+            if (event.keyCode == 27)
+                window.close();
+            return true;
+        }
+        //页面启动函数.
+        $(function () {
+
+            $("#Msg").html("正在加载,请稍后......");
+
+            InitPage();
+
+            $("#Msg").html("");
+        });
+        //初始化数据.
+        function InitPage() {
+
+            var fk_mapData = GetQueryString("FK_MapData");
+
+            //初始化表格.
+            $.ajax({
+                type: 'post',
+                async: true,
+                url:basePath+"/WF/MapDef/MapDef.do?DoType=SFTableList&FK_MapData=" + fk_mapData + "&m=" + Math.random(),
+                dataType: 'html',
+                success: function (data) {
+                    data = JSON.parse(data);
+                    //增加处理.
+                    for (var i = 0; i < data.length; i++) {
+
+                        var newRow = "";
+                        var nameLink = "";
+                        if (fk_mapData != null)
+                        	{
+                            nameLink = "<a href=\"javascript:AddSFTable('" + data[i].no + "')\" ><img src='../Img/Btn/Add.gif' border=0 />" + data[i].no + "</a>";
+                        	}
+                        else
+                            nameLink = data[i].no;
+	
+                        newRow = "<tr ><td class=Idx>" + i + "</td>";
+                        newRow += "<td>" + nameLink + "</td>";
+                        newRow += "<td>" + data[i].name + "</td>";
+                        newRow += "<td>" + data[i].fk_sfdbsrctext + "</td>";
+                        newRow += "<td>" + data[i].srctypetext + "</td>";
+                        newRow += "<td><a href=\"javascript:Edit('" + data[i].no + "')\"><img src='../Img/Btn/Edit.gif' border=0 />编辑</a></td>";
+                        newRow += "<td><a href=\"javascript:Ref('" + data[i].no + "')\">引用</a></td>";
+                        newRow += "<td><a href=\"javascript:Delete('" + data[i].no + "')\"><img src='../Img/Btn/Delete.gif' border=0 />删除</a></td>";
+                        newRow += "</tr>";
+
+                        $("#Table1 tr:last").after(newRow);
+                    }
+                }
+            });
+        }
+        function Delete(key) {
+            if (window.confirm('您确定要删除吗？') == false)
+                return;
+            //删除表格.
+            $.ajax({
+                type: 'post',
+                async: true,
+                url:basePath+"/WF/MapDef/MapDef.do?DoType=SFTable_Delete&FK_SFTable=" + key + "&m=" + Math.random(),
+                dataType: 'html',
+                success: function (data) {
+                	alert(data);
+                    if (data.indexOf('err@') == 0) {
+                        alert(data);
+                    } else {
+                        window.location.href = window.location.href;
+                    }
+                }
+               
+            });
+        }
+        function Ref(key) {
+            alert(key);
+        }
+
+        function AddSFTable(key) {
+            var groupID = GetQueryString("GroupField");
+            if (groupID == "null")
+                groupID = 0;
+            var fk_mapData = GetQueryString("FK_MapData");
+
+            var url = 'EditTableField.htm?FK_MapData=' + fk_mapData + '&FK_SFTable=' + key + '&GroupField=' + groupID;
+            var b = window.showModalDialog(url, 'ass', 'dialogHeight: 400px; dialogWidth: 500px;center: yes; help: no');
+        }
+        function AddSFSQL(mypk, idx, key) {
+
+            var url = 'Do.jsp?DoType=AddSFSQLAttr&MyPK=' + mypk + '&IDX=' + idx + '&RefNo=' + key;
+            var b = window.showModalDialog(url, 'ass', 'dialogHeight: 400px; dialogWidth: 500px;center: yes; help: no');
+        }
+
+     </script>
+</head>
+<body onkeypress="Esc()" >
+	<table id="Table1">
+<caption>字典列表 - <a href="">创建字典表</a></caption>
+<tr>
+<th>序</th>
+<th>编号</th>
+<th>名称</th>
+<th>数据源</th>
+<th>类型</th>
+<th>编辑</th>
+<th>引用</th>
+<th>删除</th>
+</tr>
+</table>
+
+<div id="Msg"></div>
+	
+
+</body>
+</html>

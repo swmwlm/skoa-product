@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>消息回复</title>
+    <link href="../../Scripts/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../../Scripts/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/EasyUIUtility.js" type="text/javascript"></script>
+    <link href="../../../DataUser/Style/Table0.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/config.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../../WF/Comm/Gener.js"></script>
+    <link href="../../../WF/Comm/JS/Calendar/skin/WdatePicker.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" >    
+    function openSelectEmp(hid, tid) {
+        var url = basePath+'/WF/Comm/Port/SelectUser_Jq.jsp';
+        var selected = $('#' + hid).val();
+        if (selected != null && selected.length > 0) {
+            url += '?In=' + selected + '&tk=' + Math.random();
+        }
+        OpenEasyUiDialog(url, 'eudlgframe', '选择发起人', 760, 470, 'icon-user', true, function (ids) {
+            var arr = ids.split(',');
+            var hiddenId = arr[0];
+            var tbId = arr[1];
+
+            var innerWin = document.getElementById('eudlgframe').contentWindow;
+            $('#' + tbId).val(innerWin.getReturnText());
+            $('#' + hiddenId).val(innerWin.getReturnValue());
+        }, hid + ',' + tid);
+    }
+        //清空回复
+        function Clear() {
+            $("#TB_Msg").val("");
+            return;
+        }
+        //取消关闭
+        function Close() {
+        	location.href='javascript:history.go(-1);'
+        }
+      //发送信息消息
+        function Submit() {  
+            if ($("#TB_RE").val() == null || $("#TB_RE").val() == "" || $("#TB_RE").val().trim().length == 0) {
+                alert("接收人不能为空!");
+                return;
+            }
+           if ($("#TB_title").val() == null || $("#TB_title").val() == "" || $("#TB_title").val().trim().length == 0) {
+               alert("标题不能为空!");
+               return;
+           }
+          if ($("#TB_Msg").val() == null || $("#TB_Msg").val() == "" || $("#TB_Msg").val().trim().length == 0) {
+              alert("正文不能为空!");
+              return;
+          }
+          $.ajax({
+              type: 'post',
+              async: true,             
+              url: basePath+"/WF/App/Classic/button.do?DoType=Submit&rec="+$("#TB_RE").val()+"&Title="+$("#TB_title").val()+"&Doc="+$("#TB_Msg").val()
+          });
+          alert("发送消息成功!");
+           Close();
+      }
+    </script>
+
+</head>
+<body  style='background-color: #dbe5f1' class="easyui-layout layout panel-noscroll">
+<form id="cc" >
+<div class="aspNetHidden"></div>
+ <div id="mainPanel"   class="mainPanel">       
+ <table class='Table' >
+ <caption>
+ <div class="CaptionMsg">新建消息</div>
+ </caption>
+<TR>
+<TD>接收人：</TD>
+<TD ><input name="TB_RE" type="text" id="TB_RE" style="width:430px;" />
+<a onclick="openSelectEmp('TB_RE','TB_FQR')" href='javascript:;'>添加人员</a>
+</TD>
+</TR>
+<tr>
+<TD>标题：</TD>
+<TD><input name="TB_title" id="TB_title" style="width:430px;" type="text" /></TD>
+</tr>
+<TR>
+<TD>正文：</TD>
+<TD >
+ <textarea  rows="3" id="TB_Msg" name="TB_Msg"  cols="60" style="height:120px;width:430px;" >
+</textarea>
+ </TD>
+</TR>
+<TR>
+<TD  colspan="2">
+<input type="button" name="Btn_Save" value="发送消息" id="Btn_Save"  onclick="Submit();"/>
+<input type="button" id="Btn_Qing" name="Btn_Qing" value="清空正文"  onclick="Clear();"/>
+<input type="button" name="Btn_Qu" value="取消关闭" id="Btn_Qu"   onclick="Close();" />
+</TD>
+</TR>
+</table>
+</div>
+</form>
+</body>
+</html>
